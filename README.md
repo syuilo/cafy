@@ -73,51 +73,51 @@ API
 ℹ️ 返り値が`Query`と表記されているものは、そのあとにメソッドチェーンを
 繋げていくことができるということを示しています。
 
-## 共通
-### `.required()` => `Query`
+### 共通
+#### `.required()` => `Query`
 テスト対象の値は省略してはならないことを示します。
 省略された場合エラーにします。
 
-### `.get()` => `[any, Error]`
+#### `.get()` => `[any, Error]`
 テスト対象の値とテスト結果の配列を取得します。
 
-### `.check()` => `Error`
+#### `.check()` => `Error`
 テスト結果を取得します。
 テストに合格した場合は`null`を、そうでない場合は`Error`オブジェクトを返します。
 
-### `.isValid` => `boolean`
+#### `.isValid` => `boolean`
 テストに合格したかどうかを取得します。
 
-## Array
-### `.range(min, max)` => `Query`
+### Array
+#### `.range(min, max)` => `Query`
 `min`以上`max`以下の数の要素を持っていなければならないという制約を追加します。
 要素数が指定された範囲内にない場合エラーにします。
 
-### `.unique()` => `Query`
+#### `.unique()` => `Query`
 ユニークな配列(=重複した値を持っていない)でなければならないという制約を追加します。
 重複した要素がある場合エラーにします。
 
-## Number
-### `.min(threshold)` => `Query`
+### Number
+#### `.min(threshold)` => `Query`
 `threshold`以上の数値でなければならないという制約を追加します。
 値が`threshold`を下回る場合エラーにします。
 
-### `.max(threshold)` => `Query`
+#### `.max(threshold)` => `Query`
 `threshold`以下の数値でなければならないという制約を追加します。
 値が`threshold`を上回る場合エラーにします。
 
-### `.range(min, max)` => `Query`
+#### `.range(min, max)` => `Query`
 `min`以上`max`以下の数値でなければならないという制約を追加します。
 値が指定された範囲内にない場合エラーにします。
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
 
-## String
-### `.match(pattern)` => `Query`
+### String
+#### `.match(pattern)` => `Query`
 与えられた正規表現とマッチしていなければならないという制約を追加します。
 正規表現と一致しない場合エラーにします。
 
-### `.or(pattern)` => `Query`
+#### `.or(pattern)` => `Query`
 与えられたパターン内の文字列のいずれかでなければならないという制約を追加します。
 `pattern`は文字列の配列またはスペースで区切られた文字列です。
 どれとも一致しない場合エラーにします。
