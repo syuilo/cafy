@@ -22,31 +22,45 @@ cafy(value)[.anyQueries()...]
 ``` javascript
 import it from 'cafy';
 
-const [val, err] = it(x).must.be.a.string().or('asc desc').default('desc').qed();
-//→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合のデフォルトは'desc'とする。
+const [val, err] = it(x).must.be.a.string().or('asc desc').get();
+//→ xは文字列でなければならず、'asc'または'desc'でなければならない。
 
-const isValid = it(x).must.be.a.number().required().range(0, 100).check();
+const err = it(x).must.be.a.number().required().range(0, 100).check();
 //→ xは数値でなければならず、かつ0~100の範囲内でなければならない。この値は省略することはできない。
 
-const isValid = it(x).must.be.an.array().unique().required().validate(x => x[0] != 'strawberry pasta').check();
+const err = it(x).must.be.an.array().unique().required().validate(x => x[0] != 'strawberry pasta').check();
 //→ xは配列でなければならず、かつ中身が重複していてはならない。この値を省略することはできない。そして配列の最初の要素が'strawberry pasta'という文字列であってはならない。
 ```
 
 ・意味的に矛盾するので、required と default は併用できません。
 
+### API
+#### `.get()`
+テスト対象の値とテスト結果の配列を取得します。
+
+#### `.check()`
+テスト結果を取得します。
+
 ### 糖衣構文
 ``` javascript
-const isValid = it(x).must.be.a.string().required().check();
+const err = it(x).must.be.a.string().required().check();
 ```
 は次のように書くこともできます:
 ``` javascript
-const isValid = it(x, 'string', true);
+const err = it(x, 'string', true);
+```
+
+### 規定値を設定する
+Destructuring assignmentの規定値機能を使うことができます。
+``` javascript
+const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
+//→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
 ### BDD風記法
 must.be.a(n) の代わりに　expect とも書けます:
 ``` javascript
-const isValid = it(x).expect.string().required().check();
+const err = it(x).expect.string().required().check();
 ```
 
 ### null と undefined の扱い
@@ -56,7 +70,7 @@ const isValid = it(x).expect.string().required().check();
 明示的に`null`を許可しない限り、`null`はエラーになります。
 `null`を許可する場合は**nullable**をプリフィックスします:
 ``` javascript
-const isValid = it(x).must.be.a.nullable.string().required().check();
+const err = it(x).must.be.a.nullable.string().required().check();
 ```
 
 Testing

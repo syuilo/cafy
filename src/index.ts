@@ -55,27 +55,16 @@ export abstract class Query {
 	}
 
 	/**
-	 * このインスタンスの値が設定されていない(=undefined)ときにデフォルトで設定する値を設定します
-	 */
-	default(value: any) {
-		if (this.isUndefined) {
-			this.value = value;
-		}
-		return this;
-	}
-
-	/**
 	 * このインスタンスの値が妥当かをチェックします
 	 */
-	check(): boolean {
+	get isValid(): boolean {
 		return this.error === null;
 	}
 
 	/**
 	 * このインスタンスの値およびエラーを取得します
-	 * *qedはQ.E.D.でもあり'QueryEnD'の略でもある
 	 */
-	qed(): [any, Error] {
+	get(): [any, Error] {
 		return [this.value, this.error];
 	}
 
@@ -108,17 +97,10 @@ export class BooleanQuery extends Query {
 	}
 
 	/**
-	 * このインスタンスの値が設定されていないときにデフォルトで設定する値を設定します
-	 */
-	default(value: boolean) {
-		return super.default(value);
-	}
-
-	/**
 	 * このインスタンスの値およびエラーを取得します
 	 */
-	qed(): [boolean, Error] {
-		return super.qed();
+	get(): [boolean, Error] {
+		return super.get();
 	}
 
 	/**
@@ -180,17 +162,10 @@ export class NumberQuery extends Query {
 	}
 
 	/**
-	 * このインスタンスの値が設定されていないときにデフォルトで設定する値を設定します
-	 */
-	default(value: number) {
-		return super.default(value);
-	}
-
-	/**
 	 * このインスタンスの値およびエラーを取得します
 	 */
-	qed(): [number, Error] {
-		return super.qed();
+	get(): [number, Error] {
+		return super.get();
 	}
 
 	/**
@@ -234,17 +209,10 @@ export class StringQuery extends Query {
 	}
 
 	/**
-	 * このインスタンスの値が設定されていないときにデフォルトで設定する値を設定します
-	 */
-	default(value: string) {
-		return super.default(value);
-	}
-
-	/**
 	 * このインスタンスの値およびエラーを取得します
 	 */
-	qed(): [string, Error] {
-		return super.qed();
+	get(): [string, Error] {
+		return super.get();
 	}
 
 	/**
@@ -329,17 +297,10 @@ export class ArrayQuery extends Query {
 	}
 
 	/**
-	 * このインスタンスの値が設定されていないときにデフォルトで設定する値を設定します
-	 */
-	default(value: any[]) {
-		return super.default(value);
-	}
-
-	/**
 	 * このインスタンスの値およびエラーを取得します
 	 */
-	qed(): [any[], Error] {
-		return super.qed();
+	get(): [any[], Error] {
+		return super.get();
 	}
 
 	/**
@@ -364,17 +325,10 @@ export class IdQuery extends Query {
 	}
 
 	/**
-	 * このインスタンスの値が設定されていないときにデフォルトで設定する値を設定します
-	 */
-	default(value: mongo.ObjectID) {
-		return super.default(value);
-	}
-
-	/**
 	 * このインスタンスの値およびエラーを取得します
 	 */
-	qed(): [mongo.ObjectID, Error] {
-		return super.qed();
+	get(): [mongo.ObjectID, Error] {
+		return super.get();
 	}
 
 	/**
@@ -399,17 +353,10 @@ export class ObjectQuery extends Query {
 	}
 
 	/**
-	 * このインスタンスの値が設定されていないときにデフォルトで設定する値を設定します
-	 */
-	default(value: any) {
-		return super.default(value);
-	}
-
-	/**
 	 * このインスタンスの値およびエラーを取得します
 	 */
-	qed(): [any, Error] {
-		return super.qed();
+	get(): [any, Error] {
+		return super.get();
 	}
 
 	/**
@@ -550,7 +497,7 @@ function x(value: any, type?: Type, isRequired?: boolean, validator?: Validator<
 			.forEach(v => q = q.validate(v));
 	}
 
-	return q.qed();
+	return q.get();
 }
 
 export default x;
