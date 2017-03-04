@@ -1,7 +1,8 @@
 cafy
 ===============================================
 > Simple, fun, flexible query-based validator
-cafyは、メソッドチェーンで値のバリデーションを行うライブラリです。
+
+cafyは、アサーションのようにメソッドチェーンで値のバリデーションを行うライブラリです。
 
 [![][npm-badge]][npm-link]
 [![][mit-badge]][mit]
