@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"noEmitOnError": true,
+		"noImplicitAny": false,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"declaration": true,
+		"sourceMap": false,
+		"target": "es2017",
+		"module": "commonjs",
+		"removeComments": false,
+		"noLib": false,
+		"outDir": "built",
+		"rootDir": "src"
+	},
+	"compileOnSave": false,
+	"include": [
+		"./node_modules/typescript/lib/lib.es6.d.ts",
+		"./src/**/*.ts"
+	]
+}
