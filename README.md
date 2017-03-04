@@ -1,6 +1,7 @@
 cafy
 ============
-Simple, fun, flexible query-based validator
+> Simple, fun, flexible query-based validator
+cafyは、メソッドチェーンで値のバリデーションを行うライブラリです。
 
 [![][npm-badge]][npm-link]
 [![][mit-badge]][mit]
@@ -35,11 +36,26 @@ const err = it(x).must.be.an.array().unique().required().validate(x => x[0] != '
 ・意味的に矛盾するので、required と default は併用できません。
 
 ### API
-#### `.get()`
+#### `.required()` => `Query`
+テスト対象の値は省略してはならないことを示します。
+省略された場合エラーにします。
+
+#### `.get()` => `[any, Error]`
 テスト対象の値とテスト結果の配列を取得します。
 
-#### `.check()`
+#### `.check()` => `Error`
 テスト結果を取得します。
+テストに合格した場合は`null`を、そうでない場合は`Error`オブジェクトを返します。
+
+#### `.isValid` => `boolean`
+テストに合格したかどうかを取得します。
+
+### 規定値を設定する
+Destructuring assignmentの規定値機能を使うことができます。
+``` javascript
+const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
+//→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
+```
 
 ### 糖衣構文
 ``` javascript
@@ -48,13 +64,6 @@ const err = it(x).must.be.a.string().required().check();
 は次のように書くこともできます:
 ``` javascript
 const err = it(x, 'string', true);
-```
-
-### 規定値を設定する
-Destructuring assignmentの規定値機能を使うことができます。
-``` javascript
-const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
-//→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
 ### BDD風記法
