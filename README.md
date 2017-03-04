@@ -51,7 +51,7 @@ const err = it(x).must.be.an.array().unique().required().validate(x => x[0] != '
 テストに合格したかどうかを取得します。
 
 ### 規定値を設定する
-Destructuring assignmentの規定値機能を使うことができます。
+[Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値機能を使うことができます。
 ``` javascript
 const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
 //→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
