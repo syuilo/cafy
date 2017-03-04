@@ -45,11 +45,11 @@ const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
 
 ### 糖衣構文
 ``` javascript
-const err = it(x).must.be.a.string().required().check();
+const [val, err] = it(x).must.be.a.string().required().get();
 ```
 は次のように書くこともできます:
 ``` javascript
-const err = it(x, 'string', true);
+const [val, err] = it(x, 'string', true);
 ```
 
 ### BDD風記法
