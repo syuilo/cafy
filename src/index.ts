@@ -504,16 +504,23 @@ const it = (value: any) => ({
 	}
 });
 
-type Type = 'id' | 'string' | 'number' | 'boolean' | 'array' | 'set' | 'object';
+type Type = 'id' | 'id?' | 'string' | 'string?' | 'number' | 'number?' | 'boolean' | 'boolean?' | 'array' | 'array?' | 'set' | 'set?' | 'object' | 'object?';
 
 function x(value: any): It;
 function x(value: any, type: 'id', isRequired?: boolean, validator?: Validator<mongo.ObjectID> | Validator<mongo.ObjectID>[]): [mongo.ObjectID, Error];
+function x(value: any, type: 'id?', isRequired?: boolean, validator?: Validator<mongo.ObjectID> | Validator<mongo.ObjectID>[]): [mongo.ObjectID, Error];
 function x(value: any, type: 'string', isRequired?: boolean, validator?: Validator<string> | Validator<string>[]): [string, Error];
+function x(value: any, type: 'string?', isRequired?: boolean, validator?: Validator<string> | Validator<string>[]): [string, Error];
 function x(value: any, type: 'number', isRequired?: boolean, validator?: Validator<number> | Validator<number>[]): [number, Error];
+function x(value: any, type: 'number?', isRequired?: boolean, validator?: Validator<number> | Validator<number>[]): [number, Error];
 function x(value: any, type: 'boolean', isRequired?: boolean): [boolean, Error];
+function x(value: any, type: 'boolean?', isRequired?: boolean): [boolean, Error];
 function x(value: any, type: 'array', isRequired?: boolean, validator?: Validator<any[]> | Validator<any[]>[]): [any[], Error];
+function x(value: any, type: 'array?', isRequired?: boolean, validator?: Validator<any[]> | Validator<any[]>[]): [any[], Error];
 function x(value: any, type: 'set', isRequired?: boolean, validator?: Validator<any[]> | Validator<any[]>[]): [any[], Error];
+function x(value: any, type: 'set?', isRequired?: boolean, validator?: Validator<any[]> | Validator<any[]>[]): [any[], Error];
 function x(value: any, type: 'object', isRequired?: boolean, validator?: Validator<any> | Validator<any>[]): [any, Error];
+function x(value: any, type: 'object?', isRequired?: boolean, validator?: Validator<any> | Validator<any>[]): [any, Error];
 function x(value: any, type?: Type, isRequired?: boolean, validator?: Validator<any> | Validator<any>[]): any {
 	if (typeof type === 'undefined') return it(value);
 
@@ -521,12 +528,19 @@ function x(value: any, type?: Type, isRequired?: boolean, validator?: Validator<
 
 	switch (type) {
 		case 'id': q = it(value).expect.id(); break;
+		case 'id?': q = it(value).expect.nullable.id(); break;
 		case 'string': q = it(value).expect.string(); break;
+		case 'string?': q = it(value).expect.nullable.string(); break;
 		case 'number': q = it(value).expect.number(); break;
+		case 'number?': q = it(value).expect.nullable.number(); break;
 		case 'boolean': q = it(value).expect.boolean(); break;
+		case 'boolean?': q = it(value).expect.nullable.boolean(); break;
 		case 'array': q = it(value).expect.array(); break;
+		case 'array?': q = it(value).expect.nullable.array(); break;
 		case 'set': q = it(value).expect.array().unique(); break;
+		case 'set?': q = it(value).expect.nullable.array().unique(); break;
 		case 'object': q = it(value).expect.object(); break;
+		case 'object?': q = it(value).expect.nullable.object(); break;
 	}
 
 	if (isRequired) q = q.required();
