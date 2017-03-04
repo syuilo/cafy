@@ -1,5 +1,7 @@
 cafy
 ============
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/syuilo/cafy.svg)](https://greenkeeper.io/)
 Simple, fun, flexible query-based validator
 
 [![][npm-badge]][npm-link]
