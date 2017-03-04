@@ -536,7 +536,7 @@ function x(value: any, type?: Type, isRequired?: boolean, validator?: Validator<
 			.forEach(v => q = q.validate(v));
 	}
 
-	return q;
+	return q.qed();
 }
 
 export default x;
