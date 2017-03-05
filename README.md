@@ -188,7 +188,7 @@ it(['a', 'b', 'c', 'b']).expect.array().unique().isValid; // false
 ```
 
 #### `.validateEach(fn)` => `Query`
-要素ごとにカスタムのバリデーションを実行できます。
+各要素に対してカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 ``` javascript
 it([1, 2, 3]).expect.array().validateEach(x => x < 4).isValid; // true

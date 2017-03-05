@@ -95,9 +95,9 @@ export default class ArrayQuery extends Query {
 	 * @param validator バリデータ
 	 */
 	@fx()
-	validateEach(validator: Validator<any>) {
-		this.value.some(x => {
-			const result = validator(x);
+	validateEach(validator: (element: any, index: number, array: any[]) => boolean | Error) {
+		this.value.some((x, i, s) => {
+			const result = validator(x, i, s);
 			if (result === false) {
 				this.error = new Error('invalid-item');
 				return true;
