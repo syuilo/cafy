@@ -193,7 +193,7 @@ it(Infinity).expect.number().int().isValid; // false
 ``` javascript
 it('strawberry').expect.string().or(['strawberry', 'pasta']).isValid // true
 it('alice').expect.string().or(['strawberry', 'pasta']).isValid      // false
-it('pasta').expect.string().or(['strawberry pasta']).isValid         // true
+it('pasta').expect.string().or('strawberry pasta').isValid           // true
 ```
 
 #### `.min(threshold)` => `Query`
