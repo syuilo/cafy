@@ -461,14 +461,14 @@ type Type =
 	'object' | 'object!' | 'object?' | 'object!?';
 
 function x(value: any): It;
-function x(value: any, type: 'id' | 'id!' | 'id?' | 'id!?', validator?: Validator<mongo.ObjectID> | Validator<mongo.ObjectID>[]): [mongo.ObjectID, Error];
-function x(value: any, type: 'string' | 'string!' | 'string?' | 'string!?', validator?: Validator<string> | Validator<string>[]): [string, Error];
-function x(value: any, type: 'number' | 'number!' | 'number?' | 'number!?', validator?: Validator<number> | Validator<number>[]): [number, Error];
-function x(value: any, type: 'boolean' | 'boolean!' | 'boolean?' | 'boolean!?'): [boolean, Error];
-function x(value: any, type: 'array' | 'array!' | 'array?' | 'array!?', validator?: Validator<any[]> | Validator<any[]>[]): [any[], Error];
-function x(value: any, type: 'set' | 'set!' | 'set?' | 'set!?', validator?: Validator<any[]> | Validator<any[]>[]): [any[], Error];
-function x(value: any, type: 'object' | 'object!' | 'object?' | 'object!?', validator?: Validator<any> | Validator<any>[]): [any, Error];
-function x(value: any, type?: Type, validator?: Validator<any> | Validator<any>[]): any {
+function x(value: any, type: 'id' | 'id!' | 'id?' | 'id!?'): IdQuery;
+function x(value: any, type: 'string' | 'string!' | 'string?' | 'string!?'): StringQuery;
+function x(value: any, type: 'number' | 'number!' | 'number?' | 'number!?'): NumberQuery;
+function x(value: any, type: 'boolean' | 'boolean!' | 'boolean?' | 'boolean!?'): BooleanQuery;
+function x(value: any, type: 'array' | 'array!' | 'array?' | 'array!?'): ArrayQuery;
+function x(value: any, type: 'set' | 'set!' | 'set?' | 'set!?'): ArrayQuery;
+function x(value: any, type: 'object' | 'object!' | 'object?' | 'object!?'): ObjectQuery;
+function x(value: any, type?: Type): any {
 	if (typeof type === 'undefined') return it(value);
 
 	const [, name, suffixes] = type.match(/([a-z]+)(.+)?/);
@@ -491,12 +491,7 @@ function x(value: any, type?: Type, validator?: Validator<any> | Validator<any>[
 
 	if (isRequired) q = q.required();
 
-	if (validator) {
-		(Array.isArray(validator) ? validator : [validator])
-			.forEach(v => q = q.validate(v));
-	}
-
-	return q.get();
+	return q;
 }
 
 export default x;

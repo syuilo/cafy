@@ -46,12 +46,6 @@ const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
 //→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
-### BDD風記法
-must.be.a(n) の代わりに　expect とも書けます:
-``` javascript
-const err = it(x).expect.string().required().check();
-```
-
 ### null と undefined の扱い
 「値が`null`または`undefined`」な状態を「値が空である」と表現しています。
 値が空である場合、バリデータやその他の処理メソッドは呼ばれません。
@@ -69,20 +63,26 @@ const err = it(x).must.be.a.nullable.string().required().check();
 | nullable | o | o |
 | required+nullable | x | o |
 
-### 糖衣構文
-次の長いコード:
+### BDD風記法
+must.be.a(n) の代わりに　expect とも書けます:
 ``` javascript
-it(x).must.be.a.string().get();                     // default
-it(x).must.be.a.string().required().get();          // required
-it(x).must.be.a.nullable.string().get();            // nullable
-it(x).must.be.a.nullable.string().required().get(); // required nullable
+const err = it(x).expect.string().required().check();
+```
+
+### 糖衣構文
+次のコード:
+``` javascript
+it(x).must.be.a.string()                     // default
+it(x).must.be.a.string().required()          // required
+it(x).must.be.a.nullable.string()            // nullable
+it(x).must.be.a.nullable.string().required() // required nullable
 ```
 は次のように書くこともできます:
 ``` javascript
-it(x, 'string');   // default
-it(x, 'string!');  // required
-it(x, 'string?');  // nullable
-it(x, 'string!?'); // required nullable
+it(x, 'string')   // default
+it(x, 'string!')  // required
+it(x, 'string?')  // nullable
+it(x, 'string!?') // required nullable
 ```
 
 API

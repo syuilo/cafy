@@ -52,12 +52,12 @@ describe('StringQuery', () => {
 
 describe('syntax sugger', () => {
 	it('?無しでnull禁止', () => {
-		const [val, err] = check(null, 'string');
+		const [val, err] = check(null, 'string').get();
 		assert.notEqual(err, null);
 	});
 
 	it('?付きでnullable', () => {
-		const [val, err] = check(null, 'string?');
+		const [val, err] = check(null, 'string?').get();
 		assert.equal(val, null);
 		assert.equal(err, null);
 	});
