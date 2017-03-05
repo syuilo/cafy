@@ -319,8 +319,12 @@ export class IdQuery extends Query {
 
 	constructor(value: any, nullable: boolean = false) {
 		super(value, nullable);
-		if (!this.isEmpty && (typeof value != 'string' || !mongo.ObjectID.isValid(value))) {
-			this.error = new Error('must-be-an-id');
+		if (!this.isEmpty && !mongo.ObjectID.prototype.isPrototypeOf(value)) {
+			if (mongo.ObjectID.isValid(value)) {
+				this.value = new mongo.ObjectID(value);
+			} else {
+				this.error = new Error('must-be-an-id');
+			}
 		}
 	}
 
