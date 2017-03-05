@@ -99,6 +99,30 @@ describe('Queries', () => {
 			assert.notEqual(err, null);
 		});
 
+		describe('# min', () => {
+			it('しきい値より長くて成功', () => {
+				const err = test('strawberry').expect.string().min(8).check();
+				assert.equal(err, null);
+			});
+
+			it('しきい値より短くて失敗', () => {
+				const err = test('pasta').expect.string().min(8).check();
+				assert.notEqual(err, null);
+			});
+		});
+
+		describe('# max', () => {
+			it('しきい値より短くて成功', () => {
+				const err = test('pasta').expect.string().max(8).check();
+				assert.equal(err, null);
+			});
+
+			it('しきい値より長くて失敗', () => {
+				const err = test('strawberry').expect.string().max(8).check();
+				assert.notEqual(err, null);
+			});
+		});
+
 		describe('# or', () => {
 			it('合致する文字列で成功 (配列)', () => {
 				const err = test('strawberry').expect.string().or(['strawberry', 'pasta']).check();

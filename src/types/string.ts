@@ -12,19 +12,6 @@ export default class StringQuery extends Query {
 		}
 	}
 
-	/**
-	 * 文字数が指定された範囲内にない場合エラーにします
-	 * @param min 下限
-	 * @param max 上限
-	 */
-	@fx()
-	range(min: number, max: number) {
-		if (this.value.length < min || this.value.length > max) {
-			this.error = new Error('invalid-range');
-		}
-		return this;
-	}
-
 	@fx()
 	trim() {
 		this.value = this.value.trim();
@@ -45,6 +32,42 @@ export default class StringQuery extends Query {
 	 */
 	validate(validator: Validator<string>) {
 		return super.validate(validator);
+	}
+
+	/**
+	 * 文字数が指定された範囲内にない場合エラーにします
+	 * @param min 下限
+	 * @param max 上限
+	 */
+	@fx()
+	range(min: number, max: number) {
+		this.min(min);
+		this.max(max);
+		return this;
+	}
+
+	/**
+	 * 文字数が指定された下限より下回っている場合エラーにします
+	 * @param threshold 下限
+	 */
+	@fx()
+	min(threshold: number) {
+		if (this.value.length < threshold) {
+			this.error = new Error('invalid-range');
+		}
+		return this;
+	}
+
+	/**
+	 * 文字数が指定された上限より上回っている場合エラーにします
+	 * @param threshold 上限
+	 */
+	@fx()
+	max(threshold: number) {
+		if (this.value.length > threshold) {
+			this.error = new Error('invalid-range');
+		}
+		return this;
 	}
 
 	/**

@@ -183,6 +183,20 @@ it(Infinity).expect.number().int().isValid; // false
 `pattern`は文字列の配列またはスペースで区切られた文字列です。
 どれとも一致しない場合エラーにします。
 
+#### `.min(threshold)` => `Query`
+`threshold`以上の文字数でなければならないという制約を追加します。
+文字数が`threshold`を下回る場合エラーにします。
+
+#### `.max(threshold)` => `Query`
+`threshold`以下の文字数でなければならないという制約を追加します。
+文字数が`threshold`を上回る場合エラーにします。
+
+#### `.range(min, max)` => `Query`
+`min`以上`max`以下の文字数でなければならないという制約を追加します。
+文字数が指定された範囲内にない場合エラーにします。
+
+ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
+
 Testing
 -----------------------------------------------
 `npm run test`
