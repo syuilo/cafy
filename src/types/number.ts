@@ -19,9 +19,8 @@ export default class NumberQuery extends Query {
 	 */
 	@fx()
 	range(min: number, max: number) {
-		if (this.value < min || this.value > max) {
-			this.error = new Error('invalid-range');
-		}
+		this.min(min);
+		this.max(max);
 		return this;
 	}
 
