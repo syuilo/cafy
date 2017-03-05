@@ -40,7 +40,7 @@ const err3 = it(x).must.be.an.array().unique().validate(x => x[0] != 'strawberry
 ```
 
 ### 規定値を設定する
-[Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値機能を使うことができます。
+[Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
 const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
 //→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
@@ -64,7 +64,7 @@ const err = it(x).must.be.a.nullable.string().required().check();
 | required+nullable | x | o |
 
 ### BDD風記法
-must.be.a(n) の代わりに　expect とも書けます:
+`must.be.a(n)`の代わりに`expect`とも書けます:
 ``` javascript
 const err = it(x).expect.string().required().check();
 ```
@@ -77,7 +77,7 @@ it(x).must.be.a.string().required()          // required
 it(x).must.be.a.nullable.string()            // nullable
 it(x).must.be.a.nullable.string().required() // required nullable
 ```
-は次のように書くこともできます:
+はこのように書くこともできます:
 ``` javascript
 it(x, 'string')   // default
 it(x, 'string!')  // required
