@@ -192,9 +192,9 @@ it([1, 2, 3]).expect.array().validateEach(x => x < 4).isValid; // true
 it([1, 4, 3]).expect.array().validateEach(x => x < 4).isValid; // false
 ```
 
-cafyの入れ子
+cafyの入れ子:
 ``` javascript
-it(x).expect.array().validateEach(x => it(x).expect.string().required().range(0, 100).isValid);
+const xsIsValid = it(xs).expect.array().validateEach(x => it(x).expect.string().required().range(0, 100).isValid).isValid;
 ```
 
 ### Number
