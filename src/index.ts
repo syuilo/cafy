@@ -451,43 +451,42 @@ const it = (value: any) => ({
 	}
 });
 
-type Type = 'id' | 'id?' | 'string' | 'string?' | 'number' | 'number?' | 'boolean' | 'boolean?' | 'array' | 'array?' | 'set' | 'set?' | 'object' | 'object?';
+type Type =
+	'id' | 'id!' | 'id?' | 'id!?' |
+	'string' | 'string!' | 'string?' | 'string!?' |
+	'number' | 'number!' | 'number?' | 'number!?' |
+	'boolean' | 'boolean!' | 'boolean?' | 'boolean!?' |
+	'array' | 'array!' | 'array?' | 'array!?' |
+	'set' | 'set!' | 'set?' | 'set!?' |
+	'object' | 'object!' | 'object?' | 'object!?';
 
 function x(value: any): It;
-function x(value: any, type: 'id', isRequired?: boolean, validator?: Validator<mongo.ObjectID> | Validator<mongo.ObjectID>[]): [mongo.ObjectID, Error];
-function x(value: any, type: 'id?', isRequired?: boolean, validator?: Validator<mongo.ObjectID> | Validator<mongo.ObjectID>[]): [mongo.ObjectID, Error];
-function x(value: any, type: 'string', isRequired?: boolean, validator?: Validator<string> | Validator<string>[]): [string, Error];
-function x(value: any, type: 'string?', isRequired?: boolean, validator?: Validator<string> | Validator<string>[]): [string, Error];
-function x(value: any, type: 'number', isRequired?: boolean, validator?: Validator<number> | Validator<number>[]): [number, Error];
-function x(value: any, type: 'number?', isRequired?: boolean, validator?: Validator<number> | Validator<number>[]): [number, Error];
-function x(value: any, type: 'boolean', isRequired?: boolean): [boolean, Error];
-function x(value: any, type: 'boolean?', isRequired?: boolean): [boolean, Error];
-function x(value: any, type: 'array', isRequired?: boolean, validator?: Validator<any[]> | Validator<any[]>[]): [any[], Error];
-function x(value: any, type: 'array?', isRequired?: boolean, validator?: Validator<any[]> | Validator<any[]>[]): [any[], Error];
-function x(value: any, type: 'set', isRequired?: boolean, validator?: Validator<any[]> | Validator<any[]>[]): [any[], Error];
-function x(value: any, type: 'set?', isRequired?: boolean, validator?: Validator<any[]> | Validator<any[]>[]): [any[], Error];
-function x(value: any, type: 'object', isRequired?: boolean, validator?: Validator<any> | Validator<any>[]): [any, Error];
-function x(value: any, type: 'object?', isRequired?: boolean, validator?: Validator<any> | Validator<any>[]): [any, Error];
-function x(value: any, type?: Type, isRequired?: boolean, validator?: Validator<any> | Validator<any>[]): any {
+function x(value: any, type: 'id' | 'id!' | 'id?' | 'id!?', validator?: Validator<mongo.ObjectID> | Validator<mongo.ObjectID>[]): [mongo.ObjectID, Error];
+function x(value: any, type: 'string' | 'string!' | 'string?' | 'string!?', validator?: Validator<string> | Validator<string>[]): [string, Error];
+function x(value: any, type: 'number' | 'number!' | 'number?' | 'number!?', validator?: Validator<number> | Validator<number>[]): [number, Error];
+function x(value: any, type: 'boolean' | 'boolean!' | 'boolean?' | 'boolean!?'): [boolean, Error];
+function x(value: any, type: 'array' | 'array!' | 'array?' | 'array!?', validator?: Validator<any[]> | Validator<any[]>[]): [any[], Error];
+function x(value: any, type: 'set' | 'set!' | 'set?' | 'set!?', validator?: Validator<any[]> | Validator<any[]>[]): [any[], Error];
+function x(value: any, type: 'object' | 'object!' | 'object?' | 'object!?', validator?: Validator<any> | Validator<any>[]): [any, Error];
+function x(value: any, type?: Type, validator?: Validator<any> | Validator<any>[]): any {
 	if (typeof type === 'undefined') return it(value);
 
-	let q: Query = null;
+	const [, name, suffixes] = type.match(/([a-z]+)(.+)?/);
+	const isRequired = suffixes == '!' || suffixes == '!?';
+	const isNullable = suffixes == '?' || suffixes == '!?';
 
-	switch (type) {
-		case 'id': q = it(value).expect.id(); break;
-		case 'id?': q = it(value).expect.nullable.id(); break;
-		case 'string': q = it(value).expect.string(); break;
-		case 'string?': q = it(value).expect.nullable.string(); break;
-		case 'number': q = it(value).expect.number(); break;
-		case 'number?': q = it(value).expect.nullable.number(); break;
-		case 'boolean': q = it(value).expect.boolean(); break;
-		case 'boolean?': q = it(value).expect.nullable.boolean(); break;
-		case 'array': q = it(value).expect.array(); break;
-		case 'array?': q = it(value).expect.nullable.array(); break;
-		case 'set': q = it(value).expect.array().unique(); break;
-		case 'set?': q = it(value).expect.nullable.array().unique(); break;
-		case 'object': q = it(value).expect.object(); break;
-		case 'object?': q = it(value).expect.nullable.object(); break;
+	let q: any = it(value).expect;
+
+	if (isNullable) q = q.nullable;
+
+	switch (name) {
+		case 'id': q = q.id(); break;
+		case 'string': q = q.string(); break;
+		case 'number': q = q.number(); break;
+		case 'boolean': q = q.boolean(); break;
+		case 'array': q = q.array(); break;
+		case 'set': q = q.array().unique(); break;
+		case 'object': q = q.object(); break;
 	}
 
 	if (isRequired) q = q.required();

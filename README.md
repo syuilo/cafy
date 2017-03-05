@@ -46,15 +46,6 @@ const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
 //→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
-### 糖衣構文
-``` javascript
-const [val, err] = it(x).must.be.a.string().required().get();
-```
-は次のように書くこともできます:
-``` javascript
-const [val, err] = it(x, 'string', true);
-```
-
 ### BDD風記法
 must.be.a(n) の代わりに　expect とも書けます:
 ``` javascript
@@ -77,6 +68,22 @@ const err = it(x).must.be.a.nullable.string().required().check();
 | required | x | x |
 | nullable | o | o |
 | required+nullable | x | o |
+
+### 糖衣構文
+次の長いコード:
+``` javascript
+it(x).must.be.a.string().get();                     // default
+it(x).must.be.a.string().required().get();          // required
+it(x).must.be.a.nullable.string().get();            // nullable
+it(x).must.be.a.nullable.string().required().get(); // required nullable
+```
+は次のように書くこともできます:
+``` javascript
+it(x, 'string');   // default
+it(x, 'string!');  // required
+it(x, 'string?');  // nullable
+it(x, 'string!?'); // required nullable
+```
 
 API
 -----------------------------------------------
