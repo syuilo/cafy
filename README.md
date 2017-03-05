@@ -39,6 +39,35 @@ const err3 = it(x).must.be.an.array().unique().validate(x => x[0] != 'strawberry
 //→ xは配列でなければならず、かつ中身が重複していてはならない。かつ配列の最初の要素が'strawberry pasta'であってはならない。
 ```
 
+### With your api server
+``` javascript
+import * as express from 'express';
+import it from 'cafy';
+import db from './mydb';
+
+const app = express();
+
+app.post('/create-account', (req, res) => {
+  // アカウント名は文字列で、30文字以内でなければならない。この値は必須である。
+  const [name, nameErr] = it(req.body.name).must.be.a.string().required().max(30).get();
+  if (nameErr) return res.status(400).send('invalid name');
+
+  // 年齢は数値で、0~100でなければならない。この値は必須である。
+  const [age, ageErr] = it(req.body.age).must.be.a.number().required().range(0,100).get();
+  if (ageErr) return res.status(400).send('invalid age');
+
+  // 性別は'male'か'female'かnull(=設定なし)でなければならない。省略した場合はnullとして扱う。
+  const [gender = null, genderErr] = it(req.body.gender).must.be.a.nullable.string().or('male female').get();
+  if (genderErr) return res.status(400).send('invalid gender');
+
+  db.insert({
+    name, age, gender
+  });
+
+  res.send('yee haw!');
+});
+```
+
 ### 規定値を設定する
 [Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
