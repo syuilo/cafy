@@ -1,7 +1,7 @@
 import Query from '../query';
 import Validator from '../validator';
 
-export default  class BooleanQuery extends Query {
+export default class BooleanQuery extends Query {
 	value: boolean;
 	error: Error;
 

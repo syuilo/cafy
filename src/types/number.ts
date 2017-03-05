@@ -1,7 +1,7 @@
 import Query from '../query';
 import Validator from '../validator';
 
-export default  class NumberQuery extends Query {
+export default class NumberQuery extends Query {
 	value: number;
 	error: Error;
 

@@ -2,7 +2,7 @@ import * as mongo from 'mongodb';
 import Query from '../query';
 import Validator from '../validator';
 
-export default  class IdQuery extends Query {
+export default class IdQuery extends Query {
 	value: mongo.ObjectID;
 	error: Error;
 
