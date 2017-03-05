@@ -100,18 +100,23 @@ describe('Queries', () => {
 		});
 
 		describe('# or', () => {
-			it('文字列の配列を与えて検証できる', () => {
+			it('合致する文字列で成功 (配列)', () => {
 				const err = test('strawberry').expect.string().or(['strawberry', 'pasta']).check();
 				assert.equal(err, null);
 			});
 
-			it('キーワードをスペースで区切った文字列を与えて検証できる', () => {
+			it('合致しない文字列で失敗 (配列)', () => {
+				const err = test('alice').expect.string().or(['strawberry', 'pasta']).check();
+				assert.notEqual(err, null);
+			});
+
+			it('合致する文字列で成功 (文字列)', () => {
 				const err = test('strawberry').expect.string().or('strawberry pasta').check();
 				assert.equal(err, null);
 			});
 
-			it('合致しない文字列でエラー', () => {
-				const err = test('alice').expect.string().or(['strawberry', 'pasta']).check();
+			it('合致しない文字列で失敗 (文字列)', () => {
+				const err = test('alice').expect.string().or('strawberry pasta').check();
 				assert.notEqual(err, null);
 			});
 		});
