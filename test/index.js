@@ -263,6 +263,23 @@ describe('Queries', () => {
 				assert.notEqual(err, null);
 			});
 		});
+
+		describe('# validateEach', () => {
+			it('バリデータが true を返したら合格', () => {
+				const err = test([1, 2, 3]).expect.array().validateEach(() => true).check();
+				assert.equal(err, null);
+			});
+
+			it('バリデータが false を返したら失格', () => {
+				const err = test([1, 2, 3]).expect.array().validateEach(() => false).check();
+				assert.notEqual(err, null);
+			});
+
+			it('バリデータが Error を返したら失格', () => {
+				const err = test([1, 2, 3]).expect.array().validateEach(() => new Error('something')).check();
+				assert.notEqual(err, null);
+			});
+		});
 	});
 });
 

@@ -184,6 +184,10 @@ it(['a', 'b', 'c']).expect.array().unique().isValid;      // true
 it(['a', 'b', 'c', 'b']).expect.array().unique().isValid; // false
 ```
 
+#### `.validateEach(fn)` => `Query`
+要素ごとにカスタムのバリデーションを実行できます。
+引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
+
 ### Number
 #### `.int()` => `Query`
 整数でなければならないという制約を追加します。

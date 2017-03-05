@@ -88,4 +88,26 @@ export default class ArrayQuery extends Query {
 	validate(validator: Validator<any[]>) {
 		return super.validate(validator);
 	}
+
+	/**
+	 * 配列の各要素に対して妥当性を検証します
+	 * バリデータが false またはエラーを返した場合エラーにします
+	 * @param validator バリデータ
+	 */
+	@fx()
+	validateEach(validator: Validator<any>) {
+		this.value.some(x => {
+			const result = validator(x);
+			if (result === false) {
+				this.error = new Error('invalid-item');
+				return true;
+			} else if (result instanceof Error) {
+				this.error = result;
+				return true;
+			} else {
+				return false;
+			}
+		});
+		return this;
+	}
 }
