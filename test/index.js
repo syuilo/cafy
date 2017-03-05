@@ -82,6 +82,23 @@ describe('Common', () => {
 			assert.notEqual(err, null);
 		});
 	});
+
+	describe('# validate', () => {
+		it('バリデータが true を返したら合格', () => {
+			const err = test('strawberry pasta').expect.string().validate(() => true).check();
+			assert.equal(err, null);
+		});
+
+		it('バリデータが false を返したら失格', () => {
+			const err = test('strawberry pasta').expect.string().validate(() => false).check();
+			assert.notEqual(err, null);
+		});
+
+		it('バリデータが Error を返したら失格', () => {
+			const err = test('strawberry pasta').expect.string().validate(() => new Error('something')).check();
+			assert.notEqual(err, null);
+		});
+	});
 });
 
 describe('Queries', () => {
