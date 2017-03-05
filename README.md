@@ -114,7 +114,7 @@ it(x, 'string?')  // nullable
 it(x, 'string!?') // required nullable
 ```
 
-サポートされている型
+Supported types
 -----------------------------------------------
 * **array** ... e.g.`it(x).expect.array()...`
 * **boolean** ... e.g.`it(x).expect.boolean()...`
@@ -187,6 +187,15 @@ it(['a', 'b', 'c', 'b']).expect.array().unique().isValid; // false
 #### `.validateEach(fn)` => `Query`
 要素ごとにカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
+``` javascript
+it([1, 2, 3]).expect.array().validateEach(x => x < 4).isValid; // true
+it([1, 4, 3]).expect.array().validateEach(x => x < 4).isValid; // false
+```
+
+cafyの入れ子
+``` javascript
+it(x).expect.array().validateEach(x => it(x).expect.string().required().range(0, 100).isValid);
+```
 
 ### Number
 #### `.int()` => `Query`
