@@ -98,6 +98,23 @@ describe('Queries', () => {
 			const [val, err] = test(x).expect.string().get();
 			assert.notEqual(err, null);
 		});
+
+		describe('# or', () => {
+			it('文字列の配列を与えて検証できる', () => {
+				const err = test('strawberry').expect.string().or(['strawberry', 'pasta']).check();
+				assert.equal(err, null);
+			});
+
+			it('キーワードをスペースで区切った文字列を与えて検証できる', () => {
+				const err = test('strawberry').expect.string().or('strawberry pasta').check();
+				assert.equal(err, null);
+			});
+
+			it('合致しない文字列でエラー', () => {
+				const err = test('alice').expect.string().or(['strawberry', 'pasta']).check();
+				assert.notEqual(err, null);
+			});
+		});
 	});
 });
 
