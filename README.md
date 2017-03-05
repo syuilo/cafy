@@ -52,8 +52,8 @@ app.post('/create-account', (req, res) => {
   const [name, nameErr] = it(req.body.name).must.be.a.string().required().max(30).get();
   if (nameErr) return res.status(400).send('invalid name');
 
-  // 年齢は数値で、0~100でなければならない。この値は必須である。
-  const [age, ageErr] = it(req.body.age).must.be.a.number().required().range(0,100).get();
+  // 年齢は数値で、0~100の整数でなければならない。この値は必須である。
+  const [age, ageErr] = it(req.body.age).must.be.a.number().required().int().range(0,100).get();
   if (ageErr) return res.status(400).send('invalid age');
 
   // 性別は'male'か'female'かnull(=設定なし)でなければならない。省略した場合はnullとして扱う。
