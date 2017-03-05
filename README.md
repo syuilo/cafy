@@ -71,6 +71,13 @@ const err = it(x).expect.string().required().check();
 const err = it(x).must.be.a.nullable.string().required().check();
 ```
 
+|   | undefined | null |
+| -:|:---------:|:----:|
+| default | o | x |
+| required | x | x |
+| nullable | o | o |
+| required+nullable | x | o |
+
 API
 -----------------------------------------------
 ℹ️ 返り値が`Query`と表記されているものは、そのあとにメソッドチェーンを
