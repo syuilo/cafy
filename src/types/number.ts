@@ -1,9 +1,7 @@
 import { Query, fx } from '../query';
 import Validator from '../validator';
 
-export default class NumberQuery extends Query {
-	value: number;
-	error: Error;
+export default class NumberQuery extends Query<number> {
 
 	constructor(value: any, nullable: boolean = false) {
 		super(value, nullable);
@@ -57,21 +55,5 @@ export default class NumberQuery extends Query {
 			this.error = new Error('must-be-an-intager');
 		}
 		return this;
-	}
-
-	/**
-	 * このインスタンスの値およびエラーを取得します
-	 */
-	get(): [number, Error] {
-		return super.get();
-	}
-
-	/**
-	 * このインスタンスの値に対して妥当性を検証します
-	 * バリデータが false またはエラーを返した場合エラーにします
-	 * @param validator バリデータ
-	 */
-	validate(validator: Validator<number>) {
-		return super.validate(validator);
 	}
 }

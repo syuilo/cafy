@@ -12,8 +12,8 @@ function fx() {
 /**
  * クエリベース
  */
-abstract class Query {
-	protected value: any;
+abstract class Query<T> {
+	protected value: T;
 	protected error: Error;
 
 	constructor(value: any, nullable: boolean = false) {
@@ -65,7 +65,7 @@ abstract class Query {
 	/**
 	 * このインスタンスの値およびエラーを取得します
 	 */
-	get(): [any, Error] {
+	get(): [T, Error] {
 		return [this.value, this.error];
 	}
 
@@ -82,7 +82,7 @@ abstract class Query {
 	 * @param validator バリデータ
 	 */
 	@fx()
-	validate(validator: Validator<any>) {
+	validate(validator: Validator<T>) {
 		const result = validator(this.value);
 		if (result === false) {
 			this.error = new Error('invalid-format');

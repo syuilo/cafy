@@ -3,9 +3,7 @@ import Validator from '../validator';
 
 const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 
-export default class ArrayQuery extends Query {
-	value: any[];
-	error: Error;
+export default class ArrayQuery extends Query<any[]> {
 
 	constructor(value: any, nullable: boolean = false) {
 		super(value, nullable);
@@ -71,22 +69,6 @@ export default class ArrayQuery extends Query {
 			this.error = new Error('dirty-array');
 		}
 		return this;
-	}
-
-	/**
-	 * このインスタンスの値およびエラーを取得します
-	 */
-	get(): [any[], Error] {
-		return super.get();
-	}
-
-	/**
-	 * このインスタンスの値に対して妥当性を検証します
-	 * バリデータが false またはエラーを返した場合エラーにします
-	 * @param validator バリデータ
-	 */
-	validate(validator: Validator<any[]>) {
-		return super.validate(validator);
 	}
 
 	/**
