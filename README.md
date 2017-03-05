@@ -164,6 +164,10 @@ it(['a', 'b', 'c']).expect.array().validate(x => x[1] != 'b').isValid // false
 #### `.unique()` => `Query`
 ユニークな配列(=重複した値を持っていない)でなければならないという制約を追加します。
 重複した要素がある場合エラーにします。
+``` javascript
+it(['a', 'b', 'c']).expect.array().unique().isValid;      // true
+it(['a', 'b', 'c', 'b']).expect.array().unique().isValid; // false
+```
 
 ### Number
 #### `.int()` => `Query`
