@@ -132,6 +132,11 @@ API
 #### `.required()` => `Query`
 テスト対象の値は省略してはならないことを示します。
 省略された場合エラーにします。
+``` javascript
+it('strawberry pasta').expect.string().required().isValid // true
+it(null).expect.string().required().isValid               // false
+it(undefined).expect.string().required().isValid          // false
+```
 
 #### `.validate(fn)` => `Query`
 カスタムのバリデーションを実行できます。
