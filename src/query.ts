@@ -61,6 +61,13 @@ abstract class Query {
 	}
 
 	/**
+	 * このインスタンスのエラーを取得します
+	 */
+	check(): Error {
+		return this.error;
+	}
+
+	/**
 	 * このインスタンスの値に対して妥当性を検証します
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
