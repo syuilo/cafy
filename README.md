@@ -3,12 +3,15 @@ cafy
 > Simple, fun, flexible query-based validator
 
 cafyは、アサーションのようにメソッドチェーンで値のバリデーションを行うライブラリです。
+[Try it out!](https://runkit.com/npm/cafy)
 
 [![][npm-badge]][npm-link]
 [![][mit-badge]][mit]
 [![][travis-badge]][travis-link]
 [![][himawari-badge]][himasaku]
 [![][sakurako-badge]][himasaku]
+
+[![NPM](https://nodei.co/npm/cafy.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/cafy)
 
 Installation
 -----------------------------------------------
