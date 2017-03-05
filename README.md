@@ -27,13 +27,15 @@ cafy(value)[.anyQueries()...]
 ``` javascript
 import it from 'cafy';
 
-const [val, err] = it(x).must.be.a.string().or('asc desc').get();
+const x = 42;
+
+const err1 = it(x).must.be.a.string().or('asc desc').check();
 //→ xは文字列でなければならず、'asc'または'desc'でなければならない。
 
-const err = it(x).must.be.a.number().required().range(0, 100).check();
+const err2 = it(x).must.be.a.number().required().range(0, 100).check();
 //→ xは数値でなければならず、かつ0~100の範囲内でなければならない。この値は省略することはできない。
 
-const err = it(x).must.be.an.array().unique().required().validate(x => x[0] != 'strawberry pasta').check();
+const err3 = it(x).must.be.an.array().unique().required().validate(x => x[0] != 'strawberry pasta').check();
 //→ xは配列でなければならず、かつ中身が重複していてはならない。この値を省略することはできない。そして配列の最初の要素が'strawberry pasta'という文字列であってはならない。
 ```
 
