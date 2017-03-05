@@ -188,6 +188,30 @@ describe('Queries', () => {
 				assert.notEqual(err, null);
 			});
 		});
+
+		describe('# min', () => {
+			it('しきい値より大きくて成功', () => {
+				const err = test(50).expect.number().min(42).check();
+				assert.equal(err, null);
+			});
+
+			it('しきい値より小さくて失敗', () => {
+				const err = test(30).expect.number().min(42).check();
+				assert.notEqual(err, null);
+			});
+		});
+
+		describe('# max', () => {
+			it('しきい値より小さくて成功', () => {
+				const err = test(30).expect.number().max(42).check();
+				assert.equal(err, null);
+			});
+
+			it('しきい値より大きくて失敗', () => {
+				const err = test(50).expect.number().max(42).check();
+				assert.notEqual(err, null);
+			});
+		});
 	});
 
 	describe('Array', () => {
@@ -212,6 +236,30 @@ describe('Queries', () => {
 
 			it('重複した要素が有って不合格', () => {
 				const err = test(['a', 'b', 'c', 'b']).expect.array().unique().check();
+				assert.notEqual(err, null);
+			});
+		});
+
+		describe('# min', () => {
+			it('しきい値より長くて成功', () => {
+				const err = test([1, 2, 3, 4]).expect.array().min(3).check();
+				assert.equal(err, null);
+			});
+
+			it('しきい値より短くて失敗', () => {
+				const err = test([1, 2]).expect.array().min(3).check();
+				assert.notEqual(err, null);
+			});
+		});
+
+		describe('# max', () => {
+			it('しきい値より短くて成功', () => {
+				const err = test([1, 2]).expect.array().max(3).check();
+				assert.equal(err, null);
+			});
+
+			it('しきい値より長くて失敗', () => {
+				const err = test([1, 2, 3, 4]).expect.array().max(3).check();
 				assert.notEqual(err, null);
 			});
 		});

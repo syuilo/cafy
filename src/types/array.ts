@@ -32,7 +32,30 @@ export default class ArrayQuery extends Query {
 	 */
 	@fx()
 	range(min: number, max: number) {
-		if (this.value.length < min || this.value.length > max) {
+		this.min(min);
+		this.max(max);
+		return this;
+	}
+
+	/**
+	 * 配列の長さが指定された下限より下回っている場合エラーにします
+	 * @param threshold 下限
+	 */
+	@fx()
+	min(threshold: number) {
+		if (this.value.length < threshold) {
+			this.error = new Error('invalid-range');
+		}
+		return this;
+	}
+
+	/**
+	 * 配列の長さが指定された上限より上回っている場合エラーにします
+	 * @param threshold 上限
+	 */
+	@fx()
+	max(threshold: number) {
+		if (this.value.length > threshold) {
 			this.error = new Error('invalid-range');
 		}
 		return this;

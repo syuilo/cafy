@@ -157,9 +157,24 @@ it(['a', 'b', 'c']).expect.array().validate(x => x[1] != 'b').isValid // false
 テストに合格したかどうかを取得します。
 
 ### Array
+#### `.min(threshold)` => `Query`
+要素の数が`threshold`以上でなければならないという制約を追加します。
+要素数が`threshold`を下回る場合エラーにします。
+
+#### `.max(threshold)` => `Query`
+要素の数が`threshold`以下でなければならないという制約を追加します。
+要素数が`threshold`を上回る場合エラーにします。
+
 #### `.range(min, max)` => `Query`
 `min`以上`max`以下の数の要素を持っていなければならないという制約を追加します。
 要素数が指定された範囲内にない場合エラーにします。
+``` javascript
+it(['a', 'b', 'c']).expect.range(2, 5).isValid;                // true
+it(['a', 'b', 'c', 'd', 'e', 'f']).expect.range(2, 5).isValid; // false
+it(['a']).expect.range(2, 5).isValid;                          // false
+```
+
+ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
 
 #### `.unique()` => `Query`
 ユニークな配列(=重複した値を持っていない)でなければならないという制約を追加します。
