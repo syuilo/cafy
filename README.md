@@ -190,6 +190,11 @@ it(Infinity).expect.number().int().isValid; // false
 与えられたパターン内の文字列のいずれかでなければならないという制約を追加します。
 `pattern`は文字列の配列またはスペースで区切られた文字列です。
 どれとも一致しない場合エラーにします。
+``` javascript
+it('strawberry').expect.string().or(['strawberry', 'pasta']).isValid // true
+it('alice').expect.string().or(['strawberry', 'pasta']).isValid      // false
+it('pasta').expect.string().or(['strawberry pasta']).isValid         // true
+```
 
 #### `.min(threshold)` => `Query`
 `threshold`以上の文字数でなければならないという制約を追加します。
