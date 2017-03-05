@@ -51,14 +51,83 @@ describe('StringQuery', () => {
 });
 
 describe('syntax sugger', () => {
-	it('?無しでnull禁止', () => {
-		const [val, err] = check(null, 'string').get();
-		assert.notEqual(err, null);
+	describe('default', () => {
+		it('値を与えられる', () => {
+			const x = 'strawberry pasta';
+			const [val, err] = check(x, 'string').get();
+			assert.equal(val, x);
+			assert.equal(err, null);
+		});
+
+		it('null不可', () => {
+			const [, err] = check(null, 'string').get();
+			assert.notEqual(err, null);
+		});
+
+		it('undefined可', () => {
+			const [val, err] = check(undefined, 'string').get();
+			assert.equal(val, undefined);
+			assert.equal(err, null);
+		});
 	});
 
-	it('?付きでnullable', () => {
-		const [val, err] = check(null, 'string?').get();
-		assert.equal(val, null);
-		assert.equal(err, null);
+	describe('required (!)', () => {
+		it('値を与えられる', () => {
+			const x = 'strawberry pasta';
+			const [val, err] = check(x, 'string!').get();
+			assert.equal(val, x);
+			assert.equal(err, null);
+		});
+
+		it('null不可', () => {
+			const [, err] = check(null, 'string!').get();
+			assert.notEqual(err, null);
+		});
+
+		it('undefined不可', () => {
+			const [, err] = check(undefined, 'string!').get();
+			assert.notEqual(err, null);
+		});
+	});
+
+	describe('nullable (?)', () => {
+		it('値を与えられる', () => {
+			const x = 'strawberry pasta';
+			const [val, err] = check(x, 'string?').get();
+			assert.equal(val, x);
+			assert.equal(err, null);
+		});
+
+		it('null可', () => {
+			const [val, err] = check(null, 'string?').get();
+			assert.equal(val, null);
+			assert.equal(err, null);
+		});
+
+		it('undefined可', () => {
+			const [val, err] = check(undefined, 'string?').get();
+			assert.equal(val, undefined);
+			assert.equal(err, null);
+		});
+	});
+
+	describe('required+nullable (!?)', () => {
+		it('値を与えられる', () => {
+			const x = 'strawberry pasta';
+			const [val, err] = check(x, 'string!?').get();
+			assert.equal(val, x);
+			assert.equal(err, null);
+		});
+
+		it('null可', () => {
+			const [val, err] = check(null, 'string!?').get();
+			assert.equal(val, null);
+			assert.equal(err, null);
+		});
+
+		it('undefined不可', () => {
+			const [, err] = check(undefined, 'string!?').get();
+			assert.notEqual(err, null);
+		});
 	});
 });
