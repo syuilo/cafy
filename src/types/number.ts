@@ -27,11 +27,11 @@ export default class NumberQuery extends Query {
 
 	/**
 	 * このインスタンスの値が指定された下限より下回っている場合エラーにします
-	 * @param value 下限
+	 * @param threshold 下限
 	 */
 	@fx()
-	min(value: number) {
-		if (this.value < value) {
+	min(threshold: number) {
+		if (this.value < threshold) {
 			this.error = new Error('invalid-range');
 		}
 		return this;
@@ -39,11 +39,11 @@ export default class NumberQuery extends Query {
 
 	/**
 	 * このインスタンスの値が指定された上限より上回っている場合エラーにします
-	 * @param value 上限
+	 * @param threshold 上限
 	 */
 	@fx()
-	max(value: number) {
-		if (this.value > value) {
+	max(threshold: number) {
+		if (this.value > threshold) {
 			this.error = new Error('invalid-range');
 		}
 		return this;
