@@ -35,8 +35,8 @@ const err1 = it(x).must.be.a.string().or('asc desc').check();
 const err2 = it(x).must.be.a.number().required().range(0, 100).check();
 //→ xは数値でなければならず、かつ0~100の範囲内でなければならない。この値は省略することはできない。
 
-const err3 = it(x).must.be.an.array().unique().required().validate(x => x[0] != 'strawberry pasta').check();
-//→ xは配列でなければならず、かつ中身が重複していてはならない。この値を省略することはできない。そして配列の最初の要素が'strawberry pasta'という文字列であってはならない。
+const err3 = it(x).must.be.an.array().unique().validate(x => x[0] != 'strawberry pasta').check();
+//→ xは配列でなければならず、かつ中身が重複していてはならない。かつ配列の最初の要素が'strawberry pasta'であってはならない。
 ```
 
 ### 規定値を設定する
