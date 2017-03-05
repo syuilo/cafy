@@ -71,8 +71,8 @@ const err = it(x).expect.string().required().check();
 const err = it(x).must.be.a.nullable.string().required().check();
 ```
 
-|   | undefined | null |
-| -:|:---------:|:----:|
+|     | undefined | null |
+| ---:|:---------:|:----:|
 | default | o | x |
 | required | x | x |
 | nullable | o | o |
