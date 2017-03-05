@@ -4,8 +4,7 @@ function fx() {
 	return function(target, key: string, descripter: PropertyDescriptor) {
 		const original = descripter.value;
 		descripter.value = function(...args) {
-			if (!this.shouldSkip) original.call(this, ...args);
-			return this;
+			return this.shouldSkip ? this : original.call(this, ...args);
 		};
 	};
 }
