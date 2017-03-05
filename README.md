@@ -114,6 +114,15 @@ it(x, 'string?')  // nullable
 it(x, 'string!?') // required nullable
 ```
 
+サポートされている型
+-----------------------------------------------
+* **array** ... e.g.`it(x).expect.array()...`
+* **boolean** ... e.g.`it(x).expect.boolean()...`
+* **number** ... e.g.`it(x).expect.number()...`
+* **object** ... e.g.`it(x).expect.object()...`
+* **string** ... e.g.`it(x).expect.string()...`
+* **ObjectID** (MongoDB) ... e.g.`it(x).expect.id()...`
+
 API
 -----------------------------------------------
 ℹ️ 返り値が`Query`と表記されているものは、そのあとにメソッドチェーンを
