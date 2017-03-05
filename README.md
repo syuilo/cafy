@@ -85,12 +85,12 @@ const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
 const err = it(x).must.be.a.nullable.string().required().check();
 ```
 
-|     | undefined | null |
-| ---:|:---------:|:----:|
-| default | o | x |
-| required | x | x |
-| nullable | o | o |
-| required+nullable | x | o |
+|                     | undefined | null |
+| -------------------:|:---------:|:----:|
+| default             | o         | x    |
+| required            | x         | x    |
+| nullable            | o         | o    |
+| required + nullable | x         | o    |
 
 ### BDD風記法
 `must.be.a(n)`の代わりに`expect`とも書けます:
@@ -127,6 +127,10 @@ API
 #### `.validate(fn)` => `Query`
 カスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
+``` javascript
+it('strawberry pasta').expect.string().validate(x => x.indexOf('alice') == -1).isValid // true
+it(['a', 'b', 'c']).expect.array().validate(x => x[1] != 'b').isValid // false
+```
 
 #### `.get()` => `[any, Error]`
 テスト対象の値とテスト結果の配列を取得します。
