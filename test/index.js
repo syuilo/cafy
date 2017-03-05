@@ -189,6 +189,33 @@ describe('Queries', () => {
 			});
 		});
 	});
+
+	describe('Array', () => {
+		it('正当な値を与える', () => {
+			const x = [1, 2, 3];
+			const [val, err] = test(x).expect.array().get();
+			assert.equal(val, x);
+			assert.equal(err, null);
+		});
+
+		it('配列以外でエラー', () => {
+			const x = 'strawberry pasta';
+			const [val, err] = test(x).expect.array().get();
+			assert.notEqual(err, null);
+		});
+
+		describe('# unique', () => {
+			it('ユニークで合格', () => {
+				const err = test(['a', 'b', 'c']).expect.array().unique().check();
+				assert.equal(err, null);
+			});
+
+			it('重複した要素が有って不合格', () => {
+				const err = test(['a', 'b', 'c', 'b']).expect.array().unique().check();
+				assert.notEqual(err, null);
+			});
+		});
+	});
 });
 
 describe('syntax sugger', () => {
