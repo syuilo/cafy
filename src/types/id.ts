@@ -1,5 +1,5 @@
 import * as mongo from 'mongodb';
-import Query from '../query';
+import { Query, fx } from '../query';
 import Validator from '../validator';
 
 export default class IdQuery extends Query {

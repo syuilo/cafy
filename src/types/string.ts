@@ -1,4 +1,4 @@
-import Query from '../query';
+import { Query, fx } from '../query';
 import Validator from '../validator';
 
 export default class StringQuery extends Query {
@@ -17,16 +17,16 @@ export default class StringQuery extends Query {
 	 * @param min 下限
 	 * @param max 上限
 	 */
+	@fx()
 	range(min: number, max: number) {
-		if (this.shouldSkip) return this;
 		if (this.value.length < min || this.value.length > max) {
 			this.error = new Error('invalid-range');
 		}
 		return this;
 	}
 
+	@fx()
 	trim() {
-		if (this.shouldSkip) return this;
 		this.value = this.value.trim();
 		return this;
 	}
@@ -52,8 +52,8 @@ export default class StringQuery extends Query {
 	 * どれとも一致しない場合エラーにします
 	 * @param pattern 文字列の配列またはスペースで区切られた文字列
 	 */
+	@fx()
 	or(pattern: string | string[]) {
-		if (this.shouldSkip) return this;
 		if (typeof pattern == 'string') pattern = pattern.split(' ');
 		const match = pattern.some(x => x === this.value);
 		if (!match) this.error = new Error('not-match-pattern');
@@ -65,8 +65,8 @@ export default class StringQuery extends Query {
 	 * 一致しない場合エラーにします
 	 * @param pattern 正規表現
 	 */
+	@fx()
 	match(pattern: RegExp) {
-		if (this.shouldSkip) return this;
 		if (!pattern.test(this.value)) this.error = new Error('not-match-pattern');
 		return this;
 	}

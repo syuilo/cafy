@@ -1,4 +1,4 @@
-import Query from '../query';
+import { Query, fx } from '../query';
 import Validator from '../validator';
 
 const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
@@ -17,8 +17,8 @@ export default class ArrayQuery extends Query {
 	/**
 	 * 配列の値がユニークでない場合(=重複した項目がある場合)エラーにします
 	 */
+	@fx()
 	unique() {
-		if (this.shouldSkip) return this;
 		if (hasDuplicates(this.value)) {
 			this.error = new Error('must-be-unique');
 		}
@@ -30,8 +30,8 @@ export default class ArrayQuery extends Query {
 	 * @param min 下限
 	 * @param max 上限
 	 */
+	@fx()
 	range(min: number, max: number) {
-		if (this.shouldSkip) return this;
 		if (this.value.length < min || this.value.length > max) {
 			this.error = new Error('invalid-range');
 		}
@@ -42,8 +42,8 @@ export default class ArrayQuery extends Query {
 	 * このインスタンスの配列内の要素すべてが文字列であるか検証します
 	 * ひとつでも文字列以外の要素が存在する場合エラーにします
 	 */
+	@fx()
 	allString() {
-		if (this.shouldSkip) return this;
 		if (this.value.some(x => typeof x != 'string')) {
 			this.error = new Error('dirty-array');
 		}

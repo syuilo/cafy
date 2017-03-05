@@ -1,5 +1,15 @@
 import Validator from './validator';
 
+function fx() {
+	return function(target, key: string, descripter: PropertyDescriptor) {
+		const original = descripter.value;
+		descripter.value = function(...args) {
+			if (!this.shouldSkip) original.call(this, ...args);
+			return this;
+		};
+	};
+}
+
 /**
  * クエリベース
  */
@@ -72,8 +82,8 @@ abstract class Query {
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
 	 */
+	@fx()
 	validate(validator: Validator<any>) {
-		if (this.shouldSkip) return this;
 		const result = validator(this.value);
 		if (result === false) {
 			this.error = new Error('invalid-format');
@@ -84,4 +94,7 @@ abstract class Query {
 	}
 }
 
-export default Query;
+export {
+	Query,
+	fx
+};

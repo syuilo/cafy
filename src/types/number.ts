@@ -1,4 +1,4 @@
-import Query from '../query';
+import { Query, fx } from '../query';
 import Validator from '../validator';
 
 export default class NumberQuery extends Query {
@@ -17,8 +17,8 @@ export default class NumberQuery extends Query {
 	 * @param min 下限
 	 * @param max 上限
 	 */
+	@fx()
 	range(min: number, max: number) {
-		if (this.shouldSkip) return this;
 		if (this.value < min || this.value > max) {
 			this.error = new Error('invalid-range');
 		}
@@ -29,8 +29,8 @@ export default class NumberQuery extends Query {
 	 * このインスタンスの値が指定された下限より下回っている場合エラーにします
 	 * @param value 下限
 	 */
+	@fx()
 	min(value: number) {
-		if (this.shouldSkip) return this;
 		if (this.value < value) {
 			this.error = new Error('invalid-range');
 		}
@@ -41,8 +41,8 @@ export default class NumberQuery extends Query {
 	 * このインスタンスの値が指定された上限より上回っている場合エラーにします
 	 * @param value 上限
 	 */
+	@fx()
 	max(value: number) {
-		if (this.shouldSkip) return this;
 		if (this.value > value) {
 			this.error = new Error('invalid-range');
 		}
