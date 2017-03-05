@@ -121,6 +121,33 @@ describe('Queries', () => {
 			});
 		});
 	});
+
+	describe('Number', () => {
+		it('正当な値を与える', () => {
+			const x = 42;
+			const [val, err] = test(x).expect.number().get();
+			assert.equal(val, x);
+			assert.equal(err, null);
+		});
+
+		it('数値以外でエラー', () => {
+			const x = 'strawberry pasta';
+			const [val, err] = test(x).expect.number().get();
+			assert.notEqual(err, null);
+		});
+
+		describe('# int', () => {
+			it('整数で合格', () => {
+				const err = test(42).expect.number().int().check();
+				assert.equal(err, null);
+			});
+
+			it('非整数で不合格', () => {
+				const err = test(3.14).expect.number().int().check();
+				assert.notEqual(err, null);
+			});
+		});
+	});
 });
 
 describe('syntax sugger', () => {

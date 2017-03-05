@@ -144,6 +144,21 @@ API
 重複した要素がある場合エラーにします。
 
 ### Number
+#### `.int()` => `Query`
+整数でなければならないという制約を追加します。
+整数でない場合エラーにします。
+``` javascript
+it(0).expect.number().int().isValid;        // true
+it(1).expect.number().int().isValid;        // true
+it(-100).expect.number().int().isValid;     // true
+
+it(0.1).expect.number().int().isValid;      // false
+it(Math.PI).expect.number().int().isValid;  // false
+
+it(NaN).expect.number().int().isValid;      // false
+it(Infinity).expect.number().int().isValid; // false
+```
+
 #### `.min(threshold)` => `Query`
 `threshold`以上の数値でなければならないという制約を追加します。
 値が`threshold`を下回る場合エラーにします。

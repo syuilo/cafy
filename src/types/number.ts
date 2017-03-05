@@ -50,6 +50,17 @@ export default class NumberQuery extends Query {
 	}
 
 	/**
+	 * このインスタンスの値が整数でなければエラーにします
+	 */
+	@fx()
+	int() {
+		if (!Number.isInteger(this.value)) {
+			this.error = new Error('must-be-an-intager');
+		}
+		return this;
+	}
+
+	/**
 	 * このインスタンスの値およびエラーを取得します
 	 */
 	get(): [number, Error] {
