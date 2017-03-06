@@ -83,6 +83,12 @@ it(null).string().isValid() // <= false
 it(null).nullable.string().isValid() // <= true
 ```
 
+### null と undefined を許可する
+`nullable`と`optional`は併用できます:
+``` javascript
+it(x).nullable.optional.string()
+```
+
 |                     | undefined | null |
 | -------------------:|:---------:|:----:|
 | default             | x         | x    |
