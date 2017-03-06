@@ -97,6 +97,17 @@ it(x).nullable.optional.string()
 | nullable            | x         | o    |
 | optional + nullable | o         | o    |
 
+### 遅延検証
+cafyの引数を省略することで、後から値を検証するバリデータになります:
+``` javascript
+it().number().range(30, 50)
+```
+`test`メソッドに値を与えて検証します:
+``` javascript
+it().number().range(30, 50).test(42) // <= null
+```
+`test`メソッドはバリデーションに合格した場合は`null`を、失格した場合は`Error`を返します。
+
 Tips
 -----------------------------------------------
 ### 規定値を設定する
