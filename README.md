@@ -68,7 +68,7 @@ Supported types
 it(x).expect.array('string');
 ```
 
-### 値を必須にする
+### 値を必須にする (required)
 デフォルトでcafyは、値を省略(=`undefined`)することを許可しています:
 ``` javascript
 it(undefined).expect.string().isValid // <= true
@@ -78,16 +78,17 @@ it(undefined).expect.string().isValid // <= true
 it(undefined).expect.string().required().isValid // <= false
 ```
 
-### null を許可する
+### null を許可する (nullable)
 デフォルトで`null`はエラーになります:
 ``` javascript
-it(null).expect.string().isValid; // <= false
+it(null).expect.string().isValid // <= false
 ```
 `null`を許可する場合は`nullable`をプリフィックスします:
 ``` javascript
-it(null).expect.nullable.string().isValid; // <= true
+it(null).expect.nullable.string().isValid // <= true
 ```
 
+### 要するに...
 |                     | undefined | null |
 | -------------------:|:---------:|:----:|
 | default             | o         | x    |
