@@ -1,5 +1,4 @@
 import { Query, fx } from '../query';
-import Validator from '../validator';
 
 const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 

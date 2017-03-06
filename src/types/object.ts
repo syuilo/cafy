@@ -1,5 +1,4 @@
 import { Query, fx } from '../query';
-import Validator from '../validator';
 
 export default class ObjectQuery extends Query<any> {
 

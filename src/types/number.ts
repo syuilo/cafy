@@ -1,5 +1,4 @@
 import { Query, fx } from '../query';
-import Validator from '../validator';
 
 export default class NumberQuery extends Query<number> {
 
