@@ -30,11 +30,11 @@ cafy(value)[.anyQueries()...]
 ``` javascript
 it(x).must.be.a.string()
 ```
-「10文字以上100文字以下でなければならない」という制約を追加してみましょう:
+`range`メソッドを利用して、「10文字以上100文字以下でなければならない」という制約を追加してみましょう:
 ``` javascript
 it(x).must.be.a.string().range(10, 100)
 ```
-検証結果の取得は`isValid`プロパティを利用できます:
+検証結果の取得は`isValid`プロパティなどを利用できます:
 ``` javascript
 const x = 'strawberry pasta';
 const xIsValid = it(x).must.be.a.string().range(10, 100).isValid; // => true
@@ -43,8 +43,18 @@ const y = 'alice';
 const yIsValid = it(y).must.be.a.string().range(10, 100).isValid; // => false
 ```
 
+`must.be.a(n)`の代わりに`expect`とも書けます:
+``` javascript
+it(x).expect.string().range(10, 100)
+```
+
+どんな型のバリデータにどんなメソッドがあるかはAPIのセクションを見てみてください！
+
+---
+
+もちろん文字列以外にも、次の型をサポートしています:
+
 Supported types
------------------------------------------------
 * **array** ... e.g.`it(x).expect.array()...`
 * **boolean** ... e.g.`it(x).expect.boolean()...`
 * **number** ... e.g.`it(x).expect.number()...`
@@ -53,6 +63,7 @@ Supported types
 * **ObjectID** (MongoDB) ... e.g.`it(x).expect.id()...`
 
 ### 配列の要素の型を指定する
+配列の要素がどんな型でなければならないか指定することもできます:
 ``` javascript
 it(x).expect.array('string');
 ```
@@ -74,21 +85,6 @@ const err = it(x).must.be.a.nullable.string().required().check();
 | nullable            | o         | o    |
 | required + nullable | x         | o    |
 
-Tips
------------------------------------------------
-### 規定値を設定する
-[Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
-``` javascript
-const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
-//→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
-```
-
-### BDD風記法
-`must.be.a(n)`の代わりに`expect`とも書けます:
-``` javascript
-const err = it(x).expect.string().required().check();
-```
-
 ### 糖衣構文
 次のコード:
 ``` javascript
@@ -103,6 +99,15 @@ it(x, 'string')   // default
 it(x, 'string!')  // required
 it(x, 'string?')  // nullable
 it(x, 'string!?') // required nullable
+```
+
+Tips
+-----------------------------------------------
+### 規定値を設定する
+[Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
+``` javascript
+const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
+//→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
 API
