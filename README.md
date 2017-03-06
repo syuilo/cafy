@@ -26,11 +26,11 @@ cafy(value)[.anyQueries()...]
 まずその値がどんな型でなければならないかを示し、
 そのあとに追加の制約をメソッドチェーンで追加していくスタイルです。
 
-たとえば「`x`は文字列でなければならない」はこう書きます(`import it from 'cafy';`している前提です):
+たとえば*「`x`は文字列でなければならない」*はこう書きます(`import it from 'cafy';`している前提です):
 ``` javascript
 it(x).string()
 ```
-`range`メソッドを利用して、「10文字以上100文字以下でなければならない」という制約を追加してみましょう:
+`range`メソッドを利用して、*「10文字以上100文字以下でなければならない」*という制約を追加してみましょう:
 ``` javascript
 it(x).string().range(10, 100)
 ```
@@ -64,7 +64,7 @@ it(x).array('string');
 ```
 
 ### null と undefined の扱い
-#### undefined を許可する (optional)
+#### undefined を許可する *(optional)*
 デフォルトで`undefined`はエラーになります:
 ``` javascript
 it(undefined).string().isValid // <= false
@@ -74,7 +74,7 @@ it(undefined).string().isValid // <= false
 it(undefined).optional.string().isValid // <= true
 ```
 
-#### null を許可する (nullable)
+#### null を許可する *(nullable)*
 デフォルトで`null`はエラーになります:
 ``` javascript
 it(null).string().isValid // <= false
@@ -258,15 +258,15 @@ const app = express();
 
 app.post('/create-account', (req, res) => {
   // アカウント名は文字列で、30文字以内でなければならない。この値は必須である。
-  const [name, nameErr] = it(req.body.name).string().max(30).get();
+  const [name, nameErr] = it(req.body.name).string().max(30).$;
   if (nameErr) return res.status(400).send('invalid name');
 
   // 年齢は数値で、0~100の整数でなければならない。この値は必須である。
-  const [age, ageErr] = it(req.body.age).number().int().range(0,100).get();
+  const [age, ageErr] = it(req.body.age).number().int().range(0,100).$;
   if (ageErr) return res.status(400).send('invalid age');
 
   // 性別は'male'か'female'かnull(=設定なし)でなければならない。省略した場合はnullとして扱う。
-  const [gender = null, genderErr] = it(req.body.gender).nullable.optional.string().or('male female').get();
+  const [gender = null, genderErr] = it(req.body.gender).nullable.optional.string().or('male female').$;
   if (genderErr) return res.status(400).send('invalid gender');
 
   db.insert({
