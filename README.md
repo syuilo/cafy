@@ -159,17 +159,17 @@ it(['a', 'b', 'c']).array().unique().isValid()      // true
 it(['a', 'b', 'c', 'b']).array().unique().isValid() // false
 ```
 
-#### `.validateEach(fn)` => `Query`
+#### `.each(fn)` => `Query`
 各要素に対してカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 ``` javascript
-it([1, 2, 3]).array().validateEach(x => x < 4).isValid() // true
-it([1, 4, 3]).array().validateEach(x => x < 4).isValid() // false
+it([1, 2, 3]).array().each(x => x < 4).isValid() // true
+it([1, 4, 3]).array().each(x => x < 4).isValid() // false
 ```
 
 cafyの入れ子:
 ``` javascript
-const xsIsValid = it(xs).array().validateEach(it().string().range(0, 100).test).isValid();
+const xsIsValid = it(xs).array().each(it().string().range(0, 100)).isValid();
 ```
 
 ### Number

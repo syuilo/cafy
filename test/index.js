@@ -40,12 +40,12 @@ describe('統合', () => {
 
 	describe('入れ子', () => {
 		it('正しく成功する', () => {
-			const err = f([1, 2, 3]).array().validateEach(f().number().range(0, 100).test).test();
+			const err = f([1, 2, 3]).array().each(f().number().range(0, 100)).test();
 			assert.equal(err, null);
 		});
 
 		it('正しく失敗する', () => {
-			const err = f([1, -1, 3]).array().validateEach(f().number().range(0, 100).test).test();
+			const err = f([1, -1, 3]).array().each(f().number().range(0, 100)).test();
 			assert.notEqual(err, null);
 		});
 	});
@@ -313,19 +313,19 @@ describe('Queries', () => {
 			});
 		});
 
-		describe('# validateEach', () => {
+		describe('# each', () => {
 			it('バリデータが true を返したら合格', () => {
-				const err = f([1, 2, 3]).array().validateEach(() => true).test();
+				const err = f([1, 2, 3]).array().each(() => true).test();
 				assert.equal(err, null);
 			});
 
 			it('バリデータが false を返したら失格', () => {
-				const err = f([1, 2, 3]).array().validateEach(() => false).test();
+				const err = f([1, 2, 3]).array().each(() => false).test();
 				assert.notEqual(err, null);
 			});
 
 			it('バリデータが Error を返したら失格', () => {
-				const err = f([1, 2, 3]).array().validateEach(() => new Error('something')).test();
+				const err = f([1, 2, 3]).array().each(() => new Error('something')).test();
 				assert.notEqual(err, null);
 			});
 		});

@@ -75,11 +75,12 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
 	 */
-	validateEach(validator: (element: T, index: number, array: T[]) => boolean | Error) {
+	each(validator: ((element: T, index: number, array: T[]) => boolean | Error) | Query<T>) {
+		const _validator = validator instanceof Query ? validator.test : validator;
 		this.pushValidator(v => {
 			let err: Error;
 			v.some((x, i, s) => {
-				const result = validator(x, i, s);
+				const result = _validator(x, i, s);
 				if (result === false) {
 					err = new Error('invalid-item');
 					return true;
