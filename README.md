@@ -26,56 +26,35 @@ cafy(value)[.anyQueries()...]
 まずその値がどんな型でなければならないかを示し、
 そのあとに追加の制約をメソッドチェーンで追加していくスタイルです。
 
-### Examples
+たとえば「`x`は文字列でなければならない」はこう書きます(`import it from 'cafy';`している前提です):
 ``` javascript
-import it from 'cafy';
+it(x).must.be.a.string()
+```
+「10文字以上100文字以下でなければならない」という制約を追加してみましょう:
+``` javascript
+it(x).must.be.a.string().range(10, 100)
+```
+検証結果の取得は`isValid`プロパティを利用できます:
+``` javascript
+const x = 'strawberry pasta';
+const xIsValid = it(x).must.be.a.string().range(10, 100).isValid; // => true
 
-const x = 42;
-
-const err1 = it(x).must.be.a.string().or('asc desc').check();
-//→ xは文字列でなければならず、'asc'または'desc'でなければならない。
-
-const err2 = it(x).must.be.a.number().required().range(0, 100).check();
-//→ xは数値でなければならず、かつ0~100の範囲内でなければならない。この値は省略することはできない。
-
-const err3 = it(x).must.be.an.array().unique().validate(x => x[0] != 'strawberry pasta').check();
-//→ xは配列でなければならず、かつ中身が重複していてはならない。かつ配列の最初の要素が'strawberry pasta'であってはならない。
+const y = 'alice';
+const yIsValid = it(y).must.be.a.string().range(10, 100).isValid; // => false
 ```
 
-### With your api server
+Supported types
+-----------------------------------------------
+* **array** ... e.g.`it(x).expect.array()...`
+* **boolean** ... e.g.`it(x).expect.boolean()...`
+* **number** ... e.g.`it(x).expect.number()...`
+* **object** ... e.g.`it(x).expect.object()...`
+* **string** ... e.g.`it(x).expect.string()...`
+* **ObjectID** (MongoDB) ... e.g.`it(x).expect.id()...`
+
+### 配列の要素の型を指定する
 ``` javascript
-import * as express from 'express';
-import it from 'cafy';
-import db from './mydb';
-
-const app = express();
-
-app.post('/create-account', (req, res) => {
-  // アカウント名は文字列で、30文字以内でなければならない。この値は必須である。
-  const [name, nameErr] = it(req.body.name).must.be.a.string().required().max(30).get();
-  if (nameErr) return res.status(400).send('invalid name');
-
-  // 年齢は数値で、0~100の整数でなければならない。この値は必須である。
-  const [age, ageErr] = it(req.body.age).must.be.a.number().required().int().range(0,100).get();
-  if (ageErr) return res.status(400).send('invalid age');
-
-  // 性別は'male'か'female'かnull(=設定なし)でなければならない。省略した場合はnullとして扱う。
-  const [gender = null, genderErr] = it(req.body.gender).must.be.a.nullable.string().or('male female').get();
-  if (genderErr) return res.status(400).send('invalid gender');
-
-  db.insert({
-    name, age, gender
-  });
-
-  res.send('yee haw!');
-});
-```
-
-### 規定値を設定する
-[Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
-``` javascript
-const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
-//→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
+it(x).expect.array('string');
 ```
 
 ### null と undefined の扱い
@@ -95,9 +74,13 @@ const err = it(x).must.be.a.nullable.string().required().check();
 | nullable            | o         | o    |
 | required + nullable | x         | o    |
 
-### 配列の要素の型を指定する
+Tips
+-----------------------------------------------
+### 規定値を設定する
+[Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
-it(x).expect.array('string');
+const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
+//→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
 ### BDD風記法
@@ -121,15 +104,6 @@ it(x, 'string!')  // required
 it(x, 'string?')  // nullable
 it(x, 'string!?') // required nullable
 ```
-
-Supported types
------------------------------------------------
-* **array** ... e.g.`it(x).expect.array()...`
-* **boolean** ... e.g.`it(x).expect.boolean()...`
-* **number** ... e.g.`it(x).expect.number()...`
-* **object** ... e.g.`it(x).expect.object()...`
-* **string** ... e.g.`it(x).expect.string()...`
-* **ObjectID** (MongoDB) ... e.g.`it(x).expect.id()...`
 
 API
 -----------------------------------------------
@@ -263,6 +237,52 @@ it('pasta').expect.string().or('strawberry pasta').isValid           // true
 文字数が指定された範囲内にない場合エラーにします。
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
+
+Examples
+-----------------------------------------------
+``` javascript
+import it from 'cafy';
+
+const x = 42;
+
+const err1 = it(x).must.be.a.string().or('asc desc').check();
+//→ xは文字列でなければならず、'asc'または'desc'でなければならない。
+
+const err2 = it(x).must.be.a.number().required().range(0, 100).check();
+//→ xは数値でなければならず、かつ0~100の範囲内でなければならない。この値は省略することはできない。
+
+const err3 = it(x).must.be.an.array().unique().validate(x => x[0] != 'strawberry pasta').check();
+//→ xは配列でなければならず、かつ中身が重複していてはならない。かつ配列の最初の要素が'strawberry pasta'であってはならない。
+```
+
+### With your api server
+``` javascript
+import * as express from 'express';
+import it from 'cafy';
+import db from './mydb';
+
+const app = express();
+
+app.post('/create-account', (req, res) => {
+  // アカウント名は文字列で、30文字以内でなければならない。この値は必須である。
+  const [name, nameErr] = it(req.body.name).must.be.a.string().required().max(30).get();
+  if (nameErr) return res.status(400).send('invalid name');
+
+  // 年齢は数値で、0~100の整数でなければならない。この値は必須である。
+  const [age, ageErr] = it(req.body.age).must.be.a.number().required().int().range(0,100).get();
+  if (ageErr) return res.status(400).send('invalid age');
+
+  // 性別は'male'か'female'かnull(=設定なし)でなければならない。省略した場合はnullとして扱う。
+  const [gender = null, genderErr] = it(req.body.gender).must.be.a.nullable.string().or('male female').get();
+  if (genderErr) return res.status(400).send('invalid gender');
+
+  db.insert({
+    name, age, gender
+  });
+
+  res.send('yee haw!');
+});
+```
 
 Testing
 -----------------------------------------------
