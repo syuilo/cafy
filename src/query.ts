@@ -71,6 +71,29 @@ abstract class Query<T> {
 	}
 
 	/**
+	 * 不正な値かどうかを取得します
+	 */
+	get isInvalid(): boolean {
+		return !this.isValid;
+	}
+
+	/**
+	 * このインスタンスのエラーを取得します
+	 */
+	get result(): Error {
+		if (this.lazy) throw new Error('このインスタンスには値がセットされていません');
+		return this.error;
+	}
+
+	/**
+	 * このインスタンスの値およびエラーを取得します
+	 */
+	get $(): [T, Error] {
+		if (this.lazy) throw new Error('このインスタンスには値がセットされていません');
+		return [this.value, this.error];
+	}
+
+	/**
 	 * 遅延検証してエラーを取得します
 	 */
 	@autobind
@@ -90,22 +113,6 @@ abstract class Query<T> {
 		this.value = value;
 		this.eval();
 		return this.error == null;
-	}
-
-	/**
-	 * このインスタンスのエラーを取得します
-	 */
-	get result(): Error {
-		if (this.lazy) throw new Error('このインスタンスには値がセットされていません');
-		return this.error;
-	}
-
-	/**
-	 * このインスタンスの値およびエラーを取得します
-	 */
-	get $(): [T, Error] {
-		if (this.lazy) throw new Error('このインスタンスには値がセットされていません');
-		return [this.value, this.error];
 	}
 
 	/**
