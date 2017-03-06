@@ -68,14 +68,24 @@ Supported types
 it(x).expect.array('string');
 ```
 
-### null と undefined の扱い
-「値が`null`または`undefined`」な状態を「値が空である」と表現しています。
-値が空である場合、バリデータやその他の処理メソッドは呼ばれません。
-
-明示的に`null`を許可しない限り、`null`はエラーになります。
-`null`を許可する場合は**nullable**をプリフィックスします:
+### 値を必須にする
+デフォルトでcafyは、値を省略(=`undefined`)することを許可しています:
 ``` javascript
-const err = it(x).must.be.a.nullable.string().required().check();
+it(undefined).expect.string().isValid // <= true
+```
+値を省略することを許可しない場合は`required`メソッドを呼び出します:
+``` javascript
+it(undefined).expect.string().required().isValid // <= false
+```
+
+### null を許可する
+デフォルトで`null`はエラーになります:
+``` javascript
+it(null).expect.string().isValid; // <= false
+```
+`null`を許可する場合は`nullable`をプリフィックスします:
+``` javascript
+it(null).expect.nullable.string().isValid; // <= true
 ```
 
 |                     | undefined | null |
@@ -84,6 +94,15 @@ const err = it(x).must.be.a.nullable.string().required().check();
 | required            | x         | x    |
 | nullable            | o         | o    |
 | required + nullable | x         | o    |
+
+Tips
+-----------------------------------------------
+### 規定値を設定する
+[Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
+``` javascript
+const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
+//→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
+```
 
 ### 糖衣構文
 次のコード:
@@ -99,15 +118,6 @@ it(x, 'string')   // default
 it(x, 'string!')  // required
 it(x, 'string?')  // nullable
 it(x, 'string!?') // required nullable
-```
-
-Tips
------------------------------------------------
-### 規定値を設定する
-[Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
-``` javascript
-const [val = 'desc', err] = it(x).must.be.a.string().or('asc desc').get();
-//→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
 API
