@@ -3,8 +3,8 @@ import { isNotAString } from '../core';
 
 export default class StringQuery extends Query<string> {
 
-	constructor(optional = false, nullable = false, value?: any) {
-		super(optional, nullable, value);
+	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
+		super(optional, nullable, lazy, value);
 		this.pushValidator(v => {
 			if (isNotAString(v)) return new Error('must-be-a-string');
 			return true;

@@ -34,13 +34,13 @@ it(x).string()
 ``` javascript
 it(x).string().range(10, 100)
 ```
-検証結果の取得は`isValid`メソッドなどを利用できます:
+検証結果の取得は`isValid`プロパティなどを利用できます:
 ``` javascript
 const x = 'strawberry pasta';
-const xIsValid = it(x).string().range(10, 100).isValid() // => true
+const xIsValid = it(x).string().range(10, 100).isValid; // => true
 
 const y = 'alice';
-const yIsValid = it(y).string().range(10, 100).isValid() // => false
+const yIsValid = it(y).string().range(10, 100).isValid; // => false
 ```
 
 どんな型のバリデータにどんなメソッドがあるかはAPIのセクションを見てみてください！
@@ -66,21 +66,21 @@ it(x).array('string');
 ### undefined を許可する (optional)
 デフォルトで`undefined`はエラーになります:
 ``` javascript
-it(undefined).string().isValid() // <= false
+it(undefined).string().isValid // <= false
 ```
 `undefined`を許可する場合は`optional`を型の前に付けます:
 ``` javascript
-it(undefined).optional.string().isValid() // <= true
+it(undefined).optional.string().isValid // <= true
 ```
 
 ### null を許可する (nullable)
 デフォルトで`null`はエラーになります:
 ``` javascript
-it(null).string().isValid() // <= false
+it(null).string().isValid // <= false
 ```
 `null`を許可する場合は`nullable`をプリフィックスします:
 ``` javascript
-it(null).nullable.string().isValid() // <= true
+it(null).nullable.string().isValid // <= true
 ```
 
 ### null と undefined を許可する
@@ -101,8 +101,15 @@ Tips
 ### 規定値を設定する
 [Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
-const [val = 'desc', err] = it(x).string().or('asc desc').get();
+const [val = 'desc', err] = it(x).string().or('asc desc').qed;
 //→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
+```
+
+### cafyの入れ子
+cafy同士はシームレスに連携するので、入れ子にして使うこともできます:
+``` javascript
+it(x).array().each(it().string().range(0, 100))
+//→ xは全ての要素が0文字以上100文字以内の文字列の配列でなければならない
 ```
 
 API
@@ -116,19 +123,18 @@ API
 カスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 ``` javascript
-it('strawberry pasta').string().validate(x => x.indexOf('alice') == -1).isValid() // true
-it(['a', 'b', 'c']).array().validate(x => x[1] != 'b').isValid() // false
+it('strawberry pasta').string().validate(x => x.indexOf('alice') == -1).isValid // true
+it(['a', 'b', 'c']).array().validate(x => x[1] != 'b').isValid // false
 ```
 
-#### `.get()` => `[any, Error]`
+#### `.qed` => `[any, Error]`
 テスト対象の値とテスト結果の配列を取得します。
 
-#### `.test([value])` => `Error`
+#### `.result` => `Error`
 テストして結果を取得します。
 テストに合格した場合は`null`を、そうでない場合は`Error`を返します。
-`value`はオプションです。
 
-#### `.isValid()` => `boolean`
+#### `.isValid` => `boolean`
 テストに合格したかどうかを取得します。
 
 ### Array
@@ -144,9 +150,9 @@ it(['a', 'b', 'c']).array().validate(x => x[1] != 'b').isValid() // false
 `min`以上`max`以下の数の要素を持っていなければならないという制約を追加します。
 要素数が指定された範囲内にない場合エラーにします。
 ``` javascript
-it(['a', 'b', 'c']).range(2, 5).isValid()                // true
-it(['a', 'b', 'c', 'd', 'e', 'f']).range(2, 5).isValid() // false
-it(['a']).range(2, 5).isValid()                          // false
+it(['a', 'b', 'c']).range(2, 5).isValid                // true
+it(['a', 'b', 'c', 'd', 'e', 'f']).range(2, 5).isValid // false
+it(['a']).range(2, 5).isValid                          // false
 ```
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
@@ -155,21 +161,16 @@ it(['a']).range(2, 5).isValid()                          // false
 ユニークな配列(=重複した値を持っていない)でなければならないという制約を追加します。
 重複した要素がある場合エラーにします。
 ``` javascript
-it(['a', 'b', 'c']).array().unique().isValid()      // true
-it(['a', 'b', 'c', 'b']).array().unique().isValid() // false
+it(['a', 'b', 'c']).array().unique().isValid      // true
+it(['a', 'b', 'c', 'b']).array().unique().isValid // false
 ```
 
 #### `.each(fn)` => `Query`
 各要素に対してカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 ``` javascript
-it([1, 2, 3]).array().each(x => x < 4).isValid() // true
-it([1, 4, 3]).array().each(x => x < 4).isValid() // false
-```
-
-cafyの入れ子:
-``` javascript
-const xsIsValid = it(xs).array().each(it().string().range(0, 100)).isValid();
+it([1, 2, 3]).array().each(x => x < 4).isValid // true
+it([1, 4, 3]).array().each(x => x < 4).isValid // false
 ```
 
 ### Number
@@ -177,15 +178,15 @@ const xsIsValid = it(xs).array().each(it().string().range(0, 100)).isValid();
 整数でなければならないという制約を追加します。
 整数でない場合エラーにします。
 ``` javascript
-it(0).number().int().isValid()        // true
-it(1).number().int().isValid()        // true
-it(-100).number().int().isValid()     // true
+it(0).number().int().isValid        // true
+it(1).number().int().isValid        // true
+it(-100).number().int().isValid     // true
 
-it(0.1).number().int().isValid()      // false
-it(Math.PI).number().int().isValid()  // false
+it(0.1).number().int().isValid      // false
+it(Math.PI).number().int().isValid  // false
 
-it(NaN).number().int().isValid()      // false
-it(Infinity).number().int().isValid() // false
+it(NaN).number().int().isValid      // false
+it(Infinity).number().int().isValid // false
 ```
 
 #### `.min(threshold)` => `Query`
@@ -212,9 +213,9 @@ it(Infinity).number().int().isValid() // false
 `pattern`は文字列の配列またはスペースで区切られた文字列です。
 どれとも一致しない場合エラーにします。
 ``` javascript
-it('strawberry').string().or(['strawberry', 'pasta']).isValid() // true
-it('alice').string().or(['strawberry', 'pasta']).isValid()      // false
-it('pasta').string().or('strawberry pasta').isValid()           // true
+it('strawberry').string().or(['strawberry', 'pasta']).isValid // true
+it('alice').string().or(['strawberry', 'pasta']).isValid      // false
+it('pasta').string().or('strawberry pasta').isValid           // true
 ```
 
 #### `.min(threshold)` => `Query`

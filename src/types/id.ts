@@ -4,8 +4,8 @@ import { isAnId, isNotAnId } from '../core';
 
 export default class IdQuery extends Query<mongo.ObjectID> {
 
-	constructor(optional = false, nullable = false, value?: any) {
-		super(optional, nullable, value);
+	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
+		super(optional, nullable, lazy, value);
 		this.pushValidator((v: any) => {
 			if (!mongo.ObjectID.prototype.isPrototypeOf(v)) {
 				if (isAnId(v)) {

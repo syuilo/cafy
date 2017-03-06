@@ -3,8 +3,8 @@ import { isNotANumber } from '../core';
 
 export default class NumberQuery extends Query<number> {
 
-	constructor(optional = false, nullable = false, value?: any) {
-		super(optional, nullable, value);
+	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
+		super(optional, nullable, lazy, value);
 		this.pushValidator(v => {
 			if (isNotANumber(v)) return new Error('must-be-a-number');
 			return true;

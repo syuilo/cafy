@@ -5,8 +5,8 @@ const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 
 export default class ArrayQuery<T> extends Query<T[]> {
 
-	constructor(optional = false, nullable = false, value?: any, type?) {
-		super(optional, nullable, value);
+	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, type?) {
+		super(optional, nullable, lazy, value);
 		this.pushValidator(v => {
 			if (isNotAnArray(v)) {
 				return new Error('must-be-an-array');
