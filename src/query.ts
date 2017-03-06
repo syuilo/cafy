@@ -45,6 +45,10 @@ abstract class Query<T> {
 		return this.error !== null || this.isEmpty;
 	}
 
+	protected setError(msg: string) {
+		this.error = new Error(msg);
+	}
+
 	/**
 	 * このインスタンスの値が指定されていない(=undefined)ときにエラーにします
 	 */

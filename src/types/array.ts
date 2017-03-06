@@ -1,13 +1,25 @@
 import { Query, fx } from '../query';
+import { isNotAnArray, isNotABoolean, isNotAnId, isNotANumber, isNotAnObject, isNotAString } from '../core';
 
 const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 
-export default class ArrayQuery extends Query<any[]> {
+export default class ArrayQuery<T> extends Query<T[]> {
 
-	constructor(value: any, nullable: boolean = false) {
+	constructor(value: any, nullable: boolean = false, type: string = null) {
 		super(value, nullable);
-		if (!this.isEmpty && !Array.isArray(value)) {
-			this.error = new Error('must-be-an-array');
+		if (!this.isEmpty) {
+			if (isNotAnArray(value)) {
+				this.error = new Error('must-be-an-array');
+			} else if (type != null) {
+				switch (type) {
+					case 'array': if (this.value.some(isNotAnArray)) this.setError('dirty-array'); break;
+					case 'boolean': if (this.value.some(isNotABoolean)) this.setError('dirty-array'); break;
+					case 'id': if (this.value.some(isNotAnId)) this.setError('dirty-array'); break;
+					case 'number': if (this.value.some(isNotANumber)) this.setError('dirty-array'); break;
+					case 'object': if (this.value.some(isNotAnObject)) this.setError('dirty-array'); break;
+					case 'string': if (this.value.some(isNotAString)) this.setError('dirty-array'); break;
+				}
+			}
 		}
 	}
 
@@ -59,24 +71,12 @@ export default class ArrayQuery extends Query<any[]> {
 	}
 
 	/**
-	 * このインスタンスの配列内の要素すべてが文字列であるか検証します
-	 * ひとつでも文字列以外の要素が存在する場合エラーにします
-	 */
-	@fx()
-	allString() {
-		if (this.value.some(x => typeof x != 'string')) {
-			this.error = new Error('dirty-array');
-		}
-		return this;
-	}
-
-	/**
 	 * 配列の各要素に対して妥当性を検証します
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
 	 */
 	@fx()
-	validateEach(validator: (element: any, index: number, array: any[]) => boolean | Error) {
+	validateEach(validator: (element: T, index: number, array: T[]) => boolean | Error) {
 		this.value.some((x, i, s) => {
 			const result = validator(x, i, s);
 			if (result === false) {

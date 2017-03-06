@@ -95,6 +95,11 @@ const err = it(x).must.be.a.nullable.string().required().check();
 | nullable            | o         | o    |
 | required + nullable | x         | o    |
 
+### 配列の要素の型を指定する
+``` javascript
+it(x).expect.array('string');
+```
+
 ### BDD風記法
 `must.be.a(n)`の代わりに`expect`とも書けます:
 ``` javascript

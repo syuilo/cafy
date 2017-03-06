@@ -228,6 +228,18 @@ describe('Queries', () => {
 			assert.notEqual(err, null);
 		});
 
+		describe('要素の型指定', () => {
+			it('正当な値を与えて合格', () => {
+				const err = test(['a', 'b', 'c']).expect.array('string').check();
+				assert.equal(err, null);
+			});
+
+			it('不正な値を与えて不合格', () => {
+				const err = test(['a', 1, 'c']).expect.array('string').check();
+				assert.notEqual(err, null);
+			});
+		});
+
 		describe('# unique', () => {
 			it('ユニークで合格', () => {
 				const err = test(['a', 'b', 'c']).expect.array().unique().check();

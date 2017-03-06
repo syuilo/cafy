@@ -1,10 +1,11 @@
 import { Query, fx } from '../query';
+import { isNotAString } from '../core';
 
 export default class StringQuery extends Query<string> {
 
 	constructor(value: any, nullable: boolean = false) {
 		super(value, nullable);
-		if (!this.isEmpty && typeof value != 'string') {
+		if (!this.isEmpty && isNotAString(value)) {
 			this.error = new Error('must-be-a-string');
 		}
 	}

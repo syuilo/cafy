@@ -1,10 +1,11 @@
 import { Query, fx } from '../query';
+import { isNotANumber } from '../core';
 
 export default class NumberQuery extends Query<number> {
 
 	constructor(value: any, nullable: boolean = false) {
 		super(value, nullable);
-		if (!this.isEmpty && !Number.isFinite(value)) {
+		if (!this.isEmpty && isNotANumber(value)) {
 			this.error = new Error('must-be-a-number');
 		}
 	}
