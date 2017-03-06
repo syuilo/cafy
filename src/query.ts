@@ -1,83 +1,77 @@
+import autobind from './autobind';
 import Validator from './validator';
-
-function fx() {
-	return function(target, key: string, descripter: PropertyDescriptor) {
-		const original = descripter.value;
-		descripter.value = function(...args) {
-			return this.shouldSkip ? this : original.call(this, ...args);
-		};
-	};
-}
 
 /**
  * クエリベース
  */
 abstract class Query<T> {
-	protected value: T;
-	protected error: Error;
+	protected value: T = undefined;
+	private error: Error = null;
+	private optional: boolean;
+	private nullable: boolean;
 
-	constructor(value: any, nullable: boolean = false) {
-		if (value === null && !nullable) {
-			this.value = undefined;
-			this.error = new Error('must-be-not-a-null');
-		} else {
-			this.value = value;
-			this.error = null;
+	private validators: Validator<T>[] = [];
+
+	constructor(optional = false, nullable = false, value?: any) {
+		this.optional = optional;
+		this.nullable = nullable;
+		this.value = value;
+		this.pushValidator(v => {
+			if (!optional && v === undefined) return new Error('must-be-not-undefined');
+			if (!nullable && v === null) return new Error('must-be-not-null');
+			return true;
+		});
+	}
+
+	protected pushValidator(validator: Validator<T>) {
+		if (this.isSafe) {
+			this.validators.push(validator);
 		}
 	}
 
-	protected get isUndefined() {
-		return this.value === undefined;
-	}
-
-	protected get isNull() {
-		return this.value === null;
-	}
-
-	protected get isEmpty() {
-		return this.isUndefined || this.isNull;
-	}
-
 	/**
-	 * このインスタンスの値が空、またはエラーが存在しているなどして、処理をスキップするべきか否か
+	 * スタックにあるバリデーションを走査実行し、妥当な場合は null を、そうでない場合は Error を返します
 	 */
-	protected get shouldSkip() {
-		return this.error !== null || this.isEmpty;
+	protected eval() {
+		if (this.optional && this.value === undefined) return null;
+		if (this.nullable && this.value === null) return null;
+
+		this.validators.some(validator => {
+			const result = validator(this.value);
+			if (result === false) {
+				this.error = new Error('something-happened');
+				return true;
+			} else if (result instanceof Error) {
+				this.error = result;
+				return true;
+			}
+			return false;
+		});
+
+		return this.error;
 	}
 
-	protected setError(msg: string) {
-		this.error = new Error(msg);
-	}
-
-	/**
-	 * このインスタンスの値が指定されていない(=undefined)ときにエラーにします
-	 */
-	required() {
-		if (this.error === null && this.isUndefined) {
-			this.error = new Error('required');
-		}
-		return this;
-	}
-
-	/**
-	 * このインスタンスの値が妥当かをチェックします
-	 */
-	get isValid(): boolean {
+	protected get isSafe() {
 		return this.error === null;
+	}
+
+	/**
+	 * テストして結果を取得します。
+	 * テストに合格した場合は`null`を、そうでない場合は`Error`を返します。
+	 * @param value テストする値
+	 */
+	@autobind
+	test(value?: any): Error {
+		if (arguments.length != 0) this.value = value;
+		return this.eval();
 	}
 
 	/**
 	 * このインスタンスの値およびエラーを取得します
 	 */
 	get(): [T, Error] {
+		this.eval();
 		return [this.value, this.error];
-	}
-
-	/**
-	 * このインスタンスのエラーを取得します
-	 */
-	check(): Error {
-		return this.error;
 	}
 
 	/**
@@ -85,19 +79,10 @@ abstract class Query<T> {
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
 	 */
-	@fx()
 	validate(validator: Validator<T>) {
-		const result = validator(this.value);
-		if (result === false) {
-			this.error = new Error('invalid-format');
-		} else if (result instanceof Error) {
-			this.error = result;
-		}
+		this.pushValidator(validator);
 		return this;
 	}
 }
 
-export {
-	Query,
-	fx
-};
+export default Query;

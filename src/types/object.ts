@@ -1,12 +1,13 @@
-import { Query, fx } from '../query';
+import Query from '../query';
 import { isNotAnObject } from '../core';
 
 export default class ObjectQuery extends Query<any> {
 
-	constructor(value: any, nullable: boolean = false) {
-		super(value, nullable);
-		if (!this.isEmpty && isNotAnObject(value)) {
-			this.error = new Error('must-be-an-object');
-		}
+	constructor(optional = false, nullable = false, value?: any) {
+		super(optional, nullable, value);
+		this.pushValidator(v => {
+			if (isNotAnObject(v)) return new Error('must-be-an-object');
+			return true;
+		});
 	}
 }

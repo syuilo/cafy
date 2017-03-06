@@ -1,13 +1,14 @@
-import { Query, fx } from '../query';
+import Query from '../query';
 import { isNotANumber } from '../core';
 
 export default class NumberQuery extends Query<number> {
 
-	constructor(value: any, nullable: boolean = false) {
-		super(value, nullable);
-		if (!this.isEmpty && isNotANumber(value)) {
-			this.error = new Error('must-be-a-number');
-		}
+	constructor(optional = false, nullable = false, value?: any) {
+		super(optional, nullable, value);
+		this.pushValidator(v => {
+			if (isNotANumber(v)) return new Error('must-be-a-number');
+			return true;
+		});
 	}
 
 	/**
@@ -15,7 +16,6 @@ export default class NumberQuery extends Query<number> {
 	 * @param min 下限
 	 * @param max 上限
 	 */
-	@fx()
 	range(min: number, max: number) {
 		this.min(min);
 		this.max(max);
@@ -26,11 +26,11 @@ export default class NumberQuery extends Query<number> {
 	 * このインスタンスの値が指定された下限より下回っている場合エラーにします
 	 * @param threshold 下限
 	 */
-	@fx()
 	min(threshold: number) {
-		if (this.value < threshold) {
-			this.error = new Error('invalid-range');
-		}
+		this.pushValidator(v => {
+			if (v < threshold) return new Error('invalid-range');
+			return true;
+		});
 		return this;
 	}
 
@@ -38,22 +38,22 @@ export default class NumberQuery extends Query<number> {
 	 * このインスタンスの値が指定された上限より上回っている場合エラーにします
 	 * @param threshold 上限
 	 */
-	@fx()
 	max(threshold: number) {
-		if (this.value > threshold) {
-			this.error = new Error('invalid-range');
-		}
+		this.pushValidator(v => {
+			if (v > threshold) return new Error('invalid-range');
+			return true;
+		});
 		return this;
 	}
 
 	/**
 	 * このインスタンスの値が整数でなければエラーにします
 	 */
-	@fx()
 	int() {
-		if (!Number.isInteger(this.value)) {
-			this.error = new Error('must-be-an-intager');
-		}
+		this.pushValidator(v => {
+			if (!Number.isInteger(v)) return new Error('must-be-an-intager');
+			return true;
+		});
 		return this;
 	}
 }
