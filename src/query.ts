@@ -5,13 +5,15 @@ import Validator from './validator';
  * クエリベース
  */
 abstract class Query<T> {
-	protected value: T = undefined;
-	private error: Error = null;
+	private value: T = undefined;
 	private optional: boolean;
 	private nullable: boolean;
 	private lazy: boolean = false;
 
-	private validators: Validator<T>[] = [];
+	private validators: {
+		validate: Validator<T>;
+		postfx?: any;
+	}[] = [];
 
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
 		this.optional = optional;
@@ -25,102 +27,77 @@ abstract class Query<T> {
 		});
 	}
 
-	protected pushValidator(validator: Validator<T>) {
-		if (this.isSafe) {
-			if (this.lazy) {
-				this.validators.push(validator);
-			} else {
-				this.execValidator(validator);
-			}
-		}
+	protected pushValidator(validator: Validator<T>, postFx?: any) {
+		this.validators.push({
+			validate: validator,
+			postfx: postFx
+		});
 	}
 
+	private exec(value: any): Error;
+	private exec(value: any, withValue: boolean): [any, Error];
 	@autobind
-	protected execValidator(validator: Validator<T>): boolean {
-		if (this.optional && this.value === undefined) return true;
-		if (this.nullable && this.value === null) return true;
+	private exec(value: any, withValue?: boolean): Error | [any, Error] {
+		if (this.optional && value === undefined) return withValue ? [value, null] : null;
+		if (this.nullable && value === null) return withValue ? [value, null] : null;
 
-		const result = validator(this.value);
-		if (result === false) {
-			this.error = new Error('something-happened');
-			return true;
-		} else if (result instanceof Error) {
-			this.error = result;
-			return true;
+		let err = null;
+		this.validators.some(validator => {
+			const result = validator.validate(value);
+			if (result === false) {
+				err = new Error('something-happened');
+				return true;
+			} else if (result instanceof Error) {
+				err = result;
+				return true;
+			} else {
+				if (validator.postfx) value = validator.postfx(value);
+				return false;
+			}
+		});
+
+		if (withValue) {
+			return [value, err];
+		} else {
+			return err;
 		}
-		return false;
 	}
 
 	/**
-	 * スタックにあるバリデーションを走査&実行します
+	 * 値を検証して、妥当な場合は null を、そうでない場合は Error を返します。
 	 */
-	protected eval(): void {
-		this.validators.some(this.execValidator);
-	}
-
-	protected get isSafe() {
-		return this.error === null;
+	@autobind
+	test(value?: any): Error {
+		if (this.lazy) {
+			if (arguments.length == 0) throw new Error('値が指定されていません');
+			return this.exec(value);
+		} else {
+			return this.exec(this.value);
+		}
 	}
 
 	/**
-	 * 妥当な値かどうかを取得します
+	 * 値を検証して、妥当な場合は true を、そうでない場合は false を返します
 	 */
-	get isValid(): boolean {
-		if (this.lazy) throw new Error('このインスタンスには値がセットされていません');
-		return this.error == null;
+	@autobind
+	isOk(value?: any): boolean {
+		return this.test(value) == null;
 	}
 
 	/**
-	 * 不正な値かどうかを取得します
+	 * 値を検証して、妥当な場合は false を、そうでない場合は true を返します
 	 */
-	get isInvalid(): boolean {
-		return !this.isValid;
+	@autobind
+	isNg(value?: any): boolean {
+		return !this.isOk(value);
 	}
 
 	/**
-	 * このインスタンスのエラーを取得します
-	 */
-	get result(): Error {
-		if (this.lazy) throw new Error('このインスタンスには値がセットされていません');
-		return this.error;
-	}
-
-	/**
-	 * このインスタンスの値およびエラーを取得します
+	 * 値を検証して、値およびエラーを取得します
 	 */
 	get $(): [T, Error] {
 		if (this.lazy) throw new Error('このインスタンスには値がセットされていません');
-		return [this.value, this.error];
-	}
-
-	/**
-	 * 遅延検証してエラーを取得します
-	 */
-	@autobind
-	test(value: any): Error {
-		if (!this.lazy) throw new Error('このインスタンスには既に値がセットされています');
-		this.value = value;
-		this.eval();
-		return this.error;
-	}
-
-	/**
-	 * 遅延検証して、妥当な場合は true を、そうでない場合は false を返します
-	 */
-	@autobind
-	testIsValid(value: any): boolean {
-		if (!this.lazy) throw new Error('このインスタンスには既に値がセットされています');
-		this.value = value;
-		this.eval();
-		return this.error == null;
-	}
-
-	/**
-	 * 遅延検証して、妥当な場合は false を、そうでない場合は true を返します
-	 */
-	@autobind
-	testIsInvalid(value: any): boolean {
-		return !this.testIsValid(value);
+		return this.exec(this.value, true);
 	}
 
 	/**

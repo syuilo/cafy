@@ -44,16 +44,17 @@ $(x).string()
 ``` javascript
 $(x).string().range(10, 100)
 ```
-検証結果の取得は`isValid`プロパティなどを利用できます:
+検証して結果を取得するには`test`や`isOk`メソッドなどを利用できます:
 ``` javascript
 const x = 'strawberry pasta';
-const xIsValid = $(x).string().range(10, 100).isValid; // => true
+const xIsValid = $(x).string().range(10, 100).isOk(); // => true
 
 const y = 'alice';
-const yIsValid = $(y).string().range(10, 100).isValid; // => false
+const yIsValid = $(y).string().range(10, 100).isOk(); // => false
 ```
 
-どんな型のバリデータにどんなメソッドがあるかはAPIのセクションを見てみてください！
+`isOk`メソッドはバリデーションに合格した場合は`true`を、失格した場合は`false`を返します。
+`test`メソッドはバリデーションに合格した場合は`null`を、失格した場合は`Error`を返します。
 
 ---
 
@@ -67,6 +68,8 @@ Supported types
 * **string** ... e.g.`$(x).string()...`
 * **ObjectID** (MongoDB) ... e.g.`$(x).id()...`
 
+どんな型のバリデータにどんなメソッドがあるかはAPIのセクションを見てみてください！
+
 ### 配列の要素の型を指定する
 配列の要素がどんな型でなければならないか指定することもできます:
 ``` javascript
@@ -77,21 +80,21 @@ $(x).array('string')
 #### undefined を許可する *(optional)*
 デフォルトで`undefined`はエラーになります:
 ``` javascript
-$(undefined).string().isValid // <= false
+$(undefined).string().isOk() // <= false
 ```
 `undefined`を許可する場合は`optional`を型の前に付けます:
 ``` javascript
-$(undefined).optional.string().isValid // <= true
+$(undefined).optional.string().isOk() // <= true
 ```
 
 #### null を許可する *(nullable)*
 デフォルトで`null`はエラーになります:
 ``` javascript
-$(null).string().isValid // <= false
+$(null).string().isOk() // <= false
 ```
 `null`を許可する場合は`nullable`を型の前に付けます:
 ``` javascript
-$(null).nullable.string().isValid // <= true
+$(null).nullable.string().isOk() // <= true
 ```
 
 #### null と undefined を許可する
@@ -112,18 +115,17 @@ cafyの引数を省略することで、後から値を検証するバリデー�
 ``` javascript
 $().number().range(30, 50)
 ```
-`test`メソッドに値を与えて検証します:
+`test`や`isOk`メソッドに値を与えて検証します:
 ``` javascript
 $().number().range(30, 50).test(42) // <= null
 ```
-`test`メソッドはバリデーションに合格した場合は`null`を、失格した場合は`Error`を返します。
-
-ℹ️ `boolean`値を取得したい場合は`testIsValid`や`testIsInvalid`メソッドが利用できます。
 
 この遅延検証を利用すると、配列の`some`などに渡すときに便利です:
 ``` javascript
-xs.some($().number().max(30).testIsValid)
+xs.some($().number().max(30).isNg)
 ```
+
+ℹ️ `isNg`は`isOk`の逆です。
 
 Tips
 -----------------------------------------------
@@ -152,24 +154,27 @@ API
 カスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 ``` javascript
-$('strawberry pasta').string().validate(x => x.indexOf('alice') == -1).isValid // true
-$(['a', 'b', 'c']).array().validate(x => x[1] != 'b').isValid // false
+$('strawberry pasta').string().validate(x => x.indexOf('alice') == -1).isOk() // true
+$(['a', 'b', 'c']).array().validate(x => x[1] != 'b').isOk() // false
 ```
 
 #### `.$` => `[any, Error]`
-テスト対象の値とテスト結果のペア(配列)。
+テスト対象の値とテスト結果のペア(配列)。先行検証のときのみ利用可能です。
 
-#### `.result` => `Error`
-テスト結果。
-テストに合格した場合は`null`で、そうでない場合は`Error`です。
+#### `.test()` => `Error`
+バリデーションを実行します。
+合格した場合は`null`で、そうでない場合は`Error`です。
 
-#### `.isValid` => `boolean`
-テストに合格したかどうか。
-`.result == null`と同義です。
+#### `.isOk()` => `boolean`
+バリデーションを実行します。
+合格した場合は`true`で、そうでない場合は`false`です。
+`.test() == null`と同義です。
 
-#### `.isInvalid` => `boolean`
-テストに失格したかどうか。
-`.isValid`の否定です。
+#### `.isNg()` => `boolean`
+バリデーションを実行します。
+合格した場合は`false`で、そうでない場合は`true`です。
+`.isOk()`の否定です。
+(*Ng*は**N**o**G**oogの略です)
 
 ### Array
 #### `.min(threshold)` => `Query`
@@ -184,9 +189,9 @@ $(['a', 'b', 'c']).array().validate(x => x[1] != 'b').isValid // false
 `min`以上`max`以下の数の要素を持っていなければならないという制約を追加します。
 要素数が指定された範囲内にない場合エラーにします。
 ``` javascript
-$(['a', 'b', 'c']).range(2, 5).isValid                // true
-$(['a', 'b', 'c', 'd', 'e', 'f']).range(2, 5).isValid // false
-$(['a']).range(2, 5).isValid                          // false
+$(['a', 'b', 'c']).range(2, 5).isOk()                // true
+$(['a', 'b', 'c', 'd', 'e', 'f']).range(2, 5).isOk() // false
+$(['a']).range(2, 5).isOk()                          // false
 ```
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
@@ -195,16 +200,16 @@ $(['a']).range(2, 5).isValid                          // false
 ユニークな配列(=重複した値を持っていない)でなければならないという制約を追加します。
 重複した要素がある場合エラーにします。
 ``` javascript
-$(['a', 'b', 'c']).array().unique().isValid      // true
-$(['a', 'b', 'c', 'b']).array().unique().isValid // false
+$(['a', 'b', 'c']).array().unique().isOk()      // true
+$(['a', 'b', 'c', 'b']).array().unique().isOk() // false
 ```
 
 #### `.each(fn)` => `Query`
 各要素に対してカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 ``` javascript
-$([1, 2, 3]).array().each(x => x < 4).isValid // true
-$([1, 4, 3]).array().each(x => x < 4).isValid // false
+$([1, 2, 3]).array().each(x => x < 4).isOk() // true
+$([1, 4, 3]).array().each(x => x < 4).isOk() // false
 ```
 
 ### Number
@@ -212,15 +217,15 @@ $([1, 4, 3]).array().each(x => x < 4).isValid // false
 整数でなければならないという制約を追加します。
 整数でない場合エラーにします。
 ``` javascript
-$(0).number().int().isValid        // true
-$(1).number().int().isValid        // true
-$(-100).number().int().isValid     // true
+$(0).number().int().isOk()        // true
+$(1).number().int().isOk()        // true
+$(-100).number().int().isOk()     // true
 
-$(0.1).number().int().isValid      // false
-$(Math.PI).number().int().isValid  // false
+$(0.1).number().int().isOk()      // false
+$(Math.PI).number().int().isOk()  // false
 
-$(NaN).number().int().isValid      // false
-$(Infinity).number().int().isValid // false
+$(NaN).number().int().isOk()      // false
+$(Infinity).number().int().isOk() // false
 ```
 
 #### `.min(threshold)` => `Query`
@@ -247,9 +252,9 @@ $(Infinity).number().int().isValid // false
 `pattern`は文字列の配列またはスペースで区切られた文字列です。
 どれとも一致しない場合エラーにします。
 ``` javascript
-$('strawberry').string().or(['strawberry', 'pasta']).isValid // true
-$('alice').string().or(['strawberry', 'pasta']).isValid      // false
-$('pasta').string().or('strawberry pasta').isValid           // true
+$('strawberry').string().or(['strawberry', 'pasta']).isOk() // true
+$('alice').string().or(['strawberry', 'pasta']).isOk()      // false
+$('pasta').string().or('strawberry pasta').isOk()           // true
 ```
 
 #### `.min(threshold)` => `Query`

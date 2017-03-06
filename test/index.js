@@ -17,12 +17,12 @@ it('デフォルトの値を設定できる', () => {
 describe('統合', () => {
 
 	it('正しく成功する', () => {
-		const err = $('strawberry pasta').string().min(1).min(10).result;
+		const err = $('strawberry pasta').string().min(1).min(10).test();
 		assert.equal(err, null);
 	});
 
 	it('正しく失敗する', () => {
-		const err = $('alice').string().min(1).min(10).result;
+		const err = $('alice').string().min(1).min(10).test();
 		assert.notEqual(err, null);
 	});
 
@@ -40,12 +40,12 @@ describe('統合', () => {
 
 	describe('入れ子', () => {
 		it('正しく成功する', () => {
-			const err = $([1, 2, 3]).array().each($().number().range(0, 100)).result;
+			const err = $([1, 2, 3]).array().each($().number().range(0, 100)).test();
 			assert.equal(err, null);
 		});
 
 		it('正しく失敗する', () => {
-			const err = $([1, -1, 3]).array().each($().number().range(0, 100)).result;
+			const err = $([1, -1, 3]).array().each($().number().range(0, 100)).test();
 			assert.notEqual(err, null);
 		});
 	});
@@ -54,12 +54,12 @@ describe('統合', () => {
 describe('Common', () => {
 
 	it('nullを与えられない', () => {
-		const err = $(null).string().result;
+		const err = $(null).string().test();
 		assert.notEqual(err, null);
 	});
 
 	it('undefinedを与えられない', () => {
-		const err = $(undefined).string().result;
+		const err = $(undefined).string().test();
 		assert.notEqual(err, null);
 	});
 
@@ -72,12 +72,12 @@ describe('Common', () => {
 		});
 
 		it('nullを与えられない', () => {
-			const err = $(null).optional.string().result;
+			const err = $(null).optional.string().test();
 			assert.notEqual(err, null);
 		});
 
 		it('undefinedを与えられる', () => {
-			const err = $(undefined).optional.string().result;
+			const err = $(undefined).optional.string().test();
 			assert.equal(err, null);
 		});
 	});
@@ -91,12 +91,12 @@ describe('Common', () => {
 		});
 
 		it('nullを与えられる', () => {
-			const err = $(null).nullable.string().result;
+			const err = $(null).nullable.string().test();
 			assert.equal(err, null);
 		});
 
 		it('undefinedを与えられない', () => {
-			const err = $(undefined).nullable.string().result;
+			const err = $(undefined).nullable.string().test();
 			assert.notEqual(err, null);
 		});
 	});
@@ -110,29 +110,29 @@ describe('Common', () => {
 		});
 
 		it('nullを与えられる', () => {
-			const err = $(null).nullable.optional.string().result;
+			const err = $(null).nullable.optional.string().test();
 			assert.equal(err, null);
 		});
 
 		it('undefinedを与えらる', () => {
-			const err = $(undefined).nullable.optional.string().result;
+			const err = $(undefined).nullable.optional.string().test();
 			assert.equal(err, null);
 		});
 	});
 
 	describe('# validate', () => {
 		it('バリデータが true を返したら合格', () => {
-			const err = $('strawberry pasta').string().validate(() => true).result;
+			const err = $('strawberry pasta').string().validate(() => true).test();
 			assert.equal(err, null);
 		});
 
 		it('バリデータが false を返したら失格', () => {
-			const err = $('strawberry pasta').string().validate(() => false).result;
+			const err = $('strawberry pasta').string().validate(() => false).test();
 			assert.notEqual(err, null);
 		});
 
 		it('バリデータが Error を返したら失格', () => {
-			const err = $('strawberry pasta').string().validate(() => new Error('something')).result;
+			const err = $('strawberry pasta').string().validate(() => new Error('something')).test();
 			assert.notEqual(err, null);
 		});
 	});
@@ -155,46 +155,46 @@ describe('Queries', () => {
 
 		describe('# min', () => {
 			it('しきい値より長くて成功', () => {
-				const err = $('strawberry').string().min(8).result;
+				const err = $('strawberry').string().min(8).test();
 				assert.equal(err, null);
 			});
 
 			it('しきい値より短くて失敗', () => {
-				const err = $('pasta').string().min(8).result;
+				const err = $('pasta').string().min(8).test();
 				assert.notEqual(err, null);
 			});
 		});
 
 		describe('# max', () => {
 			it('しきい値より短くて成功', () => {
-				const err = $('pasta').string().max(8).result;
+				const err = $('pasta').string().max(8).test();
 				assert.equal(err, null);
 			});
 
 			it('しきい値より長くて失敗', () => {
-				const err = $('strawberry').string().max(8).result;
+				const err = $('strawberry').string().max(8).test();
 				assert.notEqual(err, null);
 			});
 		});
 
 		describe('# or', () => {
 			it('合致する文字列で成功 (配列)', () => {
-				const err = $('strawberry').string().or(['strawberry', 'pasta']).result;
+				const err = $('strawberry').string().or(['strawberry', 'pasta']).test();
 				assert.equal(err, null);
 			});
 
 			it('合致しない文字列で失敗 (配列)', () => {
-				const err = $('alice').string().or(['strawberry', 'pasta']).result;
+				const err = $('alice').string().or(['strawberry', 'pasta']).test();
 				assert.notEqual(err, null);
 			});
 
 			it('合致する文字列で成功 (文字列)', () => {
-				const err = $('strawberry').string().or('strawberry pasta').result;
+				const err = $('strawberry').string().or('strawberry pasta').test();
 				assert.equal(err, null);
 			});
 
 			it('合致しない文字列で失敗 (文字列)', () => {
-				const err = $('alice').string().or('strawberry pasta').result;
+				const err = $('alice').string().or('strawberry pasta').test();
 				assert.notEqual(err, null);
 			});
 		});
@@ -216,36 +216,36 @@ describe('Queries', () => {
 
 		describe('# int', () => {
 			it('整数で合格', () => {
-				const err = $(42).number().int().result;
+				const err = $(42).number().int().test();
 				assert.equal(err, null);
 			});
 
 			it('非整数で不合格', () => {
-				const err = $(3.14).number().int().result;
+				const err = $(3.14).number().int().test();
 				assert.notEqual(err, null);
 			});
 		});
 
 		describe('# min', () => {
 			it('しきい値より大きくて成功', () => {
-				const err = $(50).number().min(42).result;
+				const err = $(50).number().min(42).test();
 				assert.equal(err, null);
 			});
 
 			it('しきい値より小さくて失敗', () => {
-				const err = $(30).number().min(42).result;
+				const err = $(30).number().min(42).test();
 				assert.notEqual(err, null);
 			});
 		});
 
 		describe('# max', () => {
 			it('しきい値より小さくて成功', () => {
-				const err = $(30).number().max(42).result;
+				const err = $(30).number().max(42).test();
 				assert.equal(err, null);
 			});
 
 			it('しきい値より大きくて失敗', () => {
-				const err = $(50).number().max(42).result;
+				const err = $(50).number().max(42).test();
 				assert.notEqual(err, null);
 			});
 		});
@@ -267,65 +267,65 @@ describe('Queries', () => {
 
 		describe('要素の型指定', () => {
 			it('正当な値を与えて合格', () => {
-				const err = $(['a', 'b', 'c']).array('string').result;
+				const err = $(['a', 'b', 'c']).array('string').test();
 				assert.equal(err, null);
 			});
 
 			it('不正な値を与えて不合格', () => {
-				const err = $(['a', 1, 'c']).array('string').result;
+				const err = $(['a', 1, 'c']).array('string').test();
 				assert.notEqual(err, null);
 			});
 		});
 
 		describe('# unique', () => {
 			it('ユニークで合格', () => {
-				const err = $(['a', 'b', 'c']).array().unique().result;
+				const err = $(['a', 'b', 'c']).array().unique().test();
 				assert.equal(err, null);
 			});
 
 			it('重複した要素が有って不合格', () => {
-				const err = $(['a', 'b', 'c', 'b']).array().unique().result;
+				const err = $(['a', 'b', 'c', 'b']).array().unique().test();
 				assert.notEqual(err, null);
 			});
 		});
 
 		describe('# min', () => {
 			it('しきい値より長くて成功', () => {
-				const err = $([1, 2, 3, 4]).array().min(3).result;
+				const err = $([1, 2, 3, 4]).array().min(3).test();
 				assert.equal(err, null);
 			});
 
 			it('しきい値より短くて失敗', () => {
-				const err = $([1, 2]).array().min(3).result;
+				const err = $([1, 2]).array().min(3).test();
 				assert.notEqual(err, null);
 			});
 		});
 
 		describe('# max', () => {
 			it('しきい値より短くて成功', () => {
-				const err = $([1, 2]).array().max(3).result;
+				const err = $([1, 2]).array().max(3).test();
 				assert.equal(err, null);
 			});
 
 			it('しきい値より長くて失敗', () => {
-				const err = $([1, 2, 3, 4]).array().max(3).result;
+				const err = $([1, 2, 3, 4]).array().max(3).test();
 				assert.notEqual(err, null);
 			});
 		});
 
 		describe('# each', () => {
 			it('バリデータが true を返したら合格', () => {
-				const err = $([1, 2, 3]).array().each(() => true).result;
+				const err = $([1, 2, 3]).array().each(() => true).test();
 				assert.equal(err, null);
 			});
 
 			it('バリデータが false を返したら失格', () => {
-				const err = $([1, 2, 3]).array().each(() => false).result;
+				const err = $([1, 2, 3]).array().each(() => false).test();
 				assert.notEqual(err, null);
 			});
 
 			it('バリデータが Error を返したら失格', () => {
-				const err = $([1, 2, 3]).array().each(() => new Error('something')).result;
+				const err = $([1, 2, 3]).array().each(() => new Error('something')).test();
 				assert.notEqual(err, null);
 			});
 		});
