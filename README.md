@@ -78,7 +78,7 @@ it(undefined).optional.string().isValid // <= true
 ``` javascript
 it(null).string().isValid // <= false
 ```
-`null`を許可する場合は`nullable`をプリフィックスします:
+`null`を許可する場合は`nullable`を型の前に付けます:
 ``` javascript
 it(null).nullable.string().isValid // <= true
 ```
@@ -101,7 +101,7 @@ Tips
 ### 規定値を設定する
 [Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
-const [val = 'desc', err] = it(x).string().or('asc desc').qed;
+const [val = 'desc', err] = it(x).optional.string().or('asc desc').qed;
 //→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
