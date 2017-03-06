@@ -28,12 +28,12 @@ describe('統合', () => {
 
 	describe('遅延評価', () => {
 		it('正しく成功する', () => {
-			const err = $().string().min(10).report('strawberry pasta');
+			const err = $().string().min(10).test('strawberry pasta');
 			assert.equal(err, null);
 		});
 
 		it('正しく失敗する', () => {
-			const err = $().string().min(10).report('alice');
+			const err = $().string().min(10).test('alice');
 			assert.notEqual(err, null);
 		});
 	});

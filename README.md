@@ -114,14 +114,15 @@ $().number().range(30, 50)
 ```
 `test`メソッドに値を与えて検証します:
 ``` javascript
-$().number().range(30, 50).test(42) // <= true
+$().number().range(30, 50).test(42) // <= null
 ```
-`boolean`値ではなく`Error`を取得したい場合は`test`の代わりに`report`メソッドが利用できます。
-ℹ️ `report`メソッドはバリデーションに合格した場合は`null`を、失格した場合は`Error`を返します。
+`test`メソッドはバリデーションに合格した場合は`null`を、失格した場合は`Error`を返します。
+
+ℹ️ `boolean`値を取得したい場合は`testIsValid`や`testIsInvalid`メソッドが利用できます。
 
 この遅延検証を利用すると、配列の`some`などに渡すときに便利です:
 ``` javascript
-xs.some($().number().max(30).test)
+xs.some($().number().max(30).testIsValid)
 ```
 
 Tips
@@ -165,6 +166,10 @@ $(['a', 'b', 'c']).array().validate(x => x[1] != 'b').isValid // false
 #### `.isValid` => `boolean`
 テストに合格したかどうか。
 `.result == null`と同義です。
+
+#### `.isInvalid` => `boolean`
+テストに失格したかどうか。
+`.isValid`の否定です。
 
 ### Array
 #### `.min(threshold)` => `Query`

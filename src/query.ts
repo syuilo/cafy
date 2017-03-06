@@ -97,7 +97,7 @@ abstract class Query<T> {
 	 * 遅延検証してエラーを取得します
 	 */
 	@autobind
-	report(value: any): Error {
+	test(value: any): Error {
 		if (!this.lazy) throw new Error('このインスタンスには既に値がセットされています');
 		this.value = value;
 		this.eval();
@@ -105,14 +105,22 @@ abstract class Query<T> {
 	}
 
 	/**
-	 * 遅延検証します
+	 * 遅延検証して、妥当な場合は true を、そうでない場合は false を返します
 	 */
 	@autobind
-	test(value: any): boolean {
+	testIsValid(value: any): boolean {
 		if (!this.lazy) throw new Error('このインスタンスには既に値がセットされています');
 		this.value = value;
 		this.eval();
 		return this.error == null;
+	}
+
+	/**
+	 * 遅延検証して、妥当な場合は false を、そうでない場合は true を返します
+	 */
+	@autobind
+	testIsInvalid(value: any): boolean {
+		return !this.testIsValid(value);
 	}
 
 	/**

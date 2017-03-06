@@ -76,7 +76,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * @param validator バリデータ
 	 */
 	each(validator: ((element: T, index: number, array: T[]) => boolean | Error) | Query<T>) {
-		const _validator = validator instanceof Query ? validator.report : validator;
+		const _validator = validator instanceof Query ? validator.test : validator;
 		this.pushValidator(v => {
 			let err: Error;
 			v.some((x, i, s) => {
