@@ -2,14 +2,14 @@ cafy
 ===============================================
 > Simple, fun, flexible query-based validator
 
-cafyは、アサーションのようにメソッドチェーンで値のバリデーションを行うライブラリです。
-[Try it out!](https://runkit.com/npm/cafy)
+**cafy**は、アサーションのようにメソッドチェーンで値のバリデーションを行うライブラリです。
 
-─堅牢なAPIには、何らかのバリデーション必要不可欠です。
+─堅牢なAPIには、何らかのバリデーションは必要不可欠です。
 あなたのAPIサーバーは、ユーザー名の更新で文字列以外を弾けていますか？
 サインイン時のパスワードの値で、クエリのインジェクションができるようになっていませんか？
 もしくは、それらのバリデーションのために長いコードを書くことに疲れていませんか？
 cafyを使えばそれらのバリデーションを楽しく簡単に、そして柔軟に書くことができます！
+[Try it out!](https://runkit.com/npm/cafy)
 
 [![][npm-badge]][npm-link]
 [![][mit-badge]][mit]
@@ -34,21 +34,23 @@ cafy(value)[.anyQueries()...]
 まずその値がどんな型でなければならないかを示し、
 そのあとに追加の制約をメソッドチェーンで追加していくスタイルです。
 
-たとえば*「`x`は文字列でなければならない」*はこう書きます(`import it from 'cafy';`している前提です):
+(以下のドキュメントでは、`import $ from 'cafy';`している前提で書いていきます(実際にはcafy関数にどんな名前を付けるかは自由です)。)
+
+たとえば*「`x`は文字列でなければならない」*はこう書きます:
 ``` javascript
-it(x).string()
+$(x).string()
 ```
 `range`メソッドを利用して、*「10文字以上100文字以下でなければならない」*という制約を追加してみましょう:
 ``` javascript
-it(x).string().range(10, 100)
+$(x).string().range(10, 100)
 ```
 検証結果の取得は`isValid`プロパティなどを利用できます:
 ``` javascript
 const x = 'strawberry pasta';
-const xIsValid = it(x).string().range(10, 100).isValid; // => true
+const xIsValid = $(x).string().range(10, 100).isValid; // => true
 
 const y = 'alice';
-const yIsValid = it(y).string().range(10, 100).isValid; // => false
+const yIsValid = $(y).string().range(10, 100).isValid; // => false
 ```
 
 どんな型のバリデータにどんなメソッドがあるかはAPIのセクションを見てみてください！
@@ -58,44 +60,44 @@ const yIsValid = it(y).string().range(10, 100).isValid; // => false
 もちろん文字列以外にも、次の型をサポートしています:
 
 Supported types
-* **array** ... e.g.`it(x).array()...`
-* **boolean** ... e.g.`it(x).boolean()...`
-* **number** ... e.g.`it(x).number()...`
-* **object** ... e.g.`it(x).object()...`
-* **string** ... e.g.`it(x).string()...`
-* **ObjectID** (MongoDB) ... e.g.`it(x).id()...`
+* **array** ... e.g.`$(x).array()...`
+* **boolean** ... e.g.`$(x).boolean()...`
+* **number** ... e.g.`$(x).number()...`
+* **object** ... e.g.`$(x).object()...`
+* **string** ... e.g.`$(x).string()...`
+* **ObjectID** (MongoDB) ... e.g.`$(x).id()...`
 
 ### 配列の要素の型を指定する
 配列の要素がどんな型でなければならないか指定することもできます:
 ``` javascript
-it(x).array('string');
+$(x).array('string')
 ```
 
 ### null と undefined の扱い
 #### undefined を許可する *(optional)*
 デフォルトで`undefined`はエラーになります:
 ``` javascript
-it(undefined).string().isValid // <= false
+$(undefined).string().isValid // <= false
 ```
 `undefined`を許可する場合は`optional`を型の前に付けます:
 ``` javascript
-it(undefined).optional.string().isValid // <= true
+$(undefined).optional.string().isValid // <= true
 ```
 
 #### null を許可する *(nullable)*
 デフォルトで`null`はエラーになります:
 ``` javascript
-it(null).string().isValid // <= false
+$(null).string().isValid // <= false
 ```
 `null`を許可する場合は`nullable`を型の前に付けます:
 ``` javascript
-it(null).nullable.string().isValid // <= true
+$(null).nullable.string().isValid // <= true
 ```
 
 #### null と undefined を許可する
 `nullable`と`optional`は併用できます:
 ``` javascript
-it(x).nullable.optional.string()
+$(x).nullable.optional.string()
 ```
 
 |                     | undefined | null |
@@ -108,27 +110,33 @@ it(x).nullable.optional.string()
 ### 遅延検証
 cafyの引数を省略することで、後から値を検証するバリデータになります:
 ``` javascript
-it().number().range(30, 50)
+$().number().range(30, 50)
 ```
 `test`メソッドに値を与えて検証します:
 ``` javascript
-it().number().range(30, 50).test(42) // <= null
+$().number().range(30, 50).test(42) // <= true
 ```
-`test`メソッドはバリデーションに合格した場合は`null`を、失格した場合は`Error`を返します。
+`boolean`値ではなく`Error`を取得したい場合は`test`の代わりに`report`メソッドが利用できます。
+ℹ️ `report`メソッドはバリデーションに合格した場合は`null`を、失格した場合は`Error`を返します。
+
+この遅延検証を利用すると、配列の`some`などに渡すときに便利です:
+``` javascript
+xs.some($().number().max(30).test)
+```
 
 Tips
 -----------------------------------------------
 ### 規定値を設定する
 [Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
-const [val = 'desc', err] = it(x).optional.string().or('asc desc').$;
+const [val = 'desc', err] = $(x).optional.string().or('asc desc').$;
 //→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
 ### cafyの入れ子
 cafy同士はシームレスに連携するので、入れ子にして使うこともできます:
 ``` javascript
-it(x).array().each(it().string().range(0, 100))
+$(x).array().each($().string().range(0, 100))
 //→ xは全ての要素が0文字以上100文字以内の文字列の配列でなければならない
 ```
 
@@ -143,8 +151,8 @@ API
 カスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 ``` javascript
-it('strawberry pasta').string().validate(x => x.indexOf('alice') == -1).isValid // true
-it(['a', 'b', 'c']).array().validate(x => x[1] != 'b').isValid // false
+$('strawberry pasta').string().validate(x => x.indexOf('alice') == -1).isValid // true
+$(['a', 'b', 'c']).array().validate(x => x[1] != 'b').isValid // false
 ```
 
 #### `.$` => `[any, Error]`
@@ -171,9 +179,9 @@ it(['a', 'b', 'c']).array().validate(x => x[1] != 'b').isValid // false
 `min`以上`max`以下の数の要素を持っていなければならないという制約を追加します。
 要素数が指定された範囲内にない場合エラーにします。
 ``` javascript
-it(['a', 'b', 'c']).range(2, 5).isValid                // true
-it(['a', 'b', 'c', 'd', 'e', 'f']).range(2, 5).isValid // false
-it(['a']).range(2, 5).isValid                          // false
+$(['a', 'b', 'c']).range(2, 5).isValid                // true
+$(['a', 'b', 'c', 'd', 'e', 'f']).range(2, 5).isValid // false
+$(['a']).range(2, 5).isValid                          // false
 ```
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
@@ -182,16 +190,16 @@ it(['a']).range(2, 5).isValid                          // false
 ユニークな配列(=重複した値を持っていない)でなければならないという制約を追加します。
 重複した要素がある場合エラーにします。
 ``` javascript
-it(['a', 'b', 'c']).array().unique().isValid      // true
-it(['a', 'b', 'c', 'b']).array().unique().isValid // false
+$(['a', 'b', 'c']).array().unique().isValid      // true
+$(['a', 'b', 'c', 'b']).array().unique().isValid // false
 ```
 
 #### `.each(fn)` => `Query`
 各要素に対してカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 ``` javascript
-it([1, 2, 3]).array().each(x => x < 4).isValid // true
-it([1, 4, 3]).array().each(x => x < 4).isValid // false
+$([1, 2, 3]).array().each(x => x < 4).isValid // true
+$([1, 4, 3]).array().each(x => x < 4).isValid // false
 ```
 
 ### Number
@@ -199,15 +207,15 @@ it([1, 4, 3]).array().each(x => x < 4).isValid // false
 整数でなければならないという制約を追加します。
 整数でない場合エラーにします。
 ``` javascript
-it(0).number().int().isValid        // true
-it(1).number().int().isValid        // true
-it(-100).number().int().isValid     // true
+$(0).number().int().isValid        // true
+$(1).number().int().isValid        // true
+$(-100).number().int().isValid     // true
 
-it(0.1).number().int().isValid      // false
-it(Math.PI).number().int().isValid  // false
+$(0.1).number().int().isValid      // false
+$(Math.PI).number().int().isValid  // false
 
-it(NaN).number().int().isValid      // false
-it(Infinity).number().int().isValid // false
+$(NaN).number().int().isValid      // false
+$(Infinity).number().int().isValid // false
 ```
 
 #### `.min(threshold)` => `Query`
@@ -234,9 +242,9 @@ it(Infinity).number().int().isValid // false
 `pattern`は文字列の配列またはスペースで区切られた文字列です。
 どれとも一致しない場合エラーにします。
 ``` javascript
-it('strawberry').string().or(['strawberry', 'pasta']).isValid // true
-it('alice').string().or(['strawberry', 'pasta']).isValid      // false
-it('pasta').string().or('strawberry pasta').isValid           // true
+$('strawberry').string().or(['strawberry', 'pasta']).isValid // true
+$('alice').string().or(['strawberry', 'pasta']).isValid      // false
+$('pasta').string().or('strawberry pasta').isValid           // true
 ```
 
 #### `.min(threshold)` => `Query`
@@ -259,22 +267,22 @@ Examples
 ### With your api server
 ``` javascript
 import * as express from 'express';
-import it from 'cafy';
+import $ from 'cafy';
 import db from './mydb';
 
 const app = express();
 
 app.post('/create-account', (req, res) => {
   // アカウント名は文字列で、30文字以内でなければならない。この値は必須である。
-  const [name, nameErr] = it(req.body.name).string().max(30).$;
+  const [name, nameErr] = $(req.body.name).string().max(30).$;
   if (nameErr) return res.status(400).send('invalid name');
 
   // 年齢は数値で、0~100の整数でなければならない。この値は必須である。
-  const [age, ageErr] = it(req.body.age).number().int().range(0,100).$;
+  const [age, ageErr] = $(req.body.age).number().int().range(0,100).$;
   if (ageErr) return res.status(400).send('invalid age');
 
   // 性別は'male'か'female'かnull(=設定なし)でなければならない。省略した場合はnullとして扱う。
-  const [gender = null, genderErr] = it(req.body.gender).nullable.optional.string().or('male female').$;
+  const [gender = null, genderErr] = $(req.body.gender).nullable.optional.string().or('male female').$;
   if (genderErr) return res.status(400).send('invalid gender');
 
   db.insert({
