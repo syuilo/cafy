@@ -9,7 +9,7 @@ const f = require('../').default;
 
 it('デフォルトの値を設定できる', () => {
 	const def = 'strawberry pasta';
-	const [val = def, err] = f(undefined).optional.string().qed;
+	const [val = def, err] = f(undefined).optional.string().$;
 	assert.equal(val, def);
 	assert.equal(err, null);
 });
@@ -66,7 +66,7 @@ describe('Common', () => {
 	describe('optional', () => {
 		it('値を与えられる', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = f(x).optional.string().qed;
+			const [val, err] = f(x).optional.string().$;
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
@@ -85,7 +85,7 @@ describe('Common', () => {
 	describe('nullable', () => {
 		it('値を与えられる', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = f(x).nullable.string().qed;
+			const [val, err] = f(x).nullable.string().$;
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
@@ -104,7 +104,7 @@ describe('Common', () => {
 	describe('optional + nullable', () => {
 		it('値を与えられる', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = f(x).nullable.optional.string().qed;
+			const [val, err] = f(x).nullable.optional.string().$;
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
@@ -142,14 +142,14 @@ describe('Queries', () => {
 	describe('String', () => {
 		it('正当な値を与える', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = f(x).string().qed;
+			const [val, err] = f(x).string().$;
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
 
 		it('文字列以外でエラー', () => {
 			const x = [1, 2, 3];
-			const [val, err] = f(x).string().qed;
+			const [val, err] = f(x).string().$;
 			assert.notEqual(err, null);
 		});
 
@@ -203,14 +203,14 @@ describe('Queries', () => {
 	describe('Number', () => {
 		it('正当な値を与える', () => {
 			const x = 42;
-			const [val, err] = f(x).number().qed;
+			const [val, err] = f(x).number().$;
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
 
 		it('数値以外でエラー', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = f(x).number().qed;
+			const [val, err] = f(x).number().$;
 			assert.notEqual(err, null);
 		});
 
@@ -254,14 +254,14 @@ describe('Queries', () => {
 	describe('Array', () => {
 		it('正当な値を与える', () => {
 			const x = [1, 2, 3];
-			const [val, err] = f(x).array().qed;
+			const [val, err] = f(x).array().$;
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
 
 		it('配列以外でエラー', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = f(x).array().qed;
+			const [val, err] = f(x).array().$;
 			assert.notEqual(err, null);
 		});
 

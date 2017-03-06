@@ -63,7 +63,8 @@ Supported types
 it(x).array('string');
 ```
 
-### undefined を許可する (optional)
+### null と undefined の扱い
+#### undefined を許可する (optional)
 デフォルトで`undefined`はエラーになります:
 ``` javascript
 it(undefined).string().isValid // <= false
@@ -73,7 +74,7 @@ it(undefined).string().isValid // <= false
 it(undefined).optional.string().isValid // <= true
 ```
 
-### null を許可する (nullable)
+#### null を許可する (nullable)
 デフォルトで`null`はエラーになります:
 ``` javascript
 it(null).string().isValid // <= false
@@ -83,7 +84,7 @@ it(null).string().isValid // <= false
 it(null).nullable.string().isValid // <= true
 ```
 
-### null と undefined を許可する
+#### null と undefined を許可する
 `nullable`と`optional`は併用できます:
 ``` javascript
 it(x).nullable.optional.string()
@@ -101,7 +102,7 @@ Tips
 ### 規定値を設定する
 [Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
-const [val = 'desc', err] = it(x).optional.string().or('asc desc').qed;
+const [val = 'desc', err] = it(x).optional.string().or('asc desc').$;
 //→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
@@ -127,7 +128,7 @@ it('strawberry pasta').string().validate(x => x.indexOf('alice') == -1).isValid 
 it(['a', 'b', 'c']).array().validate(x => x[1] != 'b').isValid // false
 ```
 
-#### `.qed` => `[any, Error]`
+#### `.$` => `[any, Error]`
 テスト対象の値とテスト結果の配列を取得します。
 
 #### `.result` => `Error`

@@ -92,7 +92,7 @@ abstract class Query<T> {
 	/**
 	 * このインスタンスの値およびエラーを取得します
 	 */
-	get qed(): [T, Error] {
+	get $(): [T, Error] {
 		if (this.lazy) throw new Error('このインスタンスには値がセットされていません');
 		return [this.value, this.error];
 	}
