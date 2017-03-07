@@ -1,4 +1,4 @@
-2.1.0 unreleased
+2.1.0 / 2017-03-08
 ------------------
 * Add `length()` to StringQuery and ArrayQuery
 * Add `item()` to ArrayQuery
