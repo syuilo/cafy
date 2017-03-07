@@ -253,6 +253,36 @@ $(Infinity).number().int().isOk() // false
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
 
+### Object
+#### `.prop(name, fn)` => `Query`
+特定のプロパティにカスタムのバリデーションを実行できます。
+引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
+引数にはcafyインスタンスも渡せます。
+``` javascript
+$({ myProp: true }).object().prop('myProp', $().boolean()).isOk() // true
+
+// --- 複雑な例 ---
+const x = {
+  some: {
+    strawberry: 'pasta',
+    alice: false,
+    tachibana: {
+      bwh: [68, 52, 67]
+    }
+  },
+  thing: 42
+};
+
+$(x).object()
+  .prop('some', $().object()
+    .prop('strawberry', $().string())
+    .prop('alice', $().boolean())
+    .prop('tachibana'), $().object()
+      .prop('bwh', $().array('number')))
+  .prop('thing', $().number())
+  .isOk() // true
+```
+
 ### String
 #### `.match(pattern)` => `Query`
 与えられた正規表現とマッチしていなければならないという制約を追加します。

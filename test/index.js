@@ -367,4 +367,54 @@ describe('Queries', () => {
 			assert.notEqual(err, null);
 		});
 	});
+
+	describe('Object', () => {
+		it('正当な値を与えられる', () => {
+			const x = { myProp: 42 };
+			const [val, err] = $(x).object().$;
+			assert.deepEqual(val, x);
+			assert.equal(err, null);
+		});
+
+		it('オブジェクト以外でエラー', () => {
+			const x = 'strawberry pasta';
+			const [val, err] = $(x).object().$;
+			assert.notEqual(err, null);
+		});
+
+		it('# prop', () => {
+			const validate = $().object()
+				.prop('some', $().object()
+					.prop('strawberry', $().string())
+					.prop('alice', $().boolean())
+					.prop('tachibana', $().object()
+						.prop('bwh', $().array('number'))))
+				.prop('thing', $().number())
+				.test;
+
+			const x = {
+				some: {
+					strawberry: 'pasta',
+					alice: false,
+					tachibana: {
+						bwh: [68, 52, 67]
+					}
+				},
+				thing: 42
+			};
+			assert.equal(validate(x), null);
+
+			const y = {
+				some: {
+					strawberry: 'pasta',
+					alice: false,
+					tachibana: {
+						bwh: [68, '52', 67]
+					}
+				},
+				thing: 42
+			};
+			assert.notEqual(validate(y), null);
+		});
+	});
 });

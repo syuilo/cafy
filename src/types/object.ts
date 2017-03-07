@@ -11,4 +11,25 @@ export default class ObjectQuery extends Query<any> {
 			return true;
 		});
 	}
+
+	/**
+	 * 指定されたプロパティに対して妥当性を検証します
+	 * バリデータが false またはエラーを返した場合エラーにします
+	 * @param name プロパティ名
+	 * @param validator バリデータ
+	 */
+	prop(name: string, validator: ((prop: any) => boolean | Error) | Query<any>) {
+		const validate = validator instanceof Query ? validator.test : validator;
+		this.pushValidator(v => {
+			const result = validate(v[name]);
+			if (result === false) {
+				return new Error('invalid-prop');
+			} else if (result instanceof Error) {
+				return result;
+			} else {
+				return true;
+			}
+		});
+		return this;
+	}
 }
