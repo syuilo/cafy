@@ -120,19 +120,19 @@ describe('Common', () => {
 		});
 	});
 
-	describe('# validate', () => {
+	describe('# pipe', () => {
 		it('バリデータが true を返したら合格', () => {
-			const err = $('strawberry pasta').string().validate(() => true).test();
+			const err = $('strawberry pasta').string().pipe(() => true).test();
 			assert.equal(err, null);
 		});
 
 		it('バリデータが false を返したら失格', () => {
-			const err = $('strawberry pasta').string().validate(() => false).test();
+			const err = $('strawberry pasta').string().pipe(() => false).test();
 			assert.notEqual(err, null);
 		});
 
 		it('バリデータが Error を返したら失格', () => {
-			const err = $('strawberry pasta').string().validate(() => new Error('something')).test();
+			const err = $('strawberry pasta').string().pipe(() => new Error('something')).test();
 			assert.notEqual(err, null);
 		});
 	});

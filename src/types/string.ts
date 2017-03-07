@@ -1,8 +1,9 @@
 import Query from '../query';
-import { isNotAString } from '../core';
+
+export const isAString = x => typeof x == 'string';
+export const isNotAString = x => !isAString(x);
 
 export default class StringQuery extends Query<string> {
-
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
 		super(optional, nullable, lazy, value);
 		this.pushValidator(v => {

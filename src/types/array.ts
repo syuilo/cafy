@@ -1,27 +1,28 @@
 import Query from '../query';
-import { isNotAnArray, isNotABoolean, isNotAnId, isNotANumber, isNotAnObject, isNotAString } from '../core';
+import $ from '../index';
 
+export const isAnArray = x => Array.isArray(x);
+export const isNotAnArray = x => !isAnArray(x);
 const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 
 export default class ArrayQuery<T> extends Query<T[]> {
-
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, type?) {
 		super(optional, nullable, lazy, value);
 		this.pushValidator(v => {
 			if (isNotAnArray(v)) {
 				return new Error('must-be-an-array');
-			} else if (type != null) {
-				switch (type) {
-					case 'array': if (v.some(isNotAnArray)) return new Error('dirty-array'); break;
-					case 'boolean': if (v.some(isNotABoolean)) return new Error('dirty-array'); break;
-					case 'id': if (v.some(isNotAnId)) return new Error('dirty-array'); break;
-					case 'number': if (v.some(isNotANumber)) return new Error('dirty-array'); break;
-					case 'object': if (v.some(isNotAnObject)) return new Error('dirty-array'); break;
-					case 'string': if (v.some(isNotAString)) return new Error('dirty-array'); break;
-				}
 			}
 			return true;
 		});
+
+		switch (type) {
+			case 'array': this.each($().array()); break;
+			case 'boolean': this.each($().boolean()); break;
+			case 'id': this.each($().id()); break;
+			case 'number': this.each($().number()); break;
+			case 'object': this.each($().object()); break;
+			case 'string': this.each($().string()); break;
+		}
 	}
 
 	/**
@@ -75,7 +76,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
 	 */
-	each(validator: ((element: T, index: number, array: T[]) => boolean | Error) | Query<T>) {
+	each(validator: ((element: T, index: number, array: T[]) => boolean | Error) | Query<any>) {
 		const _validator = validator instanceof Query ? validator.test : validator;
 		this.pushValidator(v => {
 			let err: Error;

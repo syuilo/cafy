@@ -105,7 +105,7 @@ abstract class Query<T> {
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
 	 */
-	validate(validator: Validator<T>) {
+	pipe(validator: Validator<T>) {
 		this.pushValidator(validator);
 		return this;
 	}

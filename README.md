@@ -75,6 +75,10 @@ Supported types
 ``` javascript
 $(x).array('string')
 ```
+ちなみにこれは次の糖衣構文です:
+``` javascript
+$(x).array().each($().string())
+```
 
 ### null と undefined の扱い
 #### undefined を許可する *(optional)*
@@ -150,12 +154,12 @@ API
 
 ### 共通
 
-#### `.validate(fn)` => `Query`
+#### `.pipe(fn)` => `Query`
 カスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 ``` javascript
-$('strawberry pasta').string().validate(x => x.indexOf('alice') == -1).isOk() // true
-$(['a', 'b', 'c']).array().validate(x => x[1] != 'b').isOk() // false
+$('strawberry pasta').string().pipe(x => x.indexOf('alice') == -1).isOk() // true
+$(['a', 'b', 'c']).array().pipe(x => x[1] != 'b').isOk() // false
 ```
 
 #### `.$` => `[any, Error]`

@@ -1,6 +1,8 @@
 import * as mongo from 'mongodb';
 import Query from '../query';
-import { isAnId, isNotAnId } from '../core';
+
+export const isAnId = x => mongo.ObjectID.isValid(x);
+export const isNotAnId = x => !isAnId(x);
 
 export default class IdQuery extends Query<mongo.ObjectID> {
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {

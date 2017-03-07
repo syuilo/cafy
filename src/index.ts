@@ -59,7 +59,7 @@ type Type =
 	'set' | 'set!' | 'set?' | 'set!?' |
 	'object' | 'object!' | 'object?' | 'object!?';
 
-function x(value?: any): It {
+function $(value?: any): It {
 	const lazy = arguments.length === 0;
 
 	return {
@@ -129,4 +129,4 @@ function x(value?: any): It {
 	};
 }
 
-export default x;
+export default $;
