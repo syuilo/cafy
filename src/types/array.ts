@@ -72,6 +72,27 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	}
 
 	/**
+	 * 指定されたインデックスの要素に対して妥当性を検証します
+	 * バリデータが false またはエラーを返した場合エラーにします
+	 * @param index インデックス
+	 * @param validator バリデータ
+	 */
+	item(index: number, validator: ((element: T) => boolean | Error) | Query<any>) {
+		const validate = validator instanceof Query ? validator.test : validator;
+		this.pushValidator(v => {
+			const result = validate(v[index]);
+			if (result === false) {
+				return new Error('invalid-item');
+			} else if (result instanceof Error) {
+				return result;
+			} else {
+				return true;
+			}
+		});
+		return this;
+	}
+
+	/**
 	 * 配列の各要素に対して妥当性を検証します
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ

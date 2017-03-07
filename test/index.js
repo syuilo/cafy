@@ -330,6 +330,16 @@ describe('Queries', () => {
 			});
 		});
 
+		it('# item', () => {
+			const validate = $().array().item(1, $().number()).test;
+
+			const x = ['a', 42, 'c'];
+			assert.equal(validate(x), null);
+
+			const y = ['a', 'b', 'c'];;
+			assert.notEqual(validate(y), null);
+		});
+
 		describe('# each', () => {
 			it('バリデータが true を返したら合格', () => {
 				const err = $([1, 2, 3]).array().each(() => true).test();

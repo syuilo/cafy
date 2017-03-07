@@ -1,5 +1,6 @@
 2.1.0 unreleased
 ------------------
+* Add `item()` to ArrayQuery
 * Add `prop()` to ObjectQuery
 
 2.0.0 / 2017-03-07
