@@ -1,5 +1,6 @@
 2.1.0 unreleased
 ------------------
+* Add `length()` to StringQuery and ArrayQuery
 * Add `item()` to ArrayQuery
 * Add `prop()` to ObjectQuery
 

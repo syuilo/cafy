@@ -194,6 +194,16 @@ describe('Queries', () => {
 			});
 		});
 
+		it('# length', () => {
+			const validate = $().string().length(3).test;
+
+			const x = 'abc';
+			assert.equal(validate(x), null);
+
+			const y = 'abcd';
+			assert.notEqual(validate(y), null);
+		});
+
 		describe('# or', () => {
 			it('合致する文字列で成功 (配列)', () => {
 				const err = $('strawberry').string().or(['strawberry', 'pasta']).test();
@@ -330,13 +340,23 @@ describe('Queries', () => {
 			});
 		});
 
+		it('# length', () => {
+			const validate = $().array().length(3).test;
+
+			const x = [1, 2, 3];
+			assert.equal(validate(x), null);
+
+			const y = [1, 2, 3, 4];
+			assert.notEqual(validate(y), null);
+		});
+
 		it('# item', () => {
 			const validate = $().array().item(1, $().number()).test;
 
 			const x = ['a', 42, 'c'];
 			assert.equal(validate(x), null);
 
-			const y = ['a', 'b', 'c'];;
+			const y = ['a', 'b', 'c'];
 			assert.notEqual(validate(y), null);
 		});
 

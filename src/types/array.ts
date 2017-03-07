@@ -72,6 +72,18 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	}
 
 	/**
+	 * 指定された数の要素を持っていなければエラーにします
+	 * @param length 要素数
+	 */
+	length(length: number) {
+		this.pushValidator(v => {
+			if (v.length !== length) return new Error('invalid-length');
+			return true;
+		});
+		return this;
+	}
+
+	/**
 	 * 指定されたインデックスの要素に対して妥当性を検証します
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param index インデックス

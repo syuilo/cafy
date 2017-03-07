@@ -48,6 +48,18 @@ export default class StringQuery extends Query<string> {
 	}
 
 	/**
+	 * 指定された文字数でなければエラーにします
+	 * @param length 文字数
+	 */
+	length(length: number) {
+		this.pushValidator(v => {
+			if (v.length !== length) return new Error('invalid-length');
+			return true;
+		});
+		return this;
+	}
+
+	/**
 	 * このインスタンスの文字列が、与えられたパターン内の文字列のどれかと一致するか検証します
 	 * どれとも一致しない場合エラーにします
 	 * @param pattern 文字列の配列または|で区切られた文字列
