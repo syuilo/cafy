@@ -227,6 +227,7 @@ $(['a', 'b', 'c']).array().item(1, $().number()).isOk() // false
 #### `.each(fn)` => `Query`
 各要素に対してカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
+引数にはcafyインスタンスも渡せます。
 ``` javascript
 $([1, 2, 3]).array().each(x => x < 4).isOk() // true
 $([1, 4, 3]).array().each(x => x < 4).isOk() // false
