@@ -296,7 +296,7 @@ app.post('/create-account', (req, res) => {
   if (ageErr) return res.status(400).send('invalid age');
 
   // 性別は'male'か'female'かnull(=設定なし)でなければならない。省略した場合はnullとして扱う。
-  const [gender = null, genderErr] = $(req.body.gender).nullable.optional.string().or('male female').$;
+  const [gender = null, genderErr] = $(req.body.gender).nullable.optional.string().or('male|female').$;
   if (genderErr) return res.status(400).send('invalid gender');
 
   db.insert({
