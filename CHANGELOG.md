@@ -1,3 +1,7 @@
+2.3.0 / unreleased
+------------------
+* Add `any` type
+
 2.2.0 / 2017-03-08
 ------------------
 * Add `strict` option ObjectQuery

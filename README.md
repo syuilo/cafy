@@ -59,6 +59,7 @@ $('alice'           ).string().range(10, 100).isOk() // => false
 もちろん文字列以外にも、次の型をサポートしています:
 
 Supported types
+* **any** ... e.g.`$(x).any()...`
 * **array** ... e.g.`$(x).array()...`
 * **boolean** ... e.g.`$(x).boolean()...`
 * **number** ... e.g.`$(x).number()...`
@@ -148,6 +149,16 @@ $({ x: 42, y: 24 }).object().have('x', $().number()).isOk() // <= true
 $({ x: 42, y: 24 }).strict.object().have('x', $().number()).isOk() // <= false
 ```
 
+### Any
+Any型を使うと、「*undefined*や*null*はダメだけど、型は何でもいい」といった値を検証したいときに便利です:
+``` javascript
+$('strawberry pasta').any().isOk() // <= true
+```
+「中に入ってるものはなんでもいいから、とりあえず`x`というプロパティを持っていてほしい」という場合:
+``` javascript
+$({ x: 'strawberry pasta' }).object().have('x', $().any()).isOk() // <= true
+```
+
 Tips
 -----------------------------------------------
 ### 規定値を設定する
@@ -196,6 +207,9 @@ $(['a', 'b', 'c']).array().pipe(x => x[1] != 'b').isOk() // false
 合格した場合は`false`で、そうでない場合は`true`です。
 `.isOk()`の否定です。
 (*Ng*は**N**o**G**oogの略です)
+
+### Any
+Any独自のメソッドはありません。
 
 ### Array
 #### `.min(threshold)` => `Query`
