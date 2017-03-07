@@ -128,6 +128,15 @@ xs.some($().number().max(30).isNg)
 
 ℹ️ `isNg`は`isOk`の逆です。
 
+バリデータを使い回したいときも簡単です:
+``` javascript
+const isValidGender = $().string().or('male|female').isOk;
+
+isValidGender('male')   // true
+isValidGender('female') // true
+isValidGender('alice')  // false
+```
+
 Tips
 -----------------------------------------------
 ### 規定値を設定する
@@ -247,6 +256,9 @@ $(Infinity).number().int().isOk() // false
 #### `.match(pattern)` => `Query`
 与えられた正規表現とマッチしていなければならないという制約を追加します。
 正規表現と一致しない場合エラーにします。
+``` javascript
+$('2017-03-07').string().match(/^([0-9]{4})\-([0-9]{2})-([0-9]{2})$/).isOk() // true
+```
 
 #### `.or(pattern)` => `Query`
 与えられたパターン内の文字列のいずれかでなければならないという制約を追加します。
