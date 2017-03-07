@@ -26,7 +26,7 @@ describe('統合', () => {
 		assert.notEqual(err, null);
 	});
 
-	describe('遅延評価', () => {
+	describe('遅延検証', () => {
 		it('正しく成功する', () => {
 			const err = $().string().min(10).test('strawberry pasta');
 			assert.equal(err, null);
@@ -36,16 +36,23 @@ describe('統合', () => {
 			const err = $().string().min(10).test('alice');
 			assert.notEqual(err, null);
 		});
+
+		it('使いまわせる', () => {
+			const isValidGender = $().string().or('male|female').isOk;
+			assert.equal(isValidGender('male'), true);
+			assert.equal(isValidGender('female'), true);
+			assert.equal(isValidGender('alice'), false);
+		});
 	});
 
 	describe('入れ子', () => {
 		it('正しく成功する', () => {
-			const err = $([1, 2, 3]).array().each($().number().range(0, 100)).test();
+			const err = $([1, 2, 3]).array().each($().number().range(0, 10)).test();
 			assert.equal(err, null);
 		});
 
 		it('正しく失敗する', () => {
-			const err = $([1, -1, 3]).array().each($().number().range(0, 100)).test();
+			const err = $([1, -1, 3]).array().each($().number().range(0, 10)).test();
 			assert.notEqual(err, null);
 		});
 	});
@@ -134,6 +141,16 @@ describe('Common', () => {
 		it('バリデータが Error を返したら失格', () => {
 			const err = $('strawberry pasta').string().pipe(() => new Error('something')).test();
 			assert.notEqual(err, null);
+		});
+
+		it('nullのときには実行されない', () => {
+			const err = $(null).nullable.string().pipe(x => x[0] == 'a').test();
+			assert.equal(err, null);
+		});
+
+		it('undefinedのときには実行されない', () => {
+			const err = $(undefined).optional.string().pipe(x => x[0] == 'a').test();
+			assert.equal(err, null);
 		});
 	});
 });
@@ -328,6 +345,26 @@ describe('Queries', () => {
 				const err = $([1, 2, 3]).array().each(() => new Error('something')).test();
 				assert.notEqual(err, null);
 			});
+		});
+	});
+
+	describe('Boolean', () => {
+		it('正当な値を与える', () => {
+			const x = true;
+			const [valx, errx] = $(x).boolean().$;
+			assert.equal(valx, x);
+			assert.equal(errx, null);
+
+			const y = false;
+			const [valy, erry] = $(y).boolean().$;
+			assert.equal(valy, y);
+			assert.equal(erry, null);
+		});
+
+		it('真理値以外でエラー', () => {
+			const x = 'strawberry pasta';
+			const [val, err] = $(x).boolean().$;
+			assert.notEqual(err, null);
 		});
 	});
 });
