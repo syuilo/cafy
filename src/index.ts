@@ -50,15 +50,6 @@ export type It = Types & {
 	optional: Types & { nullable: Types; };
 };
 
-type Type =
-	'id' | 'id!' | 'id?' | 'id!?' |
-	'string' | 'string!' | 'string?' | 'string!?' |
-	'number' | 'number!' | 'number?' | 'number!?' |
-	'boolean' | 'boolean!' | 'boolean?' | 'boolean!?' |
-	'array' | 'array!' | 'array?' | 'array!?' |
-	'set' | 'set!' | 'set?' | 'set!?' |
-	'object' | 'object!' | 'object?' | 'object!?';
-
 function $(value?: any): It {
 	const lazy = arguments.length === 0;
 
