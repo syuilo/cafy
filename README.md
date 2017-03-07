@@ -21,7 +21,7 @@ cafyを使えばそれらのバリデーションを楽しく簡単に、そし�
 
 Installation
 -----------------------------------------------
-Juat `npm install cafy --save`.
+Just `npm install cafy --save`.
 Happy validation!
 
 Usage
