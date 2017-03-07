@@ -1,4 +1,5 @@
 import Query from '../query';
+import $ from '../index';
 
 export const isAnObject = x => typeof x == 'object';
 export const isNotAnObject = x => !isAnObject(x);
@@ -53,8 +54,9 @@ export default class ObjectQuery extends Query<Object> {
 	 * @param name プロパティ名
 	 * @param validator バリデータ
 	 */
-	have(name: string, validator: ((prop: any) => boolean | Error) | Query<any>) {
+	have(name: string, validator?: ((prop: any) => boolean | Error) | Query<any>) {
 		this.mentions.push(name);
+		validator = arguments.length == 1 ? $().any() : validator;
 		const validate = validator instanceof Query ? validator.test : validator;
 		this.pushValidator(v => {
 			if (!v.hasOwnProperty(name)) return new Error('prop-required');
