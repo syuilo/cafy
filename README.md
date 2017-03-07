@@ -215,7 +215,7 @@ $(['a', 'b', 'c']).array().unique().isOk()      // true
 $(['a', 'b', 'c', 'b']).array().unique().isOk() // false
 ```
 
-#### `.prop(name, fn)` => `Query`
+#### `.item(index, fn)` => `Query`
 特定のインデックスの要素に対してカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 引数にはcafyインスタンスも渡せます。
