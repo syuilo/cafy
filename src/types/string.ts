@@ -50,10 +50,10 @@ export default class StringQuery extends Query<string> {
 	/**
 	 * このインスタンスの文字列が、与えられたパターン内の文字列のどれかと一致するか検証します
 	 * どれとも一致しない場合エラーにします
-	 * @param pattern 文字列の配列またはスペースで区切られた文字列
+	 * @param pattern 文字列の配列または|で区切られた文字列
 	 */
 	or(pattern: string | string[]) {
-		if (typeof pattern == 'string') pattern = pattern.split(' ');
+		if (typeof pattern == 'string') pattern = pattern.split('|');
 		this.pushValidator(v => {
 			const match = (pattern as string[]).some(x => x === v);
 			if (!match) return new Error('not-match-pattern');

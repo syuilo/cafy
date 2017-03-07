@@ -189,12 +189,12 @@ describe('Queries', () => {
 			});
 
 			it('合致する文字列で成功 (文字列)', () => {
-				const err = $('strawberry').string().or('strawberry pasta').test();
+				const err = $('strawberry').string().or('strawberry|pasta').test();
 				assert.equal(err, null);
 			});
 
 			it('合致しない文字列で失敗 (文字列)', () => {
-				const err = $('alice').string().or('strawberry pasta').test();
+				const err = $('alice').string().or('strawberry|pasta').test();
 				assert.notEqual(err, null);
 			});
 		});

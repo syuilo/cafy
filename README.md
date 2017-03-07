@@ -253,12 +253,12 @@ $(Infinity).number().int().isOk() // false
 
 #### `.or(pattern)` => `Query`
 与えられたパターン内の文字列のいずれかでなければならないという制約を追加します。
-`pattern`は文字列の配列またはスペースで区切られた文字列です。
+`pattern`は文字列の配列または`|`で区切られた文字列です。
 どれとも一致しない場合エラーにします。
 ``` javascript
 $('strawberry').string().or(['strawberry', 'pasta']).isOk() // true
 $('alice').string().or(['strawberry', 'pasta']).isOk()      // false
-$('pasta').string().or('strawberry pasta').isOk()           // true
+$('pasta').string().or('strawberry|pasta').isOk()           // true
 ```
 
 #### `.min(threshold)` => `Query`
