@@ -4,12 +4,22 @@ export const isAnObject = x => typeof x == 'object';
 export const isNotAnObject = x => !isAnObject(x);
 
 export default class ObjectQuery extends Query<Object> {
-	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
+	mentions: string[] = [];
+
+	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, strict?: boolean) {
 		super(optional, nullable, lazy, value);
 		this.pushValidator(v => {
 			if (isNotAnObject(v)) return new Error('must-be-an-object');
 			return true;
 		});
+		if (strict) {
+			this.pushValidator(v => {
+				const properties = Object.keys(v);
+				const hasNotMentionedProperty = properties.some(p => this.mentions.some(m => m != p));
+				if (hasNotMentionedProperty) return new Error('dirty-object');
+				return true;
+			});
+		}
 	}
 
 	/**
@@ -20,6 +30,7 @@ export default class ObjectQuery extends Query<Object> {
 	 * @param validator バリデータ
 	 */
 	prop(name: string, validator: ((prop: any) => boolean | Error) | Query<any>) {
+		this.mentions.push(name);
 		const validate = validator instanceof Query ? validator.test : validator;
 		this.pushValidator(v => {
 			if (!v.hasOwnProperty(name)) return true;
@@ -43,6 +54,7 @@ export default class ObjectQuery extends Query<Object> {
 	 * @param validator バリデータ
 	 */
 	have(name: string, validator: ((prop: any) => boolean | Error) | Query<any>) {
+		this.mentions.push(name);
 		const validate = validator instanceof Query ? validator.test : validator;
 		this.pushValidator(v => {
 			if (!v.hasOwnProperty(name)) return new Error('prop-required');

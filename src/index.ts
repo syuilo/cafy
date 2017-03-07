@@ -43,6 +43,9 @@ export type Types = {
 	id: () => IdQuery;
 	array: typeof createArrayQuery;
 	object: () => ObjectQuery;
+	strict: {
+		object: () => ObjectQuery;
+	};
 };
 
 export type It = Types & {
@@ -65,6 +68,9 @@ function $(value?: any): It {
 				nullable: false
 			})(type),
 		object: () => new ObjectQuery(false, false, lazy, value),
+		strict: {
+			object: () => new ObjectQuery(false, false, lazy, value, true)
+		},
 		nullable: {
 			string: () => new StringQuery(false, true, lazy, value),
 			number: () => new NumberQuery(false, true, lazy, value),
@@ -77,6 +83,9 @@ function $(value?: any): It {
 				nullable: true
 			})(type),
 			object: () => new ObjectQuery(false, true, lazy, value),
+			strict: {
+				object: () => new ObjectQuery(false, true, lazy, value, true)
+			},
 			optional: {
 				string: () => new StringQuery(true, true, lazy, value),
 				number: () => new NumberQuery(true, true, lazy, value),
@@ -88,7 +97,10 @@ function $(value?: any): It {
 					optional: true,
 					nullable: true
 				})(type),
-				object: () => new ObjectQuery(true, true, lazy, value)
+				object: () => new ObjectQuery(true, true, lazy, value),
+				strict: {
+					object: () => new ObjectQuery(true, true, lazy, value, true)
+				}
 			}
 		},
 		optional: {
@@ -103,6 +115,9 @@ function $(value?: any): It {
 				nullable: false
 			})(type),
 			object: () => new ObjectQuery(true, false, lazy, value),
+			strict: {
+				object: () => new ObjectQuery(true, false, lazy, value, true)
+			},
 			nullable: {
 				string: () => new StringQuery(true, true, lazy, value),
 				number: () => new NumberQuery(true, true, lazy, value),
@@ -114,7 +129,10 @@ function $(value?: any): It {
 					optional: true,
 					nullable: true
 				})(type),
-				object: () => new ObjectQuery(true, true, lazy, value)
+				object: () => new ObjectQuery(true, true, lazy, value),
+				strict: {
+					object: () => new ObjectQuery(true, true, lazy, value, true)
+				}
 			}
 		}
 	};

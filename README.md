@@ -138,6 +138,16 @@ isValidGender('female') // true
 isValidGender('alice')  // false
 ```
 
+### オブジェクトの厳格な検証 *(strict)*
+デフォルトでは、`have`や`prop`で言及した以外のプロパティを持っていても、問題にはしません:
+``` javascript
+$({ x: 42, y: 24 }).object().have('x', $().number()).isOk() // <= true
+```
+`have`または`prop`で言及した以外のプロパティを持っている場合にエラーにしたい場合は、`strict`を`object`の前に付けます:
+``` javascript
+$({ x: 42, y: 24 }).strict.object().have('x', $().number()).isOk() // <= false
+```
+
 Tips
 -----------------------------------------------
 ### 規定値を設定する

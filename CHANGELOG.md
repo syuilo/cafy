@@ -1,5 +1,6 @@
 2.2.0 / unreleased
 ------------------
+* Add `strict` option ObjectQuery
 * Add `have()` to ObjectQuery
 
 2.1.0 / 2017-03-08

@@ -412,6 +412,14 @@ describe('Queries', () => {
 			assert.notEqual(err, null);
 		});
 
+		it('strict', () => {
+			const err1 = $({ x: 42 }).strict.object().have('x', $().number()).test();
+			assert.equal(err1, null);
+
+			const err2 = $({ x: 42, y: 24 }).strict.object().have('x', $().number()).test();
+			assert.notEqual(err2, null);
+		});
+
 		it('# have', () => {
 			const err1 = $({ myProp: 42 }).object().have('myProp', $().number()).test();
 			assert.equal(err1, null);
