@@ -412,7 +412,29 @@ describe('Queries', () => {
 			assert.notEqual(err, null);
 		});
 
+		it('# have', () => {
+			const err1 = $({ myProp: 42 }).object().have('myProp', $().number()).test();
+			assert.equal(err1, null);
+
+			const err2 = $({}).object().have('myProp', $().number()).test();
+			assert.notEqual(err2, null);
+
+			const err3 = $({ myProp: 'strawberry pasta' }).object().have('myProp', $().number()).test();
+			assert.notEqual(err3, null);
+		});
+
 		it('# prop', () => {
+			const err1 = $({ myProp: 42 }).object().prop('myProp', $().number()).test();
+			assert.equal(err1, null);
+
+			const err2 = $({}).object().prop('myProp', $().number()).test();
+			assert.equal(err2, null);
+
+			const err3 = $({ myProp: 'strawberry pasta' }).object().prop('myProp', $().number()).test();
+			assert.notEqual(err3, null);
+		});
+
+		it('入れ子prop', () => {
 			const validate = $().object()
 				.prop('some', $().object()
 					.prop('strawberry', $().string())

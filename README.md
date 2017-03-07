@@ -271,6 +271,7 @@ $(Infinity).number().int().isOk() // false
 #### `.prop(name, fn)` => `Query`
 特定のプロパティにカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
+そのプロパティが存在しなかった場合は単に無視されます。
 引数にはcafyインスタンスも渡せます。
 ``` javascript
 $({ myProp: true }).object().prop('myProp', $().boolean()).isOk() // true
@@ -296,6 +297,12 @@ $(x).object()
   .prop('thing', $().number())
   .isOk() // true
 ```
+
+#### `.have(name, fn)` => `Query`
+特定のプロパティにカスタムのバリデーションを実行できます。
+引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
+そのプロパティが存在しなかった場合はエラーにします。
+引数にはcafyインスタンスも渡せます。
 
 ### String
 #### `.match(pattern)` => `Query`
