@@ -46,11 +46,8 @@ $(x).string().range(10, 100)
 ```
 検証して結果を取得するには`test`や`isOk`メソッドなどを利用できます:
 ``` javascript
-const x = 'strawberry pasta';
-const xIsValid = $(x).string().range(10, 100).isOk(); // => true
-
-const y = 'alice';
-const yIsValid = $(y).string().range(10, 100).isOk(); // => false
+$('strawberry pasta').string().range(10, 100).isOk() // => true
+$('alice'           ).string().range(10, 100).isOk() // => false
 ```
 
 `isOk`メソッドはバリデーションに合格した場合は`true`を、失格した場合は`false`を返します。
@@ -136,7 +133,7 @@ Tips
 ### 規定値を設定する
 [Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
-const [val = 'desc', err] = $(x).optional.string().or('asc desc').$;
+const [val = 'desc', err] = $(x).optional.string().or('asc|desc').$;
 //→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
