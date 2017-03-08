@@ -1,5 +1,6 @@
 2.3.0 / unreleased
 ------------------
+* Add overload to `have()`
 * Add `any` type
 
 2.2.0 / 2017-03-08
