@@ -154,9 +154,9 @@ Any型を使うと、「*undefined*や*null*はダメだけど、型は何でも
 ``` javascript
 $('strawberry pasta').any().isOk() // <= true
 ```
-「中に入ってるものはなんでもいいから、とりあえず`x`というプロパティを持っていてほしい」という場合:
+「中に入ってるものは文字列でも数値でも配列でもオブジェクトでもnullでもundefinedでもなんでもいいけど、必ず`x`というプロパティを持っていてほしい」という場合もanyを活用できます:
 ``` javascript
-$({ x: 'strawberry pasta' }).object().have('x', $().any()).isOk() // <= true
+$({ x: 'strawberry pasta' }).object().have('x', $().optional.nullable.any()).isOk() // <= true
 ```
 
 Tips
@@ -266,14 +266,14 @@ $([1, 4, 3]).array().each(x => x < 4).isOk() // false
 整数でなければならないという制約を追加します。
 整数でない場合エラーにします。
 ``` javascript
-$(0).number().int().isOk()        // true
-$(1).number().int().isOk()        // true
-$(-100).number().int().isOk()     // true
+$(0       ).number().int().isOk() // true
+$(1       ).number().int().isOk() // true
+$(-100    ).number().int().isOk() // true
 
-$(0.1).number().int().isOk()      // false
-$(Math.PI).number().int().isOk()  // false
+$(0.1     ).number().int().isOk() // false
+$(Math.PI ).number().int().isOk() // false
 
-$(NaN).number().int().isOk()      // false
+$(NaN     ).number().int().isOk() // false
 $(Infinity).number().int().isOk() // false
 ```
 
