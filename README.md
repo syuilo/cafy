@@ -154,9 +154,9 @@ Any型を使うと、「*undefined*や*null*はダメだけど、型は何でも
 ``` javascript
 $('strawberry pasta').any().isOk() // <= true
 ```
-「中に入ってるものは文字列でも数値でも配列でもオブジェクトでもnullでもundefinedでもなんでもいいけど、必ず`x`というプロパティを持っていてほしい」という場合もanyを活用できます:
+「必ず`x`というプロパティを持っていてほしい。中身はnullやundefined以外なら何でもいい」のような場合もanyを活用できます:
 ``` javascript
-$({ x: 'strawberry pasta' }).object().have('x', $().optional.nullable.any()).isOk() // <= true
+$({ x: 'strawberry pasta' }).object().have('x', $().any()).isOk() // <= true
 ```
 
 Tips
