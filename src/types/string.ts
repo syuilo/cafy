@@ -3,6 +3,9 @@ import Query from '../query';
 export const isAString = x => typeof x == 'string';
 export const isNotAString = x => !isAString(x);
 
+/**
+ * String
+ */
 export default class StringQuery extends Query<string> {
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
 		super(optional, nullable, lazy, value);

@@ -3,6 +3,9 @@ import Query from '../query';
 export const isAnObject = x => typeof x == 'object';
 export const isNotAnObject = x => !isAnObject(x);
 
+/**
+ * Object
+ */
 export default class ObjectQuery extends Query<Object> {
 	mentions: string[] = [];
 

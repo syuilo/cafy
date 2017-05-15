@@ -5,6 +5,9 @@ export const isAnArray = x => Array.isArray(x);
 export const isNotAnArray = x => !isAnArray(x);
 const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 
+/**
+ * Array
+ */
 export default class ArrayQuery<T> extends Query<T[]> {
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, type?: string) {
 		super(optional, nullable, lazy, value);
