@@ -8,10 +8,13 @@ export default class ObjectQuery extends Query<Object> {
 
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, strict?: boolean) {
 		super(optional, nullable, lazy, value);
-		this.pushValidator(v => {
-			if (isNotAnObject(v)) return new Error('must-be-an-object');
-			return true;
-		});
+
+		this.pushValidator(v =>
+			isNotAnObject(v)
+				? new Error('must-be-an-object')
+				: true
+		);
+
 		if (strict) {
 			this.pushValidator(v => {
 				const properties = Object.keys(v);

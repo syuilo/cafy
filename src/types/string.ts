@@ -6,10 +6,12 @@ export const isNotAString = x => !isAString(x);
 export default class StringQuery extends Query<string> {
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
 		super(optional, nullable, lazy, value);
-		this.pushValidator(v => {
-			if (isNotAString(v)) return new Error('must-be-a-string');
-			return true;
-		});
+
+		this.pushValidator(v =>
+			isNotAString(v)
+				? new Error('must-be-a-string')
+				: true
+		);
 	}
 
 	/**
@@ -28,10 +30,11 @@ export default class StringQuery extends Query<string> {
 	 * @param threshold 下限
 	 */
 	min(threshold: number) {
-		this.pushValidator(v => {
-			if (v.length < threshold) return new Error('invalid-range');
-			return true;
-		});
+		this.pushValidator(v =>
+			v.length < threshold
+				? new Error('invalid-range')
+				: true
+		);
 		return this;
 	}
 
@@ -40,10 +43,11 @@ export default class StringQuery extends Query<string> {
 	 * @param threshold 上限
 	 */
 	max(threshold: number) {
-		this.pushValidator(v => {
-			if (v.length > threshold) return new Error('invalid-range');
-			return true;
-		});
+		this.pushValidator(v =>
+			v.length > threshold
+				? new Error('invalid-range')
+				: true
+		);
 		return this;
 	}
 
@@ -52,10 +56,11 @@ export default class StringQuery extends Query<string> {
 	 * @param length 文字数
 	 */
 	length(length: number) {
-		this.pushValidator(v => {
-			if (v.length !== length) return new Error('invalid-length');
-			return true;
-		});
+		this.pushValidator(v =>
+			v.length !== length
+				? new Error('invalid-length')
+				: true
+		);
 		return this;
 	}
 
@@ -80,10 +85,11 @@ export default class StringQuery extends Query<string> {
 	 * @param pattern 正規表現
 	 */
 	match(pattern: RegExp) {
-		this.pushValidator(v => {
-			if (!pattern.test(v)) return new Error('not-match-pattern');
-			return true;
-		});
+		this.pushValidator(v =>
+			!pattern.test(v)
+				? new Error('not-match-pattern')
+				: true
+		);
 		return this;
 	}
 }

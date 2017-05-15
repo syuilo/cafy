@@ -8,12 +8,12 @@ const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 export default class ArrayQuery<T> extends Query<T[]> {
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, type?: string) {
 		super(optional, nullable, lazy, value);
-		this.pushValidator(v => {
-			if (isNotAnArray(v)) {
-				return new Error('must-be-an-array');
-			}
-			return true;
-		});
+
+		this.pushValidator(v =>
+			isNotAnArray(v)
+				? new Error('must-be-an-array')
+				: true
+		);
 
 		switch (type) {
 			case 'array': this.each($().array()); break;
@@ -29,10 +29,11 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * 配列の値がユニークでない場合(=重複した項目がある場合)エラーにします
 	 */
 	unique() {
-		this.pushValidator(v => {
-			if (hasDuplicates(v)) return new Error('must-be-unique');
-			return true;
-		});
+		this.pushValidator(v =>
+			hasDuplicates(v)
+				? new Error('must-be-unique')
+				: true
+		);
 		return this;
 	}
 
@@ -52,10 +53,11 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * @param threshold 下限
 	 */
 	min(threshold: number) {
-		this.pushValidator(v => {
-			if (v.length < threshold) return new Error('invalid-range');
-			return true;
-		});
+		this.pushValidator(v =>
+			v.length < threshold
+				? new Error('invalid-range')
+				: true
+		);
 		return this;
 	}
 
@@ -64,10 +66,11 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * @param threshold 上限
 	 */
 	max(threshold: number) {
-		this.pushValidator(v => {
-			if (v.length > threshold) return new Error('invalid-range');
-			return true;
-		});
+		this.pushValidator(v =>
+			v.length > threshold
+				? new Error('invalid-range')
+				: true
+		);
 		return this;
 	}
 
@@ -76,10 +79,11 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * @param length 要素数
 	 */
 	length(length: number) {
-		this.pushValidator(v => {
-			if (v.length !== length) return new Error('invalid-length');
-			return true;
-		});
+		this.pushValidator(v =>
+			v.length !== length
+				? new Error('invalid-length')
+				: true
+		);
 		return this;
 	}
 

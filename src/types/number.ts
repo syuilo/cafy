@@ -6,10 +6,12 @@ export const isNotANumber = x => !isANumber(x);
 export default class NumberQuery extends Query<number> {
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
 		super(optional, nullable, lazy, value);
-		this.pushValidator(v => {
-			if (isNotANumber(v)) return new Error('must-be-a-number');
-			return true;
-		});
+
+		this.pushValidator(v =>
+			isNotANumber(v)
+				? new Error('must-be-a-number')
+				: true
+		);
 	}
 
 	/**
@@ -28,10 +30,11 @@ export default class NumberQuery extends Query<number> {
 	 * @param threshold 下限
 	 */
 	min(threshold: number) {
-		this.pushValidator(v => {
-			if (v < threshold) return new Error('invalid-range');
-			return true;
-		});
+		this.pushValidator(v =>
+			v < threshold
+				? new Error('invalid-range')
+				: true
+		);
 		return this;
 	}
 
@@ -40,10 +43,11 @@ export default class NumberQuery extends Query<number> {
 	 * @param threshold 上限
 	 */
 	max(threshold: number) {
-		this.pushValidator(v => {
-			if (v > threshold) return new Error('invalid-range');
-			return true;
-		});
+		this.pushValidator(v =>
+			v > threshold
+				? new Error('invalid-range')
+				: true
+		);
 		return this;
 	}
 
@@ -51,10 +55,11 @@ export default class NumberQuery extends Query<number> {
 	 * このインスタンスの値が整数でなければエラーにします
 	 */
 	int() {
-		this.pushValidator(v => {
-			if (!Number.isInteger(v)) return new Error('must-be-an-intager');
-			return true;
-		});
+		this.pushValidator(v =>
+			!Number.isInteger(v)
+				? new Error('must-be-an-intager')
+				: true
+		);
 		return this;
 	}
 }
