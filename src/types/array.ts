@@ -9,14 +9,18 @@ const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
  * Array
  */
 export default class ArrayQuery<T> extends Query<T[]> {
-	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, type?: string) {
+	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, flexible?: boolean, type?: string) {
 		super(optional, nullable, lazy, value);
 
-		this.pushValidator(v =>
-			isNotAnArray(v)
-				? new Error('must-be-an-array')
-				: true
-		);
+		if (flexible) {
+			this.pushValidator(v => true, v => [v]);
+		} else {
+			this.pushValidator(v =>
+				isNotAnArray(v)
+					? new Error('must-be-an-array')
+					: true
+			);
+		}
 
 		switch (type) {
 			case 'array': this.each($().array()); break;

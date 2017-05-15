@@ -304,6 +304,23 @@ describe('Queries', () => {
 			});
 		});
 
+		describe('flexible', () => {
+			it('配列でない値が要素数一の配列として扱われる', () => {
+				const err = $(42).flexible.array().length(1).test();
+				assert.equal(err, null);
+			});
+
+			it('nullダメ', () => {
+				const err = $(null).flexible.array().length(1).test();
+				assert.notEqual(err, null);
+			});
+
+			it('undefinedダメ', () => {
+				const err = $(undefined).flexible.array().length(1).test();
+				assert.notEqual(err, null);
+			});
+		});
+
 		describe('# unique', () => {
 			it('ユニークで合格', () => {
 				const err = $(['a', 'b', 'c']).array().unique().test();

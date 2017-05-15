@@ -1,6 +1,6 @@
 {
   "name": "cafy",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Query-based validator",
   "keywords": [
     "validator"

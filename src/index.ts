@@ -24,16 +24,17 @@ export function createArrayQuery(type?: 'array' | 'boolean' | 'id' | 'number' | 
 	const value = this.value;
 	const optional = this.optional;
 	const nullable = this.nullable;
+	const flexible = this.flexible;
 
-	if (type == null) return new ArrayQuery<any>(optional, nullable, lazy, value);
+	if (type == null) return new ArrayQuery<any>(optional, nullable, lazy, value, flexible);
 
 	switch (type) {
-		case 'array': return new ArrayQuery<any[]>(optional, nullable, lazy, value, 'array');
-		case 'boolean': return new ArrayQuery<boolean>(optional, nullable, lazy, value, 'boolean');
-		case 'id': return new ArrayQuery<mongo.ObjectID>(optional, nullable, lazy, value, 'id');
-		case 'number': return new ArrayQuery<number>(optional, nullable, lazy, value, 'number');
-		case 'object': return new ArrayQuery<object>(optional, nullable, lazy, value, 'object');
-		case 'string': return new ArrayQuery<string>(optional, nullable, lazy, value, 'string');
+		case 'array': return new ArrayQuery<any[]>(optional, nullable, lazy, value, flexible, 'array');
+		case 'boolean': return new ArrayQuery<boolean>(optional, nullable, lazy, value, flexible, 'boolean');
+		case 'id': return new ArrayQuery<mongo.ObjectID>(optional, nullable, lazy, value, flexible, 'id');
+		case 'number': return new ArrayQuery<number>(optional, nullable, lazy, value, flexible, 'number');
+		case 'object': return new ArrayQuery<object>(optional, nullable, lazy, value, flexible, 'object');
+		case 'string': return new ArrayQuery<string>(optional, nullable, lazy, value, flexible, 'string');
 	}
 }
 
@@ -47,6 +48,9 @@ export type Types = {
 	object: () => ObjectQuery;
 	strict: {
 		object: () => ObjectQuery;
+	};
+	flexible: {
+		array: typeof createArrayQuery;
 	};
 };
 
@@ -74,6 +78,15 @@ function $(value?: any): It {
 		strict: {
 			object: () => new ObjectQuery(false, false, lazy, value, true)
 		},
+		flexible: {
+			array: (type?) => createArrayQuery.bind({
+				value,
+				lazy,
+				optional: false,
+				nullable: false,
+				flexible: true
+			})(type)
+		},
 		nullable: {
 			any: () => new AnyQuery(false, true, lazy, value),
 			string: () => new StringQuery(false, true, lazy, value),
@@ -90,6 +103,15 @@ function $(value?: any): It {
 			strict: {
 				object: () => new ObjectQuery(false, true, lazy, value, true)
 			},
+			flexible: {
+				array: (type?) => createArrayQuery.bind({
+					value,
+					lazy,
+					optional: false,
+					nullable: true,
+					flexible: true
+				})(type)
+			},
 			optional: {
 				any: () => new AnyQuery(true, true, lazy, value),
 				string: () => new StringQuery(true, true, lazy, value),
@@ -105,7 +127,16 @@ function $(value?: any): It {
 				object: () => new ObjectQuery(true, true, lazy, value),
 				strict: {
 					object: () => new ObjectQuery(true, true, lazy, value, true)
-				}
+				},
+				flexible: {
+					array: (type?) => createArrayQuery.bind({
+						value,
+						lazy,
+						optional: true,
+						nullable: true,
+						flexible: true
+					})(type)
+				},
 			}
 		},
 		optional: {
@@ -124,6 +155,15 @@ function $(value?: any): It {
 			strict: {
 				object: () => new ObjectQuery(true, false, lazy, value, true)
 			},
+			flexible: {
+				array: (type?) => createArrayQuery.bind({
+					value,
+					lazy,
+					optional: true,
+					nullable: false,
+					flexible: true
+				})(type)
+			},
 			nullable: {
 				any: () => new AnyQuery(true, true, lazy, value),
 				string: () => new StringQuery(true, true, lazy, value),
@@ -139,7 +179,16 @@ function $(value?: any): It {
 				object: () => new ObjectQuery(true, true, lazy, value),
 				strict: {
 					object: () => new ObjectQuery(true, true, lazy, value, true)
-				}
+				},
+				flexible: {
+					array: (type?) => createArrayQuery.bind({
+						value,
+						lazy,
+						optional: true,
+						nullable: true,
+						flexible: true
+					})(type)
+				},
 			}
 		}
 	};

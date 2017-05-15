@@ -1,3 +1,7 @@
+2.4.0 / 2017-05-16
+------------------
+* Add flexible option to array
+
 2.3.0 / 2017-03-08
 ------------------
 * Add overload to `have()`

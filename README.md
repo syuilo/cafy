@@ -159,6 +159,12 @@ $('strawberry pasta').any().isOk() // <= true
 $({ x: 'strawberry pasta' }).object().have('x', $().any()).isOk() // <= true
 ```
 
+### Flexible array
+`flexible`を`array`の前に付けると、配列でない値を要素数1の配列に変換します:
+``` javascript
+$(42).flexible.array().length(1).isOk() // <= true
+```
+
 Tips
 -----------------------------------------------
 ### 規定値を設定する
