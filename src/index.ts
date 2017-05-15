@@ -17,7 +17,7 @@ export function createArrayQuery(type: 'array'): ArrayQuery<any[]>;
 export function createArrayQuery(type: 'boolean'): ArrayQuery<boolean>;
 export function createArrayQuery(type: 'id'): ArrayQuery<mongo.ObjectID>;
 export function createArrayQuery(type: 'number'): ArrayQuery<number>;
-export function createArrayQuery(type: 'object'): ArrayQuery<any>;
+export function createArrayQuery(type: 'object'): ArrayQuery<object>;
 export function createArrayQuery(type: 'string'): ArrayQuery<string>;
 export function createArrayQuery(type?: 'array' | 'boolean' | 'id' | 'number' | 'object' | 'string'): any {
 	const lazy = this.lazy;
@@ -32,7 +32,7 @@ export function createArrayQuery(type?: 'array' | 'boolean' | 'id' | 'number' | 
 		case 'boolean': return new ArrayQuery<boolean>(optional, nullable, lazy, value, 'boolean');
 		case 'id': return new ArrayQuery<mongo.ObjectID>(optional, nullable, lazy, value, 'id');
 		case 'number': return new ArrayQuery<number>(optional, nullable, lazy, value, 'number');
-		case 'object': return new ArrayQuery<any>(optional, nullable, lazy, value, 'object');
+		case 'object': return new ArrayQuery<object>(optional, nullable, lazy, value, 'object');
 		case 'string': return new ArrayQuery<string>(optional, nullable, lazy, value, 'string');
 	}
 }

@@ -6,7 +6,7 @@ export const isNotAnObject = x => !isAnObject(x);
 /**
  * Object
  */
-export default class ObjectQuery extends Query<Object> {
+export default class ObjectQuery extends Query<object> {
 	mentions: string[] = [];
 
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, strict?: boolean) {
