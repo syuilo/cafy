@@ -12,22 +12,16 @@
   "main": "./built/index.js",
   "types": "./built/index.d.ts",
   "scripts": {
-    "build": "gulp build",
+    "build": "tsc",
     "test": "mocha --harmony"
   },
   "devDependencies": {
     "@types/debug": "0.0.29",
     "@types/mocha": "2.2.39",
-    "@types/event-stream": "3.3.30",
-    "@types/gulp": "3.8.32",
-    "@types/gulp-typescript": "0.0.32",
     "@types/node": "7.0.5",
     "@types/mongodb": "2.1.41",
-    "event-stream": "3.3.4",
-    "gulp": "3.9.1",
-    "gulp-typescript": "3.1.5",
     "mocha": "3.2.0",
-    "typescript": "2.1.6"
+    "typescript": "2.3.2"
   },
   "dependencies": {
     "mongodb": "2.2.24"
