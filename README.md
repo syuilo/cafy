@@ -3,7 +3,7 @@ cafy
 > Simple, fun, flexible query-based validator
 
 **cafy**は、アサーションのようにメソッドチェーンで値のバリデーションを行うライブラリです。
-cafyを使えばバリデーションを楽しく・簡単に・柔軟に書くことができます。
+cafyを使えばバリデーションを楽しく・簡単に・柔軟に書くことができます。TypeScriptを完全にサポートしています。
 [Try it out!](https://runkit.com/npm/cafy)
 
 [![][npm-badge]][npm-link]
@@ -200,20 +200,23 @@ $(['a', 'b', 'c']).array().pipe(x => x[1] != 'b').isOk() // false
 #### `.$` => `[any, Error]`
 テスト対象の値とテスト結果のペア(配列)。先行検証のときのみ利用可能です。
 
-#### `.test()` => `Error`
+#### `.test(value?)` => `Error`
 バリデーションを実行します。
 合格した場合は`null`で、そうでない場合は`Error`です。
+遅延検証を行うときは、テスト対象の値を引数として与えます。
 
-#### `.isOk()` => `boolean`
+#### `.isOk(value?)` => `boolean`
 バリデーションを実行します。
 合格した場合は`true`で、そうでない場合は`false`です。
 `.test() == null`と同義です。
+遅延検証を行うときは、テスト対象の値を引数として与えます。
 
-#### `.isNg()` => `boolean`
+#### `.isNg(value?)` => `boolean`
 バリデーションを実行します。
 合格した場合は`false`で、そうでない場合は`true`です。
 `.isOk()`の否定です。
 (*Ng*は**N**o**G**oogの略です)
+遅延検証を行うときは、テスト対象の値を引数として与えます。
 
 ### Any
 Any独自のメソッドはありません。
