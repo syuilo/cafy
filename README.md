@@ -36,14 +36,20 @@ cafy(value)[.anyQueries()...]
 ``` javascript
 $(x).string()
 ```
-`range`メソッドを利用して、*「10文字以上100文字以下でなければならない」*という制約を追加してみましょう:
+`range`メソッドを利用して、*「10文字以上20文字以下でなければならない」*という制約を追加してみましょう:
 ``` javascript
-$(x).string().range(10, 100)
+$(x).string().range(10, 20)
 ```
 検証して結果を取得するには`test`や`isOk`メソッドなどを利用できます:
 ``` javascript
-$('strawberry pasta').string().range(10, 100).isOk() // => true
-$('alice'           ).string().range(10, 100).isOk() // => false
+$('strawberry pasta').string().range(10, 20).isOk()
+// => true
+
+$('alice').string().range(10, 20).isOk()
+// => 短すぎるので false
+
+$('i love strawberry pasta').string().range(10, 20).isOk()
+// => 長すぎるので false
 ```
 
 `isOk`メソッドはバリデーションに合格した場合は`true`を、失格した場合は`false`を返します。
@@ -101,12 +107,12 @@ $(null).nullable.string().isOk() // <= true
 $(x).nullable.optional.string()
 ```
 
-|                     | undefined | null |
-| -------------------:|:---------:|:----:|
-| default             | x         | x    |
-| optional            | o         | x    |
-| nullable            | x         | o    |
-| optional + nullable | o         | o    |
+|                         | undefined | null |
+| -----------------------:|:---------:|:----:|
+| (default)               | x         | x    |
+| `optional`              | o         | x    |
+| `nullable`              | x         | o    |
+| `optional` + `nullable` | o         | o    |
 
 ### 遅延検証
 cafyの引数を省略することで、後から値を検証するバリデータになります:
@@ -300,8 +306,10 @@ $(Infinity).number().int().isOk() // false
 引数にはcafyインスタンスも渡せます。
 ``` javascript
 $({ myProp: true }).object().prop('myProp', $().boolean()).isOk() // true
+```
 
-// --- 複雑な例 ---
+複雑な例:
+``` javascript
 const x = {
   some: {
     strawberry: 'pasta',
