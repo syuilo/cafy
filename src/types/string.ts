@@ -37,7 +37,7 @@ export default class StringQuery extends Query<string> {
 			v.length < threshold
 				? new Error('invalid-range')
 				: true
-		);
+		, 'min');
 		return this;
 	}
 
@@ -50,7 +50,7 @@ export default class StringQuery extends Query<string> {
 			v.length > threshold
 				? new Error('invalid-range')
 				: true
-		);
+		, 'max');
 		return this;
 	}
 
@@ -63,7 +63,7 @@ export default class StringQuery extends Query<string> {
 			v.length !== length
 				? new Error('invalid-length')
 				: true
-		);
+		, 'length');
 		return this;
 	}
 
@@ -78,7 +78,7 @@ export default class StringQuery extends Query<string> {
 			const match = (pattern as string[]).some(x => x === v);
 			if (!match) return new Error('not-match-pattern');
 			return true;
-		});
+		}, 'or');
 		return this;
 	}
 
@@ -92,7 +92,7 @@ export default class StringQuery extends Query<string> {
 			!pattern.test(v)
 				? new Error('not-match-pattern')
 				: true
-		);
+		, 'match');
 		return this;
 	}
 }

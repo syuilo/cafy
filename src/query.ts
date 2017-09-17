@@ -20,7 +20,8 @@ abstract class Query<T> {
 		this.value = value;
 	}
 
-	protected pushValidator(validator: Validator<T>) {
+	protected pushValidator(validator: Validator<T>, name?: string) {
+		validator.toString = name ? () => name : () => null;
 		this.validators.push(validator);
 	}
 
@@ -101,8 +102,15 @@ abstract class Query<T> {
 	 * @param validator バリデータ
 	 */
 	public pipe(validator: Validator<T>) {
-		this.pushValidator(validator);
+		this.pushValidator(validator, 'pipe');
 		return this;
+	}
+
+	/**
+	 * このcafyインスタンスを表す文字列を取得します
+	 */
+	public toString() {
+		return `${this.constructor.name} (${this.validators.map(v => v.toString()).filter(n => n != null).join(' > ')})`;
 	}
 }
 

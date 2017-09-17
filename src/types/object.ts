@@ -48,7 +48,7 @@ export default class ObjectQuery extends Query<object> {
 			} else {
 				return true;
 			}
-		});
+		}, 'prop');
 		return this;
 	}
 
@@ -73,7 +73,7 @@ export default class ObjectQuery extends Query<object> {
 			} else {
 				return true;
 			}
-		});
+		}, 'have');
 		return this;
 	}
 }

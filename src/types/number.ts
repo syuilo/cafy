@@ -37,7 +37,7 @@ export default class NumberQuery extends Query<number> {
 			v < threshold
 				? new Error('invalid-range')
 				: true
-		);
+		, 'min');
 		return this;
 	}
 
@@ -50,7 +50,7 @@ export default class NumberQuery extends Query<number> {
 			v > threshold
 				? new Error('invalid-range')
 				: true
-		);
+		, 'max');
 		return this;
 	}
 
@@ -62,7 +62,7 @@ export default class NumberQuery extends Query<number> {
 			!Number.isInteger(v)
 				? new Error('must-be-an-intager')
 				: true
-		);
+		, 'int');
 		return this;
 	}
 }

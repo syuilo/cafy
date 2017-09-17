@@ -40,7 +40,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 			hasDuplicates(v)
 				? new Error('must-be-unique')
 				: true
-		);
+		, 'unique');
 		return this;
 	}
 
@@ -64,7 +64,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 			v.length < threshold
 				? new Error('invalid-range')
 				: true
-		);
+		, 'min');
 		return this;
 	}
 
@@ -77,7 +77,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 			v.length > threshold
 				? new Error('invalid-range')
 				: true
-		);
+		, 'max');
 		return this;
 	}
 
@@ -90,7 +90,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 			v.length !== length
 				? new Error('invalid-length')
 				: true
-		);
+		, 'length');
 		return this;
 	}
 
@@ -111,7 +111,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 			} else {
 				return true;
 			}
-		});
+		}, 'item');
 		return this;
 	}
 
@@ -138,7 +138,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 			});
 			if (err) return err;
 			return true;
-		});
+		}, 'each');
 		return this;
 	}
 }
