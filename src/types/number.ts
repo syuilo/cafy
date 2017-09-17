@@ -22,7 +22,7 @@ export default class NumberQuery extends Query<number> {
 	 * @param min 下限
 	 * @param max 上限
 	 */
-	range(min: number, max: number) {
+	public range(min: number, max: number) {
 		this.min(min);
 		this.max(max);
 		return this;
@@ -32,7 +32,7 @@ export default class NumberQuery extends Query<number> {
 	 * このインスタンスの値が指定された下限より下回っている場合エラーにします
 	 * @param threshold 下限
 	 */
-	min(threshold: number) {
+	public min(threshold: number) {
 		this.pushValidator(v =>
 			v < threshold
 				? new Error('invalid-range')
@@ -45,7 +45,7 @@ export default class NumberQuery extends Query<number> {
 	 * このインスタンスの値が指定された上限より上回っている場合エラーにします
 	 * @param threshold 上限
 	 */
-	max(threshold: number) {
+	public max(threshold: number) {
 		this.pushValidator(v =>
 			v > threshold
 				? new Error('invalid-range')
@@ -57,7 +57,7 @@ export default class NumberQuery extends Query<number> {
 	/**
 	 * このインスタンスの値が整数でなければエラーにします
 	 */
-	int() {
+	public int() {
 		this.pushValidator(v =>
 			!Number.isInteger(v)
 				? new Error('must-be-an-intager')

@@ -22,7 +22,7 @@ export default class StringQuery extends Query<string> {
 	 * @param min 下限
 	 * @param max 上限
 	 */
-	range(min: number, max: number) {
+	public range(min: number, max: number) {
 		this.min(min);
 		this.max(max);
 		return this;
@@ -32,7 +32,7 @@ export default class StringQuery extends Query<string> {
 	 * 文字数が指定された下限より下回っている場合エラーにします
 	 * @param threshold 下限
 	 */
-	min(threshold: number) {
+	public min(threshold: number) {
 		this.pushValidator(v =>
 			v.length < threshold
 				? new Error('invalid-range')
@@ -45,7 +45,7 @@ export default class StringQuery extends Query<string> {
 	 * 文字数が指定された上限より上回っている場合エラーにします
 	 * @param threshold 上限
 	 */
-	max(threshold: number) {
+	public max(threshold: number) {
 		this.pushValidator(v =>
 			v.length > threshold
 				? new Error('invalid-range')
@@ -58,7 +58,7 @@ export default class StringQuery extends Query<string> {
 	 * 指定された文字数でなければエラーにします
 	 * @param length 文字数
 	 */
-	length(length: number) {
+	public length(length: number) {
 		this.pushValidator(v =>
 			v.length !== length
 				? new Error('invalid-length')
@@ -72,7 +72,7 @@ export default class StringQuery extends Query<string> {
 	 * どれとも一致しない場合エラーにします
 	 * @param pattern 文字列の配列または|で区切られた文字列
 	 */
-	or(pattern: string | string[]) {
+	public or(pattern: string | string[]) {
 		if (typeof pattern == 'string') pattern = pattern.split('|');
 		this.pushValidator(v => {
 			const match = (pattern as string[]).some(x => x === v);
@@ -87,7 +87,7 @@ export default class StringQuery extends Query<string> {
 	 * 一致しない場合エラーにします
 	 * @param pattern 正規表現
 	 */
-	match(pattern: RegExp) {
+	public match(pattern: RegExp) {
 		this.pushValidator(v =>
 			!pattern.test(v)
 				? new Error('not-match-pattern')

@@ -62,7 +62,7 @@ abstract class Query<T> {
 	 * 値を検証して、妥当な場合は null を、そうでない場合は Error を返します。
 	 */
 	@autobind
-	test(value?: any): Error {
+	public test(value?: any): Error {
 		if (this.lazy) {
 			if (arguments.length == 0) throw new Error('値が指定されていません');
 			return this.exec(value);
@@ -75,7 +75,7 @@ abstract class Query<T> {
 	 * 値を検証して、妥当な場合は true を、そうでない場合は false を返します
 	 */
 	@autobind
-	isOk(value?: any): boolean {
+	public isOk(value?: any): boolean {
 		return this.test(value) == null;
 	}
 
@@ -83,14 +83,14 @@ abstract class Query<T> {
 	 * 値を検証して、妥当な場合は false を、そうでない場合は true を返します
 	 */
 	@autobind
-	isNg(value?: any): boolean {
+	public isNg(value?: any): boolean {
 		return !this.isOk(value);
 	}
 
 	/**
 	 * 値を検証して、値およびエラーを取得します
 	 */
-	get $(): [T, Error] {
+	public get $(): [T, Error] {
 		if (this.lazy) throw new Error('このインスタンスには値がセットされていません');
 		return this.exec(this.value, true);
 	}
@@ -100,7 +100,7 @@ abstract class Query<T> {
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
 	 */
-	pipe(validator: Validator<T>) {
+	public pipe(validator: Validator<T>) {
 		this.pushValidator(validator);
 		return this;
 	}

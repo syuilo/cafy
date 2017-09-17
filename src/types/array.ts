@@ -35,7 +35,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	/**
 	 * 配列の値がユニークでない場合(=重複した項目がある場合)エラーにします
 	 */
-	unique() {
+	public unique() {
 		this.pushValidator(v =>
 			hasDuplicates(v)
 				? new Error('must-be-unique')
@@ -49,7 +49,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * @param min 下限
 	 * @param max 上限
 	 */
-	range(min: number, max: number) {
+	public range(min: number, max: number) {
 		this.min(min);
 		this.max(max);
 		return this;
@@ -59,7 +59,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * 配列の長さが指定された下限より下回っている場合エラーにします
 	 * @param threshold 下限
 	 */
-	min(threshold: number) {
+	public min(threshold: number) {
 		this.pushValidator(v =>
 			v.length < threshold
 				? new Error('invalid-range')
@@ -72,7 +72,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * 配列の長さが指定された上限より上回っている場合エラーにします
 	 * @param threshold 上限
 	 */
-	max(threshold: number) {
+	public max(threshold: number) {
 		this.pushValidator(v =>
 			v.length > threshold
 				? new Error('invalid-range')
@@ -85,7 +85,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * 指定された数の要素を持っていなければエラーにします
 	 * @param length 要素数
 	 */
-	length(length: number) {
+	public length(length: number) {
 		this.pushValidator(v =>
 			v.length !== length
 				? new Error('invalid-length')
@@ -100,7 +100,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * @param index インデックス
 	 * @param validator バリデータ
 	 */
-	item(index: number, validator: ((element: T) => boolean | Error) | Query<any>) {
+	public item(index: number, validator: ((element: T) => boolean | Error) | Query<any>) {
 		const validate = validator instanceof Query ? validator.test : validator;
 		this.pushValidator(v => {
 			const result = validate(v[index]);
@@ -120,7 +120,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
 	 */
-	each(validator: ((element: T, index: number, array: T[]) => boolean | Error) | Query<any>) {
+	public each(validator: ((element: T, index: number, array: T[]) => boolean | Error) | Query<any>) {
 		const validate = validator instanceof Query ? validator.test : validator;
 		this.pushValidator(v => {
 			let err: Error;
