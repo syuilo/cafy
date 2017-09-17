@@ -274,6 +274,9 @@ $([1, 2, 3]).array().each(x => x < 4).isOk() // true
 $([1, 4, 3]).array().each(x => x < 4).isOk() // false
 ```
 
+### Boolean
+Boolean独自のメソッドはありません。
+
 ### ID
 ID独自のメソッドはありません。
 
