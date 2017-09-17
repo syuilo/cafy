@@ -274,6 +274,9 @@ $([1, 2, 3]).array().each(x => x < 4).isOk() // true
 $([1, 4, 3]).array().each(x => x < 4).isOk() // false
 ```
 
+### ID
+ID独自のメソッドはありません。
+
 ### Number
 #### `.int()` => `Query`
 整数でなければならないという制約を追加します。
