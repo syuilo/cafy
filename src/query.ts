@@ -10,40 +10,40 @@ abstract class Query<T> {
 	private nullable: boolean;
 	private lazy: boolean = false;
 
-	private validators: {
-		validate: Validator<T>;
-		postfx?: any;
-	}[] = [];
+	private validators: Validator<T>[] = [];
+	protected transformer: any = null;
 
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
 		this.optional = optional;
 		this.nullable = nullable;
 		this.lazy = lazy;
 		this.value = value;
-		this.pushValidator(v => {
-			if (!optional && v === undefined) return new Error('must-be-not-undefined');
-			if (!nullable && v === null) return new Error('must-be-not-null');
-			return true;
-		});
 	}
 
 	protected pushValidator(validator: Validator<T>, postFx?: any) {
-		this.validators.push({
-			validate: validator,
-			postfx: postFx
-		});
+		this.validators.push(validator);
 	}
 
 	private exec(value: any): Error;
 	private exec(value: any, withValue: boolean): [any, Error];
 	@autobind
 	private exec(value: any, withValue?: boolean): Error | [any, Error] {
-		if (this.optional && value === undefined) return withValue ? [value, null] : null;
-		if (this.nullable && value === null) return withValue ? [value, null] : null;
+		function res(val, err) {
+			return withValue ? [val, err] : err;
+		}
+
+		if (this.optional && value === undefined) return res(value, null);
+		if (this.nullable && value === null) return res(value, null);
+
+		if (!this.optional && value === undefined) return res(null, new Error('must-be-not-undefined'));
+		if (!this.nullable && value === null) return res(null, new Error('must-be-not-null'));
+
+		// Pre FX
+		if (this.transformer) value = this.transformer(value);
 
 		let err = null;
-		this.validators.some(validator => {
-			const result = validator.validate(value);
+		this.validators.some(validate => {
+			const result = validate(value);
 			if (result === false) {
 				err = new Error('something-happened');
 				return true;
@@ -51,16 +51,11 @@ abstract class Query<T> {
 				err = result;
 				return true;
 			} else {
-				if (validator.postfx) value = validator.postfx(value);
 				return false;
 			}
 		});
 
-		if (withValue) {
-			return [value, err];
-		} else {
-			return err;
-		}
+		return res(value, err);
 	}
 
 	/**

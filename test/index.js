@@ -5,6 +5,7 @@
 'use strict';
 
 const assert = require('assert');
+const mongo = require('mongodb');
 const $ = require('../').default;
 
 it('デフォルトの値を設定できる', () => {
@@ -492,6 +493,33 @@ describe('Queries', () => {
 				thing: 42
 			};
 			assert.notEqual(validate(y), null);
+		});
+	});
+
+	describe('ID', () => {
+		it('正当な値を与える (文字列)', () => {
+			const x = '59bde85bd8f8c20a41bee87d';
+			const res = $(x).id().test();
+			assert.equal(res, null);
+		});
+
+		it('正当な値を与える (IDインスタンス)', () => {
+			const x = new mongo.ObjectID('59bde85bd8f8c20a41bee87d');
+			const res = $(x).id().test();
+			assert.equal(res, null);
+		});
+
+		it('ID以外でエラー', () => {
+			const x = 'x';
+			const res = $(x).id().test();
+			assert.notEqual(res, null);
+		});
+
+		it('文字列を与えた場合にIDインスタンスに変換される', () => {
+			const x = '59bde85bd8f8c20a41bee87d';
+			const [val, err] = $(x).id().$;
+			assert.equal(err, null);
+			assert.equal(mongo.ObjectID.prototype.isPrototypeOf(val), true);
 		});
 	});
 });

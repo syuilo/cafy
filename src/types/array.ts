@@ -13,7 +13,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 		super(optional, nullable, lazy, value);
 
 		if (flexible) {
-			this.pushValidator(v => true, v => [v]);
+			this.transformer = v => [v];
 		} else {
 			this.pushValidator(v =>
 				isNotAnArray(v)
