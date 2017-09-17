@@ -11,7 +11,7 @@ abstract class Query<T> {
 	private lazy: boolean = false;
 
 	private validators: Validator<T>[] = [];
-	protected transformer: any = null;
+	protected transformer: (value: any) => T = null;
 
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
 		this.optional = optional;
