@@ -20,7 +20,7 @@ abstract class Query<T> {
 		this.value = value;
 	}
 
-	protected pushValidator(validator: Validator<T>, postFx?: any) {
+	protected pushValidator(validator: Validator<T>) {
 		this.validators.push(validator);
 	}
 
