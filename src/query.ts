@@ -81,7 +81,7 @@ abstract class Query<T> {
 	 * 値を検証して、妥当な場合は true を、そうでない場合は false を返します
 	 */
 	@autobind
-	public isOk(value?: any): boolean {
+	public ok(value?: any): boolean {
 		return this.test(value) == null;
 	}
 
@@ -89,8 +89,8 @@ abstract class Query<T> {
 	 * 値を検証して、妥当な場合は false を、そうでない場合は true を返します
 	 */
 	@autobind
-	public isNg(value?: any): boolean {
-		return !this.isOk(value);
+	public nok(value?: any): boolean {
+		return !this.ok(value);
 	}
 
 	/**

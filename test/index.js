@@ -39,7 +39,7 @@ describe('統合', () => {
 		});
 
 		it('使いまわせる', () => {
-			const isValidGender = $().string().or('male|female').isOk;
+			const isValidGender = $().string().or('male|female').ok;
 			assert.equal(isValidGender('male'), true);
 			assert.equal(isValidGender('female'), true);
 			assert.equal(isValidGender('alice'), false);

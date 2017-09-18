@@ -46,19 +46,19 @@ $(x).string()
 ``` javascript
 $(x).string().range(10, 20)
 ```
-検証して結果を取得するには`test`や`isOk`メソッドなどを利用できます:
+検証して結果を取得するには`test`や`ok`メソッドなどを利用できます:
 ``` javascript
-$('strawberry pasta').string().range(10, 20).isOk()
+$('strawberry pasta').string().range(10, 20).ok()
 // => true
 
-$('alice').string().range(10, 20).isOk()
+$('alice').string().range(10, 20).ok()
 // => 短すぎるので false
 
-$('i love strawberry pasta').string().range(10, 20).isOk()
+$('i love strawberry pasta').string().range(10, 20).ok()
 // => 長すぎるので false
 ```
 
-`isOk`メソッドはバリデーションに合格した場合は`true`を、失格した場合は`false`を返します。
+`ok`メソッドはバリデーションに合格した場合は`true`を、失格した場合は`false`を返します。
 `test`メソッドはバリデーションに合格した場合は`null`を、失格した場合は`Error`を返します。
 
 ---
@@ -90,21 +90,21 @@ $(x).array().each($().string())
 #### undefined を許可する *(optional)*
 デフォルトで`undefined`はエラーになります:
 ``` javascript
-$(undefined).string().isOk() // <= false
+$(undefined).string().ok() // <= false
 ```
 `undefined`を許可する場合は`optional`を型の前に付けます:
 ``` javascript
-$(undefined).optional.string().isOk() // <= true
+$(undefined).optional.string().ok() // <= true
 ```
 
 #### null を許可する *(nullable)*
 デフォルトで`null`はエラーになります:
 ``` javascript
-$(null).string().isOk() // <= false
+$(null).string().ok() // <= false
 ```
 `null`を許可する場合は`nullable`を型の前に付けます:
 ``` javascript
-$(null).nullable.string().isOk() // <= true
+$(null).nullable.string().ok() // <= true
 ```
 
 #### null と undefined を許可する
@@ -125,21 +125,21 @@ cafyの引数を省略することで、後から値を検証するバリデー�
 ``` javascript
 $().number().range(30, 50)
 ```
-`test`や`isOk`メソッドに値を与えて検証します:
+`test`や`ok`メソッドに値を与えて検証します:
 ``` javascript
 $().number().range(30, 50).test(42) // <= null
 ```
 
 この遅延検証を利用すると、配列の`some`などに渡すときに便利です:
 ``` javascript
-xs.some($().number().max(30).isNg)
+xs.some($().number().max(30).nok)
 ```
 
-ℹ️ `isNg`は`isOk`の逆です。
+ℹ️ `nok`は`ok`の逆です。
 
 バリデータを使い回したいときも簡単です:
 ``` javascript
-const isValidGender = $().string().or('male|female').isOk;
+const isValidGender = $().string().or('male|female').ok;
 
 isValidGender('male')   // true
 isValidGender('female') // true
@@ -149,27 +149,27 @@ isValidGender('alice')  // false
 ### オブジェクトの厳格な検証 *(strict)*
 デフォルトでは、`have`や`prop`で言及した以外のプロパティを持っていても、問題にはしません:
 ``` javascript
-$({ x: 42, y: 24 }).object().have('x', $().number()).isOk() // <= true
+$({ x: 42, y: 24 }).object().have('x', $().number()).ok() // <= true
 ```
 `have`または`prop`で言及した以外のプロパティを持っている場合にエラーにしたい場合は、`strict`を`object`の前に付けます:
 ``` javascript
-$({ x: 42, y: 24 }).strict.object().have('x', $().number()).isOk() // <= false
+$({ x: 42, y: 24 }).strict.object().have('x', $().number()).ok() // <= false
 ```
 
 ### Any
 Any型を使うと、「*undefined*や*null*はダメだけど、型は何でもいい」といった値を検証したいときに便利です:
 ``` javascript
-$('strawberry pasta').any().isOk() // <= true
+$('strawberry pasta').any().ok() // <= true
 ```
 「必ず`x`というプロパティを持っていてほしい。中身はnullやundefined以外なら何でもいい」のような場合もanyを活用できます:
 ``` javascript
-$({ x: 'strawberry pasta' }).object().have('x', $().any()).isOk() // <= true
+$({ x: 'strawberry pasta' }).object().have('x', $().any()).ok() // <= true
 ```
 
 ### Flexible array
 `flexible`を`array`の前に付けると、配列でない値を要素数1の配列に変換します:
 ``` javascript
-$(42).flexible.array().length(1).isOk() // <= true
+$(42).flexible.array().length(1).ok() // <= true
 ```
 
 Tips
@@ -199,8 +199,8 @@ API
 カスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 ``` javascript
-$('strawberry pasta').string().pipe(x => x.indexOf('alice') == -1).isOk() // true
-$(['a', 'b', 'c']).array().pipe(x => x[1] != 'b').isOk() // false
+$('strawberry pasta').string().pipe(x => x.indexOf('alice') == -1).ok() // true
+$(['a', 'b', 'c']).array().pipe(x => x[1] != 'b').ok() // false
 ```
 
 #### `.$` => `[any, Error]`
@@ -212,18 +212,18 @@ $(['a', 'b', 'c']).array().pipe(x => x[1] != 'b').isOk() // false
 遅延検証を行うときは、テスト対象の値を引数として与えます。
 先行検証のときは、引数は単に無視されます。
 
-#### `.isOk(value?)` => `boolean`
+#### `.ok(value?)` => `boolean`
 バリデーションを実行します。
 合格した場合は`true`で、そうでない場合は`false`です。
 `.test() == null`と同義です。
 遅延検証を行うときは、テスト対象の値を引数として与えます。
 先行検証のときは、引数は単に無視されます。
 
-#### `.isNg(value?)` => `boolean`
+#### `.nok(value?)` => `boolean`
 バリデーションを実行します。
 合格した場合は`false`で、そうでない場合は`true`です。
-`.isOk()`の否定です。
-(*Ng*は**N**o**G**oogの略です)
+`.ok()`の否定です。
+(*nok* は _**n**ot **ok**_ の略です)
 遅延検証を行うときは、テスト対象の値を引数として与えます。
 先行検証のときは、引数は単に無視されます。
 
@@ -243,9 +243,9 @@ Any独自のメソッドはありません。
 `min`以上`max`以下の数の要素を持っていなければならないという制約を追加します。
 要素数が指定された範囲内にない場合エラーにします。
 ``` javascript
-$(['a', 'b', 'c']).range(2, 5).isOk()                // true
-$(['a', 'b', 'c', 'd', 'e', 'f']).range(2, 5).isOk() // false
-$(['a']).range(2, 5).isOk()                          // false
+$(['a', 'b', 'c']).range(2, 5).ok()                // true
+$(['a', 'b', 'c', 'd', 'e', 'f']).range(2, 5).ok() // false
+$(['a']).range(2, 5).ok()                          // false
 ```
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
@@ -258,8 +258,8 @@ $(['a']).range(2, 5).isOk()                          // false
 ユニークな配列(=重複した値を持っていない)でなければならないという制約を追加します。
 重複した要素がある場合エラーにします。
 ``` javascript
-$(['a', 'b', 'c']).array().unique().isOk()      // true
-$(['a', 'b', 'c', 'b']).array().unique().isOk() // false
+$(['a', 'b', 'c']).array().unique().ok()      // true
+$(['a', 'b', 'c', 'b']).array().unique().ok() // false
 ```
 
 #### `.item(index, fn)` => `Query`
@@ -267,8 +267,8 @@ $(['a', 'b', 'c', 'b']).array().unique().isOk() // false
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 引数にはcafyインスタンスも渡せます。
 ``` javascript
-$(['a', 42,  'c']).array().item(1, $().number()).isOk() // true
-$(['a', 'b', 'c']).array().item(1, $().number()).isOk() // false
+$(['a', 42,  'c']).array().item(1, $().number()).ok() // true
+$(['a', 'b', 'c']).array().item(1, $().number()).ok() // false
 ```
 
 #### `.each(fn)` => `Query`
@@ -276,8 +276,8 @@ $(['a', 'b', 'c']).array().item(1, $().number()).isOk() // false
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 引数にはcafyインスタンスも渡せます。
 ``` javascript
-$([1, 2, 3]).array().each(x => x < 4).isOk() // true
-$([1, 4, 3]).array().each(x => x < 4).isOk() // false
+$([1, 2, 3]).array().each(x => x < 4).ok() // true
+$([1, 4, 3]).array().each(x => x < 4).ok() // false
 ```
 
 ### Boolean
@@ -291,15 +291,15 @@ ID独自のメソッドはありません。
 整数でなければならないという制約を追加します。
 整数でない場合エラーにします。
 ``` javascript
-$(0       ).number().int().isOk() // true
-$(1       ).number().int().isOk() // true
-$(-100    ).number().int().isOk() // true
+$(0       ).number().int().ok() // true
+$(1       ).number().int().ok() // true
+$(-100    ).number().int().ok() // true
 
-$(0.1     ).number().int().isOk() // false
-$(Math.PI ).number().int().isOk() // false
+$(0.1     ).number().int().ok() // false
+$(Math.PI ).number().int().ok() // false
 
-$(NaN     ).number().int().isOk() // false
-$(Infinity).number().int().isOk() // false
+$(NaN     ).number().int().ok() // false
+$(Infinity).number().int().ok() // false
 ```
 
 #### `.min(threshold)` => `Query`
@@ -323,7 +323,7 @@ $(Infinity).number().int().isOk() // false
 そのプロパティが存在しなかった場合は単に無視されます。
 引数にはcafyインスタンスも渡せます。
 ``` javascript
-$({ myProp: true }).object().prop('myProp', $().boolean()).isOk() // true
+$({ myProp: true }).object().prop('myProp', $().boolean()).ok() // true
 ```
 
 複雑な例:
@@ -346,7 +346,7 @@ $(x).object()
     .prop('tachibana'), $().object()
       .prop('bwh', $().array('number')))
   .prop('thing', $().number())
-  .isOk() // true
+  .ok() // true
 ```
 
 #### `.have(name, fn)` => `Query`
@@ -365,7 +365,7 @@ have('x', () => true)
 与えられた正規表現とマッチしていなければならないという制約を追加します。
 正規表現と一致しない場合エラーにします。
 ``` javascript
-$('2017-03-07').string().match(/^([0-9]{4})\-([0-9]{2})-([0-9]{2})$/).isOk() // true
+$('2017-03-07').string().match(/^([0-9]{4})\-([0-9]{2})-([0-9]{2})$/).ok() // true
 ```
 
 #### `.or(pattern)` => `Query`
@@ -373,9 +373,9 @@ $('2017-03-07').string().match(/^([0-9]{4})\-([0-9]{2})-([0-9]{2})$/).isOk() // 
 `pattern`は文字列の配列または`|`で区切られた文字列です。
 どれとも一致しない場合エラーにします。
 ``` javascript
-$('strawberry').string().or(['strawberry', 'pasta']).isOk() // true
-$('alice').string().or(['strawberry', 'pasta']).isOk()      // false
-$('pasta').string().or('strawberry|pasta').isOk()           // true
+$('strawberry').string().or(['strawberry', 'pasta']).ok() // true
+$('alice').string().or(['strawberry', 'pasta']).ok()      // false
+$('pasta').string().or('strawberry|pasta').ok()           // true
 ```
 
 #### `.min(threshold)` => `Query`
