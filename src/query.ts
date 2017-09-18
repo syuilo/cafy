@@ -2,7 +2,7 @@ import autobind from './autobind';
 import Validator from './validator';
 
 /**
- * クエリベース
+ * クエリ基底クラス
  */
 abstract class Query<T> {
 	private value: T = undefined;
@@ -20,6 +20,11 @@ abstract class Query<T> {
 		this.value = value;
 	}
 
+	/**
+	 * バリデーションを追加します
+	 * @param validator バリデータ
+	 * @param name バリデータ名
+	 */
 	protected pushValidator(validator: Validator<T>, name?: string) {
 		validator.toString = name ? () => name : () => null;
 		this.validators.push(validator);
