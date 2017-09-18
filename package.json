@@ -16,14 +16,13 @@
     "test": "mocha --harmony"
   },
   "devDependencies": {
-    "@types/debug": "0.0.29",
-    "@types/mocha": "2.2.39",
-    "@types/node": "7.0.5",
-    "@types/mongodb": "2.1.41",
-    "mocha": "3.2.0",
-    "typescript": "2.3.2"
+    "@types/mocha": "2.2.43",
+    "@types/node": "8.0.28",
+    "@types/mongodb": "2.2.11",
+    "mocha": "3.5.3",
+    "typescript": "2.5.2"
   },
   "dependencies": {
-    "mongodb": "2.2.24"
+    "mongodb": "2.2.31"
   }
 }

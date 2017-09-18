@@ -1,3 +1,8 @@
+3.0.0 / 2017-09-19
+------------------
+* **[BREAKING]** `isOk` is now `ok`
+* **[BREAKING]** `isNg` is now `nok`
+
 2.4.0 / 2017-05-16
 ------------------
 * Add flexible option to array
