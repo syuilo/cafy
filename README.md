@@ -3,7 +3,7 @@ cafy
 > Simple, fun, flexible query-based validator
 
 **cafy**は、アサーションのようにメソッドチェーンで値のバリデーションを行うライブラリです。
-cafyを使えばバリデーションを楽しく・簡単に・柔軟に書くことができます。TypeScriptを完全にサポートしています。
+cafyを使えばバリデーションを楽しく・簡単に・柔軟に書くことができます。TypeScriptを完全にサポートしています💪
 [Try it out!](https://runkit.com/npm/cafy)
 
 [![][npm-badge]][npm-link]
@@ -14,18 +14,18 @@ cafyを使えばバリデーションを楽しく・簡単に・柔軟に書く�
 
 [![NPM](https://nodei.co/npm/cafy.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/cafy)
 
-Why cafy
+🤔 Why cafy
 -----------------------------------------------
 たとえばWeb APIを書くときに、ちゃんとクライアントから送信されてきたパラメータが正しい形式か確認しないと、クエリインジェクション(NoSQLであっても発生し得ます)やSSJI、[ReDoS](https://en.wikipedia.org/wiki/ReDoS)などの思わぬ不具合を引き起こす可能性があります(リクエストをJSONなどで受け付けているような場合は特に)。それを防ぐために値の正当性の検証は重要です。
 cafyを使えば、*「このパラメータはnullやundefinedではない文字列でなくてはならず、1文字以上100文字以下でなくてはならず、a-z0-9の文字種で構成されてなければならない」*といった長いバリデーションを、**たった一行で簡潔に**書くことができます。
 例外も行うバリデーションごとに用意されているので、ユーザーにわかりやすいエラーメッセージを返すこともできます。
 
-Installation
+📦 Installation
 -----------------------------------------------
 Just `npm install cafy --save`.
-Happy validation!
+Happy validation👍
 
-Usage
+☘ Usage
 -----------------------------------------------
 ``` javascript
 cafy(value)[.anyQueries()...]
@@ -172,7 +172,7 @@ $({ x: 'strawberry pasta' }).object().have('x', $().any()).ok() // <= true
 $(42).flexible.array().length(1).ok() // <= true
 ```
 
-Tips
+💡 Tips
 -----------------------------------------------
 ### 規定値を設定する
 [Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
@@ -188,7 +188,7 @@ $(x).array().each($().string().range(0, 100))
 //→ xは全ての要素が0文字以上100文字以内の文字列の配列でなければならない
 ```
 
-API
+📖 API
 -----------------------------------------------
 ℹ️ 返り値が`Query`と表記されているものは、そのあとにメソッドチェーンを
 繋げていくことができるということを示しています。
@@ -396,7 +396,7 @@ $('pasta').string().or('strawberry|pasta').ok()           // true
 文字数が`length`でなければならないという制約を追加します。
 文字数が`length`でない場合エラーにします。
 
-Examples
+📌 Examples
 -----------------------------------------------
 
 ### With your api server
@@ -428,7 +428,7 @@ app.post('/create-account', (req, res) => {
 });
 ```
 
-Testing
+⚗️ Testing
 -----------------------------------------------
 `npm run test`
 
