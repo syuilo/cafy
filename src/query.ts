@@ -33,7 +33,6 @@ abstract class Query<T> {
 	/**
 	 * 最初のバリデーションを追加します
 	 * @param validator バリデータ
-	 * @param name バリデータ名
 	 */
 	protected pushFirstTimeValidator(validator: Validator<any>) {
 		validator.toString = () => null;
