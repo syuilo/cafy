@@ -10,7 +10,7 @@ export default class StringQuery extends Query<string> {
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
 		super(optional, nullable, lazy, value);
 
-		this.pushValidator(v =>
+		this.pushFirstTimeValidator(v =>
 			isNotAString(v)
 				? new Error('must-be-a-string')
 				: true

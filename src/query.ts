@@ -30,6 +30,16 @@ abstract class Query<T> {
 		this.validators.push(validator);
 	}
 
+	/**
+	 * 最初のバリデーションを追加します
+	 * @param validator バリデータ
+	 * @param name バリデータ名
+	 */
+	protected pushFirstTimeValidator(validator: Validator<any>) {
+		validator.toString = () => null;
+		this.validators.push(validator);
+	}
+
 	private exec(value: any): Error;
 	private exec(value: any, withValue: boolean): [any, Error];
 	@autobind

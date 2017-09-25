@@ -15,7 +15,7 @@ export default class ArrayQuery<T> extends Query<T[]> {
 		if (flexible) {
 			this.transformer = v => [v];
 		} else {
-			this.pushValidator(v =>
+			this.pushFirstTimeValidator(v =>
 				isNotAnArray(v)
 					? new Error('must-be-an-array')
 					: true

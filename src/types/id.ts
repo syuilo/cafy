@@ -19,7 +19,7 @@ export default class IdQuery extends Query<mongo.ObjectID> {
 			}
 		};
 
-		this.pushValidator((v: any) => {
+		this.pushFirstTimeValidator(v => {
 			if (!mongo.ObjectID.prototype.isPrototypeOf(v) && isNotAnId(v)) {
 				return new Error('must-be-an-id');
 			}

@@ -10,7 +10,7 @@ export default class BooleanQuery extends Query<boolean> {
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
 		super(optional, nullable, lazy, value);
 
-		this.pushValidator(v =>
+		this.pushFirstTimeValidator(v =>
 			isNotABoolean(v)
 				? new Error('must-be-a-boolean')
 				: true
