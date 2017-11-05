@@ -438,7 +438,7 @@ describe('Queries', () => {
 
 		it('オブジェクト以外でエラー', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $(x).object().$;
+			const err = $(x).object().test();
 			assert.notEqual(err, null);
 		});
 
