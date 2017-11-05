@@ -1,3 +1,7 @@
+3.1.0 / 2017-11-05
+------------------
+* Add `eachQ` method to ArrayQuery (#10)
+
 3.0.0 / 2017-09-19
 ------------------
 * **[BREAKING]** `isOk` is now `ok`
