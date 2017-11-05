@@ -442,6 +442,12 @@ describe('Queries', () => {
 			assert.notEqual(err, null);
 		});
 
+		it('オブジェクト以外でエラー (配列)', () => {
+			const x = [];
+			const err = $(x).object().test();
+			assert.notEqual(err, null);
+		});
+
 		it('strict', () => {
 			const err1 = $({ x: 42 }).strict.object().have('x', $().number()).test();
 			assert.equal(err1, null);
