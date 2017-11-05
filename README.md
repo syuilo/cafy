@@ -280,6 +280,13 @@ $([1, 2, 3]).array().each(x => x < 4).ok() // true
 $([1, 4, 3]).array().each(x => x < 4).ok() // false
 ```
 
+#### `.eachQ(fn)` => `Query`
+各要素に対してのクエリを追加します。
+``` javascript
+$(['hoge', 'piyo']).array('string').eachQ(q => q.or(['hoge', 'piyo'])).ok() // true
+$(['hoge', 'fuga']).array('string').eachQ(q => q.or(['hoge', 'piyo'])).ok() // false
+```
+
 ### Boolean
 Boolean独自のメソッドはありません。
 

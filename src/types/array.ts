@@ -8,7 +8,10 @@ const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 /**
  * Array
  */
-export default class ArrayQuery<T> extends Query<T[]> {
+export default class ArrayQuery<T, U extends Query<any>> extends Query<T[]> {
+	private type: string;
+	private baseQ: U;
+
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, flexible?: boolean, type?: string) {
 		super(optional, nullable, lazy, value);
 
@@ -22,13 +25,22 @@ export default class ArrayQuery<T> extends Query<T[]> {
 			);
 		}
 
-		switch (type) {
-			case 'array': this.each($().array()); break;
-			case 'boolean': this.each($().boolean()); break;
-			case 'id': this.each($().id()); break;
-			case 'number': this.each($().number()); break;
-			case 'object': this.each($().object()); break;
-			case 'string': this.each($().string()); break;
+		this.type = type;
+
+		this.baseQ = this.createQuery();
+
+		this.each(this.baseQ);
+	}
+
+	private createQuery(): U {
+		switch (this.type) {
+			case 'array': return $().array() as any;
+			case 'boolean': return $().boolean() as any;
+			case 'id': return $().id() as any;
+			case 'number': return $().number() as any;
+			case 'object': return $().object() as any;
+			case 'string': return $().string() as any;
+			default: return $().any() as any;
 		}
 	}
 
@@ -139,6 +151,15 @@ export default class ArrayQuery<T> extends Query<T[]> {
 			if (err) return err;
 			return true;
 		}, 'each');
+		return this;
+	}
+
+	/**
+	 * 配列の各要素に対してクエリを追加します
+	 * @param addQuery クエリを追加する関数
+	 */
+	public eachQ(addQuery: (q: U) => U) {
+		this.baseQ.pipe(addQuery(this.createQuery()).test);
 		return this;
 	}
 }

@@ -394,6 +394,18 @@ describe('Queries', () => {
 				assert.notEqual(err, null);
 			});
 		});
+
+		describe('# eachQ', () => {
+			it('ok', () => {
+				const err = $(['hoge', 'piyo']).array('string').eachQ(q => q.or(['hoge', 'piyo'])).test();
+				assert.equal(err, null);
+			});
+
+			it('no', () => {
+				const err = $(['hoge', 'fuga']).array('string').eachQ(q => q.or(['hoge', 'piyo'])).test();
+				assert.notEqual(err, null);
+			});
+		});
 	});
 
 	describe('Boolean', () => {

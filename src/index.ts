@@ -12,13 +12,13 @@ import NumberQuery from './types/number';
 import ObjectQuery from './types/object';
 import StringQuery from './types/string';
 
-export function createArrayQuery(): ArrayQuery<any>;
-export function createArrayQuery(type: 'array'): ArrayQuery<any[]>;
-export function createArrayQuery(type: 'boolean'): ArrayQuery<boolean>;
-export function createArrayQuery(type: 'id'): ArrayQuery<mongo.ObjectID>;
-export function createArrayQuery(type: 'number'): ArrayQuery<number>;
-export function createArrayQuery(type: 'object'): ArrayQuery<object>;
-export function createArrayQuery(type: 'string'): ArrayQuery<string>;
+export function createArrayQuery(): ArrayQuery<any, AnyQuery>;
+export function createArrayQuery(type: 'array'): ArrayQuery<any[], ArrayQuery<any, any>>;
+export function createArrayQuery(type: 'boolean'): ArrayQuery<boolean, BooleanQuery>;
+export function createArrayQuery(type: 'id'): ArrayQuery<mongo.ObjectID, IdQuery>;
+export function createArrayQuery(type: 'number'): ArrayQuery<number, NumberQuery>;
+export function createArrayQuery(type: 'object'): ArrayQuery<object, ObjectQuery>;
+export function createArrayQuery(type: 'string'): ArrayQuery<string, StringQuery>;
 export function createArrayQuery(type?: 'array' | 'boolean' | 'id' | 'number' | 'object' | 'string'): any {
 	const lazy = this.lazy;
 	const value = this.value;
@@ -26,15 +26,15 @@ export function createArrayQuery(type?: 'array' | 'boolean' | 'id' | 'number' | 
 	const nullable = this.nullable;
 	const flexible = this.flexible;
 
-	if (type == null) return new ArrayQuery<any>(optional, nullable, lazy, value, flexible);
+	if (type == null) return new ArrayQuery<any, AnyQuery>(optional, nullable, lazy, value, flexible);
 
 	switch (type) {
-		case 'array': return new ArrayQuery<any[]>(optional, nullable, lazy, value, flexible, 'array');
-		case 'boolean': return new ArrayQuery<boolean>(optional, nullable, lazy, value, flexible, 'boolean');
-		case 'id': return new ArrayQuery<mongo.ObjectID>(optional, nullable, lazy, value, flexible, 'id');
-		case 'number': return new ArrayQuery<number>(optional, nullable, lazy, value, flexible, 'number');
-		case 'object': return new ArrayQuery<object>(optional, nullable, lazy, value, flexible, 'object');
-		case 'string': return new ArrayQuery<string>(optional, nullable, lazy, value, flexible, 'string');
+		case 'array': return new ArrayQuery<any[], ArrayQuery<any, any>>(optional, nullable, lazy, value, flexible, 'array');
+		case 'boolean': return new ArrayQuery<boolean, BooleanQuery>(optional, nullable, lazy, value, flexible, 'boolean');
+		case 'id': return new ArrayQuery<mongo.ObjectID, IdQuery>(optional, nullable, lazy, value, flexible, 'id');
+		case 'number': return new ArrayQuery<number, NumberQuery>(optional, nullable, lazy, value, flexible, 'number');
+		case 'object': return new ArrayQuery<object, ObjectQuery>(optional, nullable, lazy, value, flexible, 'object');
+		case 'string': return new ArrayQuery<string, StringQuery>(optional, nullable, lazy, value, flexible, 'string');
 	}
 }
 
