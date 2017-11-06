@@ -387,6 +387,13 @@ $('alice').string().or(['strawberry', 'pasta']).ok()      // false
 $('pasta').string().or('strawberry|pasta').ok()           // true
 ```
 
+#### `.notInclude(str | str[])` => `Query`
+引数に与えられた文字列を含んでいてはならないという制約を追加します。
+``` javascript
+$('She is fucking rich.').string().notInclude('fuck').ok() // false
+$('strawberry pasta').string().notInclude(['strawberry', 'alice']).ok() // false
+```
+
 #### `.min(threshold)` => `Query`
 `threshold`以上の文字数でなければならないという制約を追加します。
 文字数が`threshold`を下回る場合エラーにします。

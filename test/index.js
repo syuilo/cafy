@@ -226,6 +226,28 @@ describe('Queries', () => {
 				assert.notEqual(err, null);
 			});
 		});
+
+		describe('# notInclude', () => {
+			it('含まない文字列で成功 (配列)', () => {
+				const err = $('strawberry pasta').string().notInclude(['alice', 'tachibana']).test();
+				assert.equal(err, null);
+			});
+
+			it('含む文字列で失敗 (配列)', () => {
+				const err = $('strawberry alice').string().notInclude(['alice', 'tachibana']).test();
+				assert.notEqual(err, null);
+			});
+
+			it('含まない文字列で成功 (文字列)', () => {
+				const err = $('strawberry pasta').string().notInclude('alice').test();
+				assert.equal(err, null);
+			});
+
+			it('含む文字列で失敗 (文字列)', () => {
+				const err = $('strawberry alice').string().notInclude('alice').test();
+				assert.notEqual(err, null);
+			});
+		});
 	});
 
 	describe('Number', () => {

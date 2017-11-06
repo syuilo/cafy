@@ -83,6 +83,21 @@ export default class StringQuery extends Query<string> {
 	}
 
 	/**
+	 * このインスタンスの文字列が、与えられた文字列を含んでいないか検証します
+	 * 含んでいる場合エラーにします
+	 * @param str 文字列または文字列の配列
+	 */
+	public notInclude(str: string | string[]) {
+		if (typeof str == 'string') str = [str];
+		this.pushValidator(v => {
+			const match = (str as string[]).some(x => v.indexOf(x) !== -1);
+			if (match) return new Error('includes-forbidden-string');
+			return true;
+		}, 'notInclude');
+		return this;
+	}
+
+	/**
 	 * このインスタンスの文字列が、与えられた正規表現と一致するか検証します
 	 * 一致しない場合エラーにします
 	 * @param pattern 正規表現
