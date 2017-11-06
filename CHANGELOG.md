@@ -1,3 +1,7 @@
+unreleased
+----------
+* Add: toStringにverboseオプションを追加
+
 3.1.1 / 2017-11-05
 ------------------
 * Fix: $([]).object().ok() がtrueを返す (#11)

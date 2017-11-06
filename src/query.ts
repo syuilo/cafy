@@ -123,8 +123,10 @@ abstract class Query<T> {
 	/**
 	 * このcafyインスタンスを表す文字列を取得します
 	 */
-	public toString() {
-		return `${this.constructor.name} (${this.validators.map(v => v.toString()).filter(n => n != null).join(' > ')})`;
+	public toString(verbose = false) {
+		return this.constructor.name + ' ' + (verbose
+			? `(${this.validators.map(v => v.toString() || '[anonymous]').join(' > ')})`
+			: `(${this.validators.map(v => v.toString()).filter(n => n != null).join(' > ')})`);
 	}
 }
 
