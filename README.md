@@ -283,7 +283,7 @@ $([1, 4, 3]).array().each(x => x < 4).ok() // false
 ```
 
 #### `.eachQ(fn)` => `Query`
-各要素に対してのクエリを追加します。
+各要素に対してのクエリを操作します。
 ``` javascript
 $(['hoge', 'piyo']).array('string').eachQ(q => q.or(['hoge', 'piyo'])).ok() // true
 $(['hoge', 'fuga']).array('string').eachQ(q => q.or(['hoge', 'piyo'])).ok() // false

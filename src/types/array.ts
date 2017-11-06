@@ -155,11 +155,11 @@ export default class ArrayQuery<T, Q extends Query<any>> extends Query<T[]> {
 	}
 
 	/**
-	 * 配列の各要素に対してクエリを追加します
-	 * @param addQuery クエリを追加する関数
+	 * 配列の各要素に対してのクエリを操作します
+	 * @param fn クエリを受け取る関数
 	 */
-	public eachQ(addQuery: (q: Q) => Q) {
-		this.baseQ.pipe(addQuery(this.createQuery()).test);
+	public eachQ(fn: (q: Q) => any) {
+		fn(this.baseQ);
 		return this;
 	}
 }
