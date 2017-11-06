@@ -447,7 +447,7 @@ PullRequestやIssueの提出は歓迎です。
 
 Release Notes
 -----------------------------------------------
-Please see [ChangeLog](CHANGELOG)!
+Please see [ChangeLog](CHANGELOG.md)!
 
 License
 -----------------------------------------------
