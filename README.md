@@ -441,6 +441,14 @@ app.post('/create-account', (req, res) => {
 -----------------------------------------------
 `npm run test`
 
+Contribution
+-----------------------------------------------
+PullRequestやIssueの提出は歓迎です。
+
+Release Notes
+-----------------------------------------------
+Please see [ChangeLog](CHANGELOG)!
+
 License
 -----------------------------------------------
 [MIT](LICENSE)
