@@ -74,6 +74,8 @@ Supported types
 * **string** ... e.g.`$(x).string()...`
 * **ObjectID** (MongoDB) ... e.g.`$(x).id()...`
 
+> ℹ JavaScriptの仕様上では配列はobjectですが、cafyでは配列はobjectとは見なされません。
+
 どんな型のバリデータにどんなメソッドがあるかは[APIのセクション](#api)を見てみてください！
 
 ### 配列の要素の型を指定する
