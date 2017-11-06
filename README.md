@@ -230,7 +230,7 @@ $(['a', 'b', 'c']).array().pipe(x => x[1] != 'b').ok() // false
 先行検証のときは、引数は単に無視されます。
 
 ### Any
-Any独自のメソッドはありません。
+Any固有のメソッドはありません。
 
 ### Array
 #### `.min(threshold)` => `Query`
@@ -290,10 +290,10 @@ $(['hoge', 'fuga']).array('string').eachQ(q => q.or(['hoge', 'piyo'])).ok() // f
 ```
 
 ### Boolean
-Boolean独自のメソッドはありません。
+Boolean固有のメソッドはありません。
 
 ### ID
-ID独自のメソッドはありません。
+ID固有のメソッドはありません。
 
 ### Number
 #### `.int()` => `Query`
