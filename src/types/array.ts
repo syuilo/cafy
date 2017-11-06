@@ -8,9 +8,9 @@ const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 /**
  * Array
  */
-export default class ArrayQuery<T, U extends Query<any>> extends Query<T[]> {
+export default class ArrayQuery<T, Q extends Query<any>> extends Query<T[]> {
 	private type: string;
-	private baseQ: U;
+	private baseQ: Q;
 
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, flexible?: boolean, type?: string) {
 		super(optional, nullable, lazy, value);
@@ -32,7 +32,7 @@ export default class ArrayQuery<T, U extends Query<any>> extends Query<T[]> {
 		this.each(this.baseQ);
 	}
 
-	private createQuery(): U {
+	private createQuery(): Q {
 		switch (this.type) {
 			case 'array': return $().array() as any;
 			case 'boolean': return $().boolean() as any;
@@ -158,7 +158,7 @@ export default class ArrayQuery<T, U extends Query<any>> extends Query<T[]> {
 	 * 配列の各要素に対してクエリを追加します
 	 * @param addQuery クエリを追加する関数
 	 */
-	public eachQ(addQuery: (q: U) => U) {
+	public eachQ(addQuery: (q: Q) => Q) {
 		this.baseQ.pipe(addQuery(this.createQuery()).test);
 		return this;
 	}
