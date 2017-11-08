@@ -1,5 +1,5 @@
-unreleased
-----------
+3.2.0 / 2017-11-08
+------------------
 * Add: StringQuery.notInclude (#12)
 * Add: toStringにverboseオプションを追加
 * Fix: strictなobjectが正しく判定されていなかった問題を修正
