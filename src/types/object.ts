@@ -21,7 +21,7 @@ export default class ObjectQuery extends Query<object> {
 		if (strict) {
 			this.pushValidator(v => {
 				const properties = Object.keys(v);
-				const hasNotMentionedProperty = properties.some(p => this.mentions.some(m => m != p));
+				const hasNotMentionedProperty = properties.some(p => !this.mentions.some(m => m == p));
 				if (hasNotMentionedProperty) return new Error('dirty-object');
 				return true;
 			});

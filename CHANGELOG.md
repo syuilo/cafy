@@ -2,6 +2,7 @@ unreleased
 ----------
 * Add: StringQuery.notInclude (#12)
 * Add: toStringにverboseオプションを追加
+* Fix: strictなobjectが正しく判定されていなかった問題を修正
 
 3.1.1 / 2017-11-05
 ------------------

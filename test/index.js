@@ -476,6 +476,12 @@ describe('Queries', () => {
 
 			const err2 = $({ x: 42, y: 24 }).strict.object().have('x', $().number()).test();
 			assert.notEqual(err2, null);
+
+			const err3 = $({ x: 42, y: 24 }).strict.object()
+				.have('x', $().number())
+				.have('y', $().number())
+				.test();
+			assert.equal(err3, null);
 		});
 
 		it('# have', () => {
