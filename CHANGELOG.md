@@ -1,3 +1,11 @@
+4.0.0 / 2018-04-04
+------------------
+* **[BREAKING]** IDが廃止されました。
+* **[BREAKING]** Flexible Arrayが廃止されました。
+* **[BREAKING]** Arrayの`eachQ`が廃止されました。その代わりArrayの引数にcafyインスタンスを渡せるようになりました
+* **[BREAKING]** strict objectの指定方法が変更されました。`strict.object` --> `object(true)`
+* Add: 後から optional および nullable の設定を上書きできるメソッド`optional()`と`nullable()`が全てのクエリに対して追加されました。
+
 3.2.1 / 2018-01-23
 ------------------
 * Fix: AnyQueryの型がbooleanになっている

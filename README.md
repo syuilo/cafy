@@ -16,7 +16,7 @@ cafyを使えばバリデーションを楽しく・簡単に・柔軟に書く�
 
 🤔 Why cafy
 -----------------------------------------------
-たとえばWeb APIを書くときに、ちゃんとクライアントから送信されてきたパラメータが正しい形式か確認しないと、クエリインジェクション(NoSQLであっても発生し得ます)やSSJI、[ReDoS](https://en.wikipedia.org/wiki/ReDoS)などの思わぬ不具合を引き起こす可能性があります(リクエストをJSONなどで受け付けているような場合は特に)。それを防ぐために値の正当性の検証は重要です。
+たとえばWeb APIを書くときに、ちゃんとクライアントから送信されてきたパラメータが正しい形式か確認しないと、プログラムの例外を引き起こしたり、非常に長い文字列を送られてサーバーがダウンしてしまうといった可能性もあります。それらを防ぐためにも値の正当性の検証は重要です。
 cafyを使えば、*「このパラメータはnullやundefinedではない文字列でなくてはならず、1文字以上100文字以下でなくてはならず、a-z0-9の文字種で構成されてなければならない」*といった長いバリデーションを、**たった一行で簡潔に**書くことができます。
 例外も行うバリデーションごとに用意されているので、ユーザーにわかりやすいエラーメッセージを返すこともできます。
 
@@ -72,24 +72,16 @@ Supported types
 * **number** ... e.g.`$(x).number()...`
 * **object** ... e.g.`$(x).object()...`
 * **string** ... e.g.`$(x).string()...`
-* **ObjectID** (MongoDB) ... e.g.`$(x).id()...`
 
 > ℹ JavaScriptの仕様上では配列はobjectですが、cafyでは配列はobjectとは見なされません。
 
 どんな型のバリデータにどんなメソッドがあるかは[APIのセクション](#api)を見てみてください！
 
-### 配列の要素の型を指定する
-配列の要素がどんな型でなければならないか指定することもできます:
-``` javascript
-$(x).array('string')
-```
-ちなみにこれは次の糖衣構文です:
-``` javascript
-$(x).array().each($().string())
-```
+<section>
+<h3>null と undefined の扱い</h3>
 
-### null と undefined の扱い
-#### undefined を許可する *(optional)*
+<section>
+<h4>undefined を許可する *(optional)*</h4>
 デフォルトで`undefined`はエラーになります:
 ``` javascript
 $(undefined).string().ok() // <= false
@@ -98,8 +90,10 @@ $(undefined).string().ok() // <= false
 ``` javascript
 $(undefined).optional.string().ok() // <= true
 ```
+</section>
 
-#### null を許可する *(nullable)*
+<section>
+<h4>null を許可する *(nullable)*</h4>
 デフォルトで`null`はエラーになります:
 ``` javascript
 $(null).string().ok() // <= false
@@ -108,12 +102,15 @@ $(null).string().ok() // <= false
 ``` javascript
 $(null).nullable.string().ok() // <= true
 ```
+</section>
 
-#### null と undefined を許可する
+<section>
+<h4>null と undefined を許可する</h4>
 `nullable`と`optional`は併用できます:
 ``` javascript
 $(x).nullable.optional.string()
 ```
+</section>
 
 |                         | undefined | null |
 | -----------------------:|:---------:|:----:|
@@ -121,6 +118,24 @@ $(x).nullable.optional.string()
 | `optional`              | o         | x    |
 | `nullable`              | x         | o    |
 | `optional` + `nullable` | o         | o    |
+
+<section>
+<h4>optional と nullable を後から設定する</h4>
+後述の遅延検証を利用してバリデータを使い回したいときに、後から optional または nullable の設定を上書きできると便利なことがあります。
+
+``` javascript
+$().string().optional().test(undefined); // false
+$().optional.string().optional(false).test(undefined); // true
+```
+</section>
+
+</section>
+
+### 配列の要素の型を指定する
+配列の要素がどんな型でなければならないか指定することもできます:
+``` javascript
+$(x).array($().string()) // xは文字列の配列でなければならない
+```
 
 ### 遅延検証
 cafyの引数を省略することで、後から値を検証するバリデータになります:
@@ -153,9 +168,9 @@ isValidGender('alice')  // false
 ``` javascript
 $({ x: 42, y: 24 }).object().have('x', $().number()).ok() // <= true
 ```
-`have`または`prop`で言及した以外のプロパティを持っている場合にエラーにしたい場合は、`strict`を`object`の前に付けます:
+`have`または`prop`で言及した以外のプロパティを持っている場合にエラーにしたい場合は、`object`の引数に`true`を設定します:
 ``` javascript
-$({ x: 42, y: 24 }).strict.object().have('x', $().number()).ok() // <= false
+$({ x: 42, y: 24 }).object(true).have('x', $().number()).ok() // <= false
 ```
 
 ### Any
@@ -168,26 +183,13 @@ $('strawberry pasta').any().ok() // <= true
 $({ x: 'strawberry pasta' }).object().have('x', $().any()).ok() // <= true
 ```
 
-### Flexible array
-`flexible`を`array`の前に付けると、配列でない値を要素数1の配列に変換します:
-``` javascript
-$(42).flexible.array().length(1).ok() // <= true
-```
-
 💡 Tips
 -----------------------------------------------
 ### 規定値を設定する
 [Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
 const [val = 'desc', err] = $(x).optional.string().or('asc|desc').$;
-//→ xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
-```
-
-### cafyの入れ子
-cafy同士はシームレスに連携するので、入れ子にして使うこともできます:
-``` javascript
-$(x).array().each($().string().range(0, 100))
-//→ xは全ての要素が0文字以上100文字以内の文字列の配列でなければならない
+// xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
 📖 API
@@ -245,9 +247,9 @@ Any固有のメソッドはありません。
 `min`以上`max`以下の数の要素を持っていなければならないという制約を追加します。
 要素数が指定された範囲内にない場合エラーにします。
 ``` javascript
-$(['a', 'b', 'c']).range(2, 5).ok()                // true
-$(['a', 'b', 'c', 'd', 'e', 'f']).range(2, 5).ok() // false
-$(['a']).range(2, 5).ok()                          // false
+$(['a', 'b', 'c']).array().range(2, 5).ok()                // true
+$(['a', 'b', 'c', 'd', 'e', 'f']).array().range(2, 5).ok() // false
+$(['a']).array().range(2, 5).ok()                          // false
 ```
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
@@ -280,13 +282,6 @@ $(['a', 'b', 'c']).array().item(1, $().number()).ok() // false
 ``` javascript
 $([1, 2, 3]).array().each(x => x < 4).ok() // true
 $([1, 4, 3]).array().each(x => x < 4).ok() // false
-```
-
-#### `.eachQ(fn)` => `Query`
-各要素に対してのクエリを操作します。
-``` javascript
-$(['hoge', 'piyo']).array('string').eachQ(q => q.or(['hoge', 'piyo'])).ok() // true
-$(['hoge', 'fuga']).array('string').eachQ(q => q.or(['hoge', 'piyo'])).ok() // false
 ```
 
 ### Boolean
@@ -411,42 +406,6 @@ $('strawberry pasta').string().notInclude(['strawberry', 'alice']).ok() // false
 #### `.length(length)` => `Query`
 文字数が`length`でなければならないという制約を追加します。
 文字数が`length`でない場合エラーにします。
-
-📌 Examples
------------------------------------------------
-
-### With your api server
-``` javascript
-import * as express from 'express';
-import $ from 'cafy';
-import db from './mydb';
-
-const app = express();
-
-app.post('/create-account', (req, res) => {
-  // アカウント名は文字列で、30文字以内でなければならない。この値は必須である。
-  const [name, nameErr] = $(req.body.name).string().max(30).$;
-  if (nameErr) return res.status(400).send('invalid name');
-
-  // 年齢は数値で、0~100の整数でなければならない。この値は必須である。
-  const [age, ageErr] = $(req.body.age).number().int().range(0,100).$;
-  if (ageErr) return res.status(400).send('invalid age');
-
-  // 性別は'male'か'female'かnull(=設定なし)でなければならない。省略した場合はnullとして扱う。
-  const [gender = null, genderErr] = $(req.body.gender).nullable.optional.string().or('male|female').$;
-  if (genderErr) return res.status(400).send('invalid gender');
-
-  db.insert({
-    name, age, gender
-  });
-
-  res.send('yee haw!');
-});
-```
-
-⚗️ Testing
------------------------------------------------
-`npm run test`
 
 Contribution
 -----------------------------------------------

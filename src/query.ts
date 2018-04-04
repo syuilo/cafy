@@ -6,16 +6,15 @@ import Validator from './validator';
  */
 abstract class Query<T> {
 	private value: T = undefined;
-	private optional: boolean;
-	private nullable: boolean;
+	private isOptional: boolean;
+	private isNullable: boolean;
 	private lazy: boolean = false;
 
 	private validators: Validator<T>[] = [];
-	protected transformer: (value: any) => T = null;
 
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
-		this.optional = optional;
-		this.nullable = nullable;
+		this.isOptional = optional;
+		this.isNullable = nullable;
 		this.lazy = lazy;
 		this.value = value;
 	}
@@ -47,14 +46,11 @@ abstract class Query<T> {
 			return withValue ? [val, err] : err;
 		}
 
-		if (this.optional && value === undefined) return res(value, null);
-		if (this.nullable && value === null) return res(value, null);
+		if (this.isOptional && value === undefined) return res(value, null);
+		if (this.isNullable && value === null) return res(value, null);
 
-		if (!this.optional && value === undefined) return res(null, new Error('must-be-not-undefined'));
-		if (!this.nullable && value === null) return res(null, new Error('must-be-not-null'));
-
-		// Pre FX
-		if (this.transformer) value = this.transformer(value);
+		if (!this.isOptional && value === undefined) return res(null, new Error('must-be-not-undefined'));
+		if (!this.isNullable && value === null) return res(null, new Error('must-be-not-null'));
 
 		let err = null;
 		this.validators.some(validate => {
@@ -117,6 +113,24 @@ abstract class Query<T> {
 	 */
 	public pipe(validator: Validator<T>) {
 		this.pushValidator(validator, 'pipe');
+		return this;
+	}
+
+	/**
+	 * undefined を許可するか否かを設定します。
+	 * @param optional 許可するか否か
+	 */
+	public optional(optional = true) {
+		this.isOptional = optional;
+		return this;
+	}
+
+	/**
+	 * null を許可するか否かを設定します。
+	 * @param nullable 許可するか否か
+	 */
+	public nullable(nullable = true) {
+		this.isNullable = nullable;
 		return this;
 	}
 

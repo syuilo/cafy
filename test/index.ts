@@ -5,8 +5,7 @@
 'use strict';
 
 const assert = require('assert');
-const mongo = require('mongodb');
-const $ = require('../').default;
+import $ from '../';
 
 it('デフォルトの値を設定できる', () => {
 	const def = 'strawberry pasta';
@@ -56,6 +55,28 @@ describe('統合', () => {
 			const err = $([1, -1, 3]).array().each($().number().range(0, 10)).test();
 			assert.notEqual(err, null);
 		});
+	});
+
+	it('lazy optional', () => {
+		const genderValidator = $().string().or('male|female');
+
+		const err1 = genderValidator.test(undefined);
+		assert.notEqual(err1, null);
+
+		const err2 = genderValidator.test('male');
+		assert.equal(err2, null);
+
+		const err3 = genderValidator.test('alice');
+		assert.notEqual(err3, null);
+
+		const err4 = genderValidator.optional().test(undefined);
+		assert.equal(err4, null);
+
+		const err5 = genderValidator.optional().test('male');
+		assert.equal(err5, null);
+
+		const err6 = genderValidator.optional().test('alice');
+		assert.notEqual(err6, null);
 	});
 });
 
@@ -317,29 +338,12 @@ describe('Queries', () => {
 
 		describe('要素の型指定', () => {
 			it('正当な値を与えて合格', () => {
-				const err = $(['a', 'b', 'c']).array('string').test();
+				const err = $(['a', 'b', 'c']).array($().string()).test();
 				assert.equal(err, null);
 			});
 
 			it('不正な値を与えて不合格', () => {
-				const err = $(['a', 1, 'c']).array('string').test();
-				assert.notEqual(err, null);
-			});
-		});
-
-		describe('flexible', () => {
-			it('配列でない値が要素数一の配列として扱われる', () => {
-				const err = $(42).flexible.array().length(1).test();
-				assert.equal(err, null);
-			});
-
-			it('nullダメ', () => {
-				const err = $(null).flexible.array().length(1).test();
-				assert.notEqual(err, null);
-			});
-
-			it('undefinedダメ', () => {
-				const err = $(undefined).flexible.array().length(1).test();
+				const err = $(['a', 1, 'c']).array($().string()).test();
 				assert.notEqual(err, null);
 			});
 		});
@@ -416,18 +420,6 @@ describe('Queries', () => {
 				assert.notEqual(err, null);
 			});
 		});
-
-		describe('# eachQ', () => {
-			it('ok', () => {
-				const err = $(['hoge', 'piyo']).array('string').eachQ(q => q.or(['hoge', 'piyo'])).test();
-				assert.equal(err, null);
-			});
-
-			it('no', () => {
-				const err = $(['hoge', 'fuga']).array('string').eachQ(q => q.or(['hoge', 'piyo'])).test();
-				assert.notEqual(err, null);
-			});
-		});
 	});
 
 	describe('Boolean', () => {
@@ -471,17 +463,20 @@ describe('Queries', () => {
 		});
 
 		it('strict', () => {
-			const err1 = $({ x: 42 }).strict.object().have('x', $().number()).test();
+			const err1 = $({ x: 42 }).object(true).have('x', $().number()).test();
 			assert.equal(err1, null);
 
-			const err2 = $({ x: 42, y: 24 }).strict.object().have('x', $().number()).test();
+			const err2 = $({ x: 42, y: 24 }).object(true).have('x', $().number()).test();
 			assert.notEqual(err2, null);
 
-			const err3 = $({ x: 42, y: 24 }).strict.object()
+			const err3 = $({ x: 42, y: 24 }).object(true)
 				.have('x', $().number())
 				.have('y', $().number())
 				.test();
 			assert.equal(err3, null);
+
+			const err4 = $({ x: 42, y: 24 }).object().have('x', $().number()).test();
+			assert.equal(err4, null);
 		});
 
 		it('# have', () => {
@@ -512,7 +507,7 @@ describe('Queries', () => {
 					.prop('strawberry', $().string())
 					.prop('alice', $().boolean())
 					.prop('tachibana', $().object()
-						.prop('bwh', $().array('number'))))
+						.prop('bwh', $().array($().number()))))
 				.prop('thing', $().number())
 				.test;
 
@@ -539,33 +534,6 @@ describe('Queries', () => {
 				thing: 42
 			};
 			assert.notEqual(validate(y), null);
-		});
-	});
-
-	describe('ID', () => {
-		it('正当な値を与える (文字列)', () => {
-			const x = '59bde85bd8f8c20a41bee87d';
-			const res = $(x).id().test();
-			assert.equal(res, null);
-		});
-
-		it('正当な値を与える (IDインスタンス)', () => {
-			const x = new mongo.ObjectID('59bde85bd8f8c20a41bee87d');
-			const res = $(x).id().test();
-			assert.equal(res, null);
-		});
-
-		it('ID以外でエラー', () => {
-			const x = 'x';
-			const res = $(x).id().test();
-			assert.notEqual(res, null);
-		});
-
-		it('文字列を与えた場合にIDインスタンスに変換される', () => {
-			const x = '59bde85bd8f8c20a41bee87d';
-			const [val, err] = $(x).id().$;
-			assert.equal(err, null);
-			assert.equal(mongo.ObjectID.prototype.isPrototypeOf(val), true);
 		});
 	});
 });
