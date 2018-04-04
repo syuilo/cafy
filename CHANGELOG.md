@@ -6,6 +6,7 @@
 ------------------
 * **[BREAKING]** IDが廃止されました。
 * **[BREAKING]** Flexible Arrayが廃止されました。
+* **[BREAKING]** Arrayの引数に型を表す文字列を渡せなくなりました。その代わりcafyインスタンスを渡せるようになりました
 * **[BREAKING]** Arrayの`eachQ`が廃止されました。その代わりArrayの引数にcafyインスタンスを渡せるようになりました
 * **[BREAKING]** strict objectの指定方法が変更されました。`strict.object` --> `object(true)`
 * Add: 後から optional および nullable の設定を上書きできるメソッド`optional()`と`nullable()`が全てのクエリに対して追加されました。
