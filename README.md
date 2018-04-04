@@ -22,7 +22,7 @@ cafyを使えば、*「このパラメータはnullやundefinedではない文�
 
 📦 Installation
 -----------------------------------------------
-Just `npm install cafy --save`.
+Just `npm install cafy`.
 Happy validation👍
 
 ☘ Usage
