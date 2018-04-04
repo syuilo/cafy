@@ -113,7 +113,7 @@ $(x).nullable.optional.string()
 | `optional` + `nullable` | o         | o    |
 
 #### optional と nullable を後から設定する
-後述の遅延検証を利用してバリデータを使い回したいときに、後から optional または nullable の設定を上書きできると便利なことがあります。
+後述の遅延検証を利用してバリデータを使い回したいときに、後から`optional`および/または`nullable`の設定を上書きできると便利なことがあります。
 
 ``` javascript
 $().string().optional().test(undefined); // false
