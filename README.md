@@ -116,8 +116,8 @@ $(x).nullable.optional.string()
 後述の遅延検証を利用してバリデータを使い回したいときに、後から`optional`および/または`nullable`の設定を上書きできると便利なことがあります。
 
 ``` javascript
-$().string().optional().test(undefined); // false
-$().optional.string().optional(false).test(undefined); // true
+$().string().optional().ok(undefined); // false
+$().optional.string().optional(false).ok(undefined); // true
 ```
 
 ### 配列の要素の型を指定する
