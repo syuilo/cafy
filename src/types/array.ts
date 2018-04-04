@@ -15,7 +15,7 @@ export type TypeOf<Q> =
 	Q extends NumberQuery ? number :
 	Q extends BooleanQuery ? boolean :
 	Q extends ObjectQuery ? { [x: string]: any } :
-	Q extends ArrayQuery<Query<infer R>> ? R[] :
+	Q extends ArrayQuery<Query<infer T>> ? T[] :
 	Q extends AnyQuery ? any :
 	any;
 
