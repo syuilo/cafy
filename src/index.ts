@@ -10,22 +10,17 @@ import ObjectQuery from './types/object';
 import StringQuery from './types/string';
 import Query from './query';
 
-export function createArrayQuery(): ArrayQuery<any, AnyQuery>;
-export function createArrayQuery(q: ArrayQuery<any, Query<any>>): ArrayQuery<any[], ArrayQuery<any, Query<any>>>;
-export function createArrayQuery(q: BooleanQuery): ArrayQuery<boolean, BooleanQuery>;
-export function createArrayQuery(q: NumberQuery): ArrayQuery<number, NumberQuery>;
-export function createArrayQuery(q: ObjectQuery): ArrayQuery<{ [x: string]: any }, ObjectQuery>;
-export function createArrayQuery(q: StringQuery): ArrayQuery<string, StringQuery>;
-export function createArrayQuery(q: AnyQuery): ArrayQuery<any, AnyQuery>;
-export function createArrayQuery(q?: Query<any>): any {
+export function createArrayQuery(): ArrayQuery<any>;
+export function createArrayQuery<T extends Query<any>>(q: T): ArrayQuery<T>;
+export function createArrayQuery(q?: Query<any>): ArrayQuery<any> {
 	const lazy = this.lazy;
 	const value = this.value;
 	const optional = this.optional;
 	const nullable = this.nullable;
 
 	return q == null
-		? new ArrayQuery<any, AnyQuery>(optional, nullable, lazy, value)
-		: new ArrayQuery<any, AnyQuery>(optional, nullable, lazy, value, q);
+		? new ArrayQuery(optional, nullable, lazy, value)
+		: new ArrayQuery(optional, nullable, lazy, value, q);
 }
 
 export type Types = {

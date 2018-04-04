@@ -1,14 +1,28 @@
 import Query from '../query';
 import $ from '../index';
+import StringQuery from './string';
+import NumberQuery from './number';
+import AnyQuery from './any';
+import BooleanQuery from './boolean';
+import ObjectQuery from './object';
 
 export const isAnArray = x => Array.isArray(x);
 export const isNotAnArray = x => !isAnArray(x);
 const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 
+export type TypeOf<Q> =
+	Q extends StringQuery ? string :
+	Q extends NumberQuery ? number :
+	Q extends BooleanQuery ? boolean :
+	Q extends ObjectQuery ? { [x: string]: any } :
+	Q extends ArrayQuery<Query<infer R>> ? R[] :
+	Q extends AnyQuery ? any :
+	any;
+
 /**
  * Array
  */
-export default class ArrayQuery<T, Q extends Query<any>> extends Query<T[]> {
+export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]> {
 	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, q?: Query<any>) {
 		super(optional, nullable, lazy, value);
 
@@ -91,7 +105,7 @@ export default class ArrayQuery<T, Q extends Query<any>> extends Query<T[]> {
 	 * @param index インデックス
 	 * @param validator バリデータ
 	 */
-	public item(index: number, validator: ((element: T) => boolean | Error) | Query<any>) {
+	public item(index: number, validator: ((element: TypeOf<Q>) => boolean | Error) | Query<any>) {
 		const validate = validator instanceof Query ? validator.test : validator;
 		this.pushValidator(v => {
 			const result = validate(v[index]);
@@ -111,7 +125,7 @@ export default class ArrayQuery<T, Q extends Query<any>> extends Query<T[]> {
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
 	 */
-	public each(validator: ((element: T, index: number, array: T[]) => boolean | Error) | Query<any>) {
+	public each(validator: ((element: TypeOf<Q>, index: number, array: TypeOf<Q>[]) => boolean | Error) | Query<any>) {
 		const validate = validator instanceof Query ? validator.test : validator;
 		this.pushValidator(v => {
 			let err: Error;
