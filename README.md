@@ -334,7 +334,7 @@ $(x).object()
     .prop('strawberry', $().string())
     .prop('alice', $().boolean())
     .prop('tachibana'), $().object()
-      .prop('bwh', $().array('number')))
+      .prop('bwh', $().array($().number())))
   .prop('thing', $().number())
   .ok() // true
 ```
