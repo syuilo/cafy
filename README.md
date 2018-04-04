@@ -77,47 +77,33 @@ Supported types
 
 どんな型のバリデータにどんなメソッドがあるかは[APIのセクション](#api)を見てみてください！
 
-<section>
-<h3>null と undefined の扱い</h3>
+### null と undefined の扱い
 
-<section>
-<h4>undefined を許可する *(optional)*</h4>
+#### undefined を許可する *(optional)*
 デフォルトで`undefined`はエラーになります:
-	
 ``` javascript
 $(undefined).string().ok() // <= false
 ```
-																		 
 `undefined`を許可する場合は`optional`を型の前に付けます:
-																		 
 ``` javascript
 $(undefined).optional.string().ok() // <= true
 ```
-</section>
 
-<section>
-<h4>null を許可する *(nullable)*</h4>
+#### null を許可する *(nullable)*
 デフォルトで`null`はエラーになります:
-	
 ``` javascript
 $(null).string().ok() // <= false
 ```
-																
 `null`を許可する場合は`nullable`を型の前に付けます:
-																
 ``` javascript
 $(null).nullable.string().ok() // <= true
 ```
-</section>
 
-<section>
-<h4>null と undefined を許可する</h4>
+#### null と undefined を許可する
 `nullable`と`optional`は併用できます:
-	
 ``` javascript
 $(x).nullable.optional.string()
 ```
-</section>
 
 |                         | undefined | null |
 | -----------------------:|:---------:|:----:|
@@ -126,17 +112,13 @@ $(x).nullable.optional.string()
 | `nullable`              | x         | o    |
 | `optional` + `nullable` | o         | o    |
 
-<section>
-<h4>optional と nullable を後から設定する</h4>
+#### optional と nullable を後から設定する
 後述の遅延検証を利用してバリデータを使い回したいときに、後から optional または nullable の設定を上書きできると便利なことがあります。
 
 ``` javascript
 $().string().optional().test(undefined); // false
 $().optional.string().optional(false).test(undefined); // true
 ```
-</section>
-
-</section>
 
 ### 配列の要素の型を指定する
 配列の要素がどんな型でなければならないか指定することもできます:
