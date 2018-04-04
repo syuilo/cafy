@@ -83,10 +83,13 @@ Supported types
 <section>
 <h4>undefined を許可する *(optional)*</h4>
 デフォルトで`undefined`はエラーになります:
+	
 ``` javascript
 $(undefined).string().ok() // <= false
 ```
+																		 
 `undefined`を許可する場合は`optional`を型の前に付けます:
+																		 
 ``` javascript
 $(undefined).optional.string().ok() // <= true
 ```
@@ -95,10 +98,13 @@ $(undefined).optional.string().ok() // <= true
 <section>
 <h4>null を許可する *(nullable)*</h4>
 デフォルトで`null`はエラーになります:
+	
 ``` javascript
 $(null).string().ok() // <= false
 ```
+																
 `null`を許可する場合は`nullable`を型の前に付けます:
+																
 ``` javascript
 $(null).nullable.string().ok() // <= true
 ```
@@ -107,6 +113,7 @@ $(null).nullable.string().ok() // <= true
 <section>
 <h4>null と undefined を許可する</h4>
 `nullable`と`optional`は併用できます:
+	
 ``` javascript
 $(x).nullable.optional.string()
 ```
