@@ -222,6 +222,11 @@ describe('Queries', () => {
 			assert.notEqual(err, null);
 		});
 
+		it('サロゲートペア', () => {
+			const ok = $('😀').string().length(1).ok();
+			assert.equal(ok, true);
+		});
+
 		describe('# min', () => {
 			it('しきい値より長くて成功', () => {
 				const err = $('strawberry').string().min(8).test();

@@ -3,6 +3,10 @@ import Query from '../query';
 export const isAString = x => typeof x == 'string';
 export const isNotAString = x => !isAString(x);
 
+function stringToArray(str) {
+	return str.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[^\uD800-\uDFFF]/g) || [];
+}
+
 /**
  * String
  */
@@ -34,7 +38,7 @@ export default class StringQuery extends Query<string> {
 	 */
 	public min(threshold: number) {
 		this.pushValidator(v =>
-			v.length < threshold
+			stringToArray(v).length < threshold
 				? new Error('invalid-range')
 				: true
 		, 'min');
@@ -47,7 +51,7 @@ export default class StringQuery extends Query<string> {
 	 */
 	public max(threshold: number) {
 		this.pushValidator(v =>
-			v.length > threshold
+			stringToArray(v).length > threshold
 				? new Error('invalid-range')
 				: true
 		, 'max');
@@ -60,7 +64,7 @@ export default class StringQuery extends Query<string> {
 	 */
 	public length(length: number) {
 		this.pushValidator(v =>
-			v.length !== length
+			stringToArray(v).length !== length
 				? new Error('invalid-length')
 				: true
 		, 'length');
