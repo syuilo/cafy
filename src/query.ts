@@ -65,6 +65,28 @@ abstract class Query<T> {
 	}
 
 	/**
+	 * 値を検証して、バリデーションに不合格なら Error をthrowします。
+	 */
+	@autobind
+	public throw(value?: any): void {
+		let v;
+		let e;
+
+		if (this.lazy) {
+			if (arguments.length == 0) throw new Error('値が指定されていません');
+			[v, e] = this.exec(value, true);
+		} else {
+			[v, e] = this.exec(this.value, true);
+		}
+
+		if (e) {
+			throw e;
+		} else {
+			return v;
+		}
+	}
+
+	/**
 	 * 値を検証して、妥当な場合は null を、そうでない場合は Error を返します。
 	 */
 	@autobind

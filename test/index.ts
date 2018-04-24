@@ -2,7 +2,7 @@
  * Tests!
  */
 
-const assert = require('assert');
+import * as assert from 'assert';
 import $, { Query } from '../';
 
 it('デフォルトの値を設定できる', () => {
@@ -144,6 +144,12 @@ describe('Common', () => {
 		it('undefinedを与えらる', () => {
 			const err = $(undefined).nullable.optional.string().test();
 			assert.equal(err, null);
+		});
+	});
+
+	describe('# throw', () => {
+		it('エラーをthrowする', () => {
+			assert.throws($('strawberry pasta').number().throw);
 		});
 	});
 

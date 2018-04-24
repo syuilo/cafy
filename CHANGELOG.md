@@ -1,3 +1,7 @@
+6.1.0 / 2018-04-25
+------------------
+* Add: throw
+
 6.0.0 / 2018-04-24
 ------------------
 * **[BREAKING]** Use `pushValidator` instead of `pushFirstTimeValidator`
