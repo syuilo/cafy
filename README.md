@@ -75,9 +75,13 @@ Supported types
 
 > ℹ JavaScriptの仕様上では配列はobjectですが、cafyでは配列はobjectとは見なされません。
 
-また、後述するように独自の型を追加することもできます。
+また、後述するように**独自の型**を追加することもできます。
+
+それぞれの型がどのようなメソッドを持っているかなどは、APIのセクションをご確認ください。
 
 ### null と undefined の扱い
+**cafyは、デフォルトで`null`も`undefined`も許容しません。**
+`null`や`undefined`を許可したい場合は、これらのオプションを使用します:
 
 #### undefined を許可する *(optional)*
 デフォルトで`undefined`はエラーになります:
@@ -199,7 +203,10 @@ $('strawberry pasta').any().ok() // <= true
 $({ x: 'strawberry pasta' }).object().have('x', $().any()).ok() // <= true
 ```
 
-### 型: **Array** (配列)
+#### メソッド
+Any固有のメソッドはありません。
+
+### 型: **Array**
 ``` javascript
 .array(type)...
 ```
@@ -258,7 +265,7 @@ $([1, 2, 3]).array().each(x => x < 4).ok() // true
 $([1, 4, 3]).array().each(x => x < 4).ok() // false
 ```
 
-### 型: **Boolean** (真理値)
+### 型: **Boolean**
 ``` javascript
 .boolean()...
 ```
@@ -267,7 +274,7 @@ $([1, 4, 3]).array().each(x => x < 4).ok() // false
 #### メソッド
 固有のメソッドはありません。
 
-### 型: **Number** (数値)
+### 型: **Number**
 ``` javascript
 .number()...
 ```
@@ -300,7 +307,7 @@ $(Infinity).number().int().ok() // false
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
 
-### 型: **Object** (オブジェクト)
+### 型: **Object**
 ``` javascript
 .object(strict?)...
 ```
@@ -359,7 +366,7 @@ $(x).object()
 have('x', () => true)
 ```
 
-### 型: **String** (文字列)
+### 型: **String**
 ``` javascript
 .string()...
 ```
