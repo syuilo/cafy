@@ -188,11 +188,9 @@ class MyClass {
 
 // あなたのクラスを検証するための、cafyのQueryクラスを継承したクラス
 class MyClassQuery extends Query<MyClass> {
-	// コンストラクタは、4つの引数を受け取ります。
-	// それらの引数はすべて親クラス(=Queryクラス)に渡してください。
-	constructor(optional, nullable, lazy, value?) {
-		// ("おまじない"のようなものです)
-		super(optional, nullable, lazy, value);
+	constructor(...args) {
+		// "おまじない"のようなものです
+		super(...args);
 
 		// 値が MyClass のインスタンスであるかチェック
 		this.pushFirstTimeValidator(v =>

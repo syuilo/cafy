@@ -15,8 +15,8 @@ const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
  * Array
  */
 export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]> {
-	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, q?: Query<any>) {
-		super(optional, nullable, lazy, value);
+	constructor(q?: Query<any>, ...args) {
+		super(...args);
 
 		this.pushFirstTimeValidator(v =>
 			isNotAnArray(v)

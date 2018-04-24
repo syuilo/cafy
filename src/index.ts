@@ -20,9 +20,7 @@ export function createArrayQuery(q?: Query<any>): ArrayQuery<any> {
 	const optional = this.optional;
 	const nullable = this.nullable;
 
-	return q == null
-		? new ArrayQuery(optional, nullable, lazy, value)
-		: new ArrayQuery(optional, nullable, lazy, value, q);
+	return new ArrayQuery(q, optional, nullable, lazy, value);
 }
 
 export type Types = {
@@ -32,7 +30,7 @@ export type Types = {
 	boolean: () => BooleanQuery;
 	array: typeof createArrayQuery;
 	object: (strict?: boolean) => ObjectQuery;
-	type: <T>(q: { new(optional, nullable, lazy, value?): T; }) => T;
+	type: <T>(q: { new(...args): T; }) => T;
 	or: <QA extends Query<any>, QB extends Query<any>>(qA: QA, qB: QB) => OrQuery<QA, QB>;
 };
 
@@ -55,9 +53,9 @@ function $(value?: any): It {
 			optional: false,
 			nullable: false
 		})(q),
-		object: (strict?: boolean) => new ObjectQuery(false, false, lazy, value, strict),
+		object: (strict?: boolean) => new ObjectQuery(strict, false, false, lazy, value),
 		type: (q: any) => new q(false, false, lazy, value),
-		or: (qA: Query<any>, qB: Query<any>) => new OrQuery(false, false, lazy, qA, qB, value),
+		or: (qA: Query<any>, qB: Query<any>) => new OrQuery(qA, qB, false, false, lazy, value),
 		nullable: {
 			any: () => new AnyQuery(false, true, lazy, value),
 			string: () => new StringQuery(false, true, lazy, value),
@@ -69,9 +67,9 @@ function $(value?: any): It {
 				optional: false,
 				nullable: true
 			})(q),
-			object: (strict?: boolean) => new ObjectQuery(false, true, lazy, value, strict),
+			object: (strict?: boolean) => new ObjectQuery(strict, false, true, lazy, value),
 			type: (q: any) => new q(false, true, lazy, value),
-			or: (qA: Query<any>, qB: Query<any>) => new OrQuery(false, true, lazy, qA, qB, value),
+			or: (qA: Query<any>, qB: Query<any>) => new OrQuery(qA, qB, false, true, lazy, value),
 			optional: {
 				any: () => new AnyQuery(true, true, lazy, value),
 				string: () => new StringQuery(true, true, lazy, value),
@@ -85,7 +83,7 @@ function $(value?: any): It {
 				})(q),
 				object: (strict?: boolean) => new ObjectQuery(true, true, lazy, value, strict),
 				type: (q: any) => new q(true, true, lazy, value),
-				or: (qA: Query<any>, qB: Query<any>) => new OrQuery(true, true, lazy, qA, qB, value),
+				or: (qA: Query<any>, qB: Query<any>) => new OrQuery(qA, qB, true, true, lazy, value),
 			}
 		},
 		optional: {
@@ -101,7 +99,7 @@ function $(value?: any): It {
 			})(q),
 			object: (strict?: boolean) => new ObjectQuery(true, false, lazy, value, strict),
 			type: (q: any) => new q(true, false, lazy, value),
-			or: (qA: Query<any>, qB: Query<any>) => new OrQuery(true, false, lazy, qA, qB, value),
+			or: (qA: Query<any>, qB: Query<any>) => new OrQuery(qA, qB, true, false, lazy, value),
 			nullable: {
 				any: () => new AnyQuery(true, true, lazy, value),
 				string: () => new StringQuery(true, true, lazy, value),
@@ -115,7 +113,7 @@ function $(value?: any): It {
 				})(q),
 				object: (strict?: boolean) => new ObjectQuery(true, true, lazy, value, strict),
 				type: (q: any) => new q(true, true, lazy, value),
-				or: (qA: Query<any>, qB: Query<any>) => new OrQuery(true, false, lazy, qA, qB, value),
+				or: (qA: Query<any>, qB: Query<any>) => new OrQuery(qA, qB, true, false, lazy, value),
 			}
 		}
 	};

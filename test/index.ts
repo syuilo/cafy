@@ -558,8 +558,8 @@ class MyClass {
 }
 
 class MyClassQuery extends Query<MyClass> {
-	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
-		super(optional, nullable, lazy, value);
+	constructor(...args) {
+		super(...args);
 
 		this.pushFirstTimeValidator(v =>
 			v instanceof MyClass ? true : new Error('value is not an instance of MyClass')

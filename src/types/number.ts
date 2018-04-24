@@ -7,8 +7,8 @@ export const isNotANumber = x => !isANumber(x);
  * Number
  */
 export default class NumberQuery extends Query<number> {
-	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
-		super(optional, nullable, lazy, value);
+	constructor(...args) {
+		super(...args);
 
 		this.pushFirstTimeValidator(v =>
 			isNotANumber(v)

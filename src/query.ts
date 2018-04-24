@@ -12,7 +12,8 @@ abstract class Query<T> {
 
 	private validators: Validator<T>[] = [];
 
-	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
+	constructor(...args) {
+		const [optional, nullable, lazy, value] = args;
 		this.isOptional = optional;
 		this.isNullable = nullable;
 		this.lazy = lazy;

@@ -9,8 +9,8 @@ export const isNotAnObject = x => !isAnObject(x);
 export default class ObjectQuery extends Query<{ [x: string]: any }> {
 	private mentions: string[] = [];
 
-	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any, strict?: boolean) {
-		super(optional, nullable, lazy, value);
+	constructor(strict: boolean, ...args) {
+		super(...args);
 
 		this.pushFirstTimeValidator(v =>
 			isNotAnObject(v)
