@@ -556,4 +556,10 @@ it('Custom Query', () => {
 
 	const ok2 = $('abc').type(MyClassQuery).ok();
 	assert.equal(ok2, false);
+
+	const ok3 = $([new MyClass(), new MyClass()]).array($().type(MyClassQuery)).ok();
+	assert.equal(ok3, true);
+
+	const ok4 = $([new MyClass(), 42]).array($().type(MyClassQuery)).ok();
+	assert.equal(ok4, false);
 });

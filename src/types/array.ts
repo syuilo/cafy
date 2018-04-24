@@ -5,19 +5,11 @@ import NumberQuery from './number';
 import AnyQuery from './any';
 import BooleanQuery from './boolean';
 import ObjectQuery from './object';
+import { TypeOf } from '.';
 
 export const isAnArray = x => Array.isArray(x);
 export const isNotAnArray = x => !isAnArray(x);
 const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
-
-export type TypeOf<Q> =
-	Q extends StringQuery ? string :
-	Q extends NumberQuery ? number :
-	Q extends BooleanQuery ? boolean :
-	Q extends ObjectQuery ? { [x: string]: any } :
-	Q extends ArrayQuery<Query<infer T>> ? T[] :
-	Q extends AnyQuery ? any :
-	any;
 
 /**
  * Array
