@@ -534,6 +534,23 @@ describe('Queries', () => {
 			assert.notEqual(validate(y), null);
 		});
 	});
+
+	describe('Or', () => {
+		it('OK', () => {
+			const ok = $(42).or($().string(), $().number()).ok();
+			assert.equal(ok, true);
+		});
+
+		it('NOT OK', () => {
+			const ok = $({}).or($().string(), $().number()).ok();
+			assert.equal(ok, false);
+		});
+
+		it('With array', () => {
+			const ok = $(['x', 42]).array($().or($().string(), $().number())).ok();
+			assert.equal(ok, true);
+		});
+	});
 });
 
 class MyClass {
