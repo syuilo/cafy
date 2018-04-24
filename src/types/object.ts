@@ -12,7 +12,7 @@ export default class ObjectQuery extends Query<{ [x: string]: any }> {
 	constructor(strict: boolean, ...args) {
 		super(...args);
 
-		this.pushFirstTimeValidator(v =>
+		this.pushValidator(v =>
 			isNotAnObject(v)
 				? new Error('must-be-an-object')
 				: true

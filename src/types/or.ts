@@ -8,7 +8,7 @@ export default class OrQuery<QA extends Query<any>, QB extends Query<any>> exten
 	constructor(qA: Query<any>, qB: Query<any>, ...args) {
 		super(...args);
 
-		this.pushFirstTimeValidator(v =>
+		this.pushValidator(v =>
 			qA.nok(v) && qB.nok(v) ? new Error('not match') : true
 		);
 	}

@@ -1,3 +1,8 @@
+6.0.0 / 2018-04-24
+------------------
+* **[BREAKING]** Use `pushValidator` instead of `pushFirstTimeValidator`
+* Bug fix
+
 5.1.0 / 2018-04-24
 ------------------
 * Add: transform

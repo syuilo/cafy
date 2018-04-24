@@ -193,7 +193,7 @@ class MyClassQuery extends Query<MyClass> {
 		super(...args);
 
 		// 値が MyClass のインスタンスであるかチェック
-		this.pushFirstTimeValidator(v =>
+		this.pushValidator(v =>
 			v instanceof MyClass ? true : new Error('not an instance of MyClass')
 		);
 	}
@@ -226,10 +226,8 @@ const [val = 'desc', err] = $(x).optional.string().or('asc|desc').$;
 
 📖 API
 -----------------------------------------------
-ℹ️ 返り値が`Query`と表記されているものは、そのあとにメソッドチェーンを
-繋げていくことができるということを示しています。
 
-### 共通
+### Query
 
 #### `.pipe(fn)` => `Query`
 カスタムのバリデーションを実行できます。
@@ -267,17 +265,14 @@ $(['a', 'b', 'c']).array().pipe(x => x[1] != 'b').ok() // false
 Any固有のメソッドはありません。
 
 ### Array
-#### `.min(threshold)` => `Query`
+#### `.min(threshold)`
 要素の数が`threshold`以上でなければならないという制約を追加します。
-要素数が`threshold`を下回る場合エラーにします。
 
-#### `.max(threshold)` => `Query`
+#### `.max(threshold)`
 要素の数が`threshold`以下でなければならないという制約を追加します。
-要素数が`threshold`を上回る場合エラーにします。
 
-#### `.range(min, max)` => `Query`
+#### `.range(min, max)`
 `min`以上`max`以下の数の要素を持っていなければならないという制約を追加します。
-要素数が指定された範囲内にない場合エラーにします。
 ``` javascript
 $(['a', 'b', 'c']).array().range(2, 5).ok()                // true
 $(['a', 'b', 'c', 'd', 'e', 'f']).array().range(2, 5).ok() // false
@@ -286,19 +281,17 @@ $(['a']).array().range(2, 5).ok()                          // false
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
 
-#### `.length(length)` => `Query`
+#### `.length(length)`
 要素の数が`length`でなければならないという制約を追加します。
-要素数が`length`でない場合エラーにします。
 
-#### `.unique()` => `Query`
+#### `.unique()`
 ユニークな配列(=重複した値を持っていない)でなければならないという制約を追加します。
-重複した要素がある場合エラーにします。
 ``` javascript
 $(['a', 'b', 'c']).array().unique().ok()      // true
 $(['a', 'b', 'c', 'b']).array().unique().ok() // false
 ```
 
-#### `.item(index, fn)` => `Query`
+#### `.item(index, fn)`
 特定のインデックスの要素に対してカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 引数にはcafyインスタンスも渡せます。
@@ -307,7 +300,7 @@ $(['a', 42,  'c']).array().item(1, $().number()).ok() // true
 $(['a', 'b', 'c']).array().item(1, $().number()).ok() // false
 ```
 
-#### `.each(fn)` => `Query`
+#### `.each(fn)`
 各要素に対してカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 引数にはcafyインスタンスも渡せます。
@@ -320,9 +313,8 @@ $([1, 4, 3]).array().each(x => x < 4).ok() // false
 Boolean固有のメソッドはありません。
 
 ### Number
-#### `.int()` => `Query`
+#### `.int()`
 整数でなければならないという制約を追加します。
-整数でない場合エラーにします。
 ``` javascript
 $(0       ).number().int().ok() // true
 $(1       ).number().int().ok() // true
@@ -335,22 +327,19 @@ $(NaN     ).number().int().ok() // false
 $(Infinity).number().int().ok() // false
 ```
 
-#### `.min(threshold)` => `Query`
+#### `.min(threshold)`
 `threshold`以上の数値でなければならないという制約を追加します。
-値が`threshold`を下回る場合エラーにします。
 
-#### `.max(threshold)` => `Query`
+#### `.max(threshold)`
 `threshold`以下の数値でなければならないという制約を追加します。
-値が`threshold`を上回る場合エラーにします。
 
-#### `.range(min, max)` => `Query`
+#### `.range(min, max)`
 `min`以上`max`以下の数値でなければならないという制約を追加します。
-値が指定された範囲内にない場合エラーにします。
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
 
 ### Object
-#### `.prop(name, fn)` => `Query`
+#### `.prop(name, fn)`
 特定のプロパティにカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 そのプロパティが存在しなかった場合は単に無視されます。
@@ -382,10 +371,9 @@ $(x).object()
   .ok() // true
 ```
 
-#### `.have(name, fn)` => `Query`
+#### `.have(name, fn)`
 特定のプロパティにカスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
-そのプロパティが存在しなかった場合はエラーにします。
 引数にはcafyインスタンスも渡せます。
 
 `fn`を省略することもできます。その場合、次と等価です:
@@ -394,47 +382,41 @@ have('x', () => true)
 ```
 
 ### String
-#### `.match(pattern)` => `Query`
+#### `.match(pattern)`
 与えられた正規表現とマッチしていなければならないという制約を追加します。
-正規表現と一致しない場合エラーにします。
 ``` javascript
 $('2017-03-07').string().match(/^([0-9]{4})\-([0-9]{2})-([0-9]{2})$/).ok() // true
 ```
 
-#### `.or(pattern)` => `Query`
+#### `.or(pattern)`
 与えられたパターン内の文字列のいずれかでなければならないという制約を追加します。
 `pattern`は文字列の配列または`|`で区切られた文字列です。
-どれとも一致しない場合エラーにします。
 ``` javascript
 $('strawberry').string().or(['strawberry', 'pasta']).ok() // true
 $('alice').string().or(['strawberry', 'pasta']).ok()      // false
 $('pasta').string().or('strawberry|pasta').ok()           // true
 ```
 
-#### `.notInclude(str | str[])` => `Query`
+#### `.notInclude(str | str[])`
 引数に与えられた文字列を含んでいてはならないという制約を追加します。
 ``` javascript
 $('She is fucking rich.').string().notInclude('fuck').ok() // false
 $('strawberry pasta').string().notInclude(['strawberry', 'alice']).ok() // false
 ```
 
-#### `.min(threshold)` => `Query`
+#### `.min(threshold)`
 `threshold`以上の文字数でなければならないという制約を追加します。
-文字数が`threshold`を下回る場合エラーにします。
 
-#### `.max(threshold)` => `Query`
+#### `.max(threshold)`
 `threshold`以下の文字数でなければならないという制約を追加します。
-文字数が`threshold`を上回る場合エラーにします。
 
-#### `.range(min, max)` => `Query`
+#### `.range(min, max)`
 `min`以上`max`以下の文字数でなければならないという制約を追加します。
-文字数が指定された範囲内にない場合エラーにします。
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
 
-#### `.length(length)` => `Query`
+#### `.length(length)`
 文字数が`length`でなければならないという制約を追加します。
-文字数が`length`でない場合エラーにします。
 
 Contribution
 -----------------------------------------------

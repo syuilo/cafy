@@ -81,7 +81,7 @@ function $(value?: any): It {
 					optional: true,
 					nullable: true
 				})(q),
-				object: (strict?: boolean) => new ObjectQuery(true, true, lazy, value, strict),
+				object: (strict?: boolean) => new ObjectQuery(strict, true, true, lazy, value),
 				type: (q: any) => new q(true, true, lazy, value),
 				or: (qA: Query<any>, qB: Query<any>) => new OrQuery(qA, qB, true, true, lazy, value),
 			}
@@ -97,7 +97,7 @@ function $(value?: any): It {
 				optional: true,
 				nullable: false
 			})(q),
-			object: (strict?: boolean) => new ObjectQuery(true, false, lazy, value, strict),
+			object: (strict?: boolean) => new ObjectQuery(strict, true, false, lazy, value),
 			type: (q: any) => new q(true, false, lazy, value),
 			or: (qA: Query<any>, qB: Query<any>) => new OrQuery(qA, qB, true, false, lazy, value),
 			nullable: {
@@ -111,7 +111,7 @@ function $(value?: any): It {
 					optional: true,
 					nullable: true
 				})(q),
-				object: (strict?: boolean) => new ObjectQuery(true, true, lazy, value, strict),
+				object: (strict?: boolean) => new ObjectQuery(strict, true, true, lazy, value),
 				type: (q: any) => new q(true, true, lazy, value),
 				or: (qA: Query<any>, qB: Query<any>) => new OrQuery(qA, qB, true, false, lazy, value),
 			}

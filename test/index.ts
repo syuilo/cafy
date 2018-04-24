@@ -477,6 +477,22 @@ describe('Queries', () => {
 			assert.equal(err4, null);
 		});
 
+		it('strict (null)', () => {
+			const err1 = $(null).object(true).have('x', $().number()).test();
+			assert.notEqual(err1, null);
+
+			const err2 = $(null).nullable.object(true).have('x', $().number()).test();
+			assert.equal(err2, null);
+		});
+
+		it('strict (undefined)', () => {
+			const err1 = $(undefined).object(true).have('x', $().number()).test();
+			assert.notEqual(err1, null);
+
+			const err2 = $(undefined).optional.object(true).have('x', $().number()).test();
+			assert.equal(err2, null);
+		});
+
 		it('# have', () => {
 			const err1 = $({ myProp: 42 }).object().have('myProp', $().number()).test();
 			assert.equal(err1, null);
@@ -561,7 +577,7 @@ class MyClassQuery extends Query<MyClass> {
 	constructor(...args) {
 		super(...args);
 
-		this.pushFirstTimeValidator(v =>
+		this.pushValidator(v =>
 			v instanceof MyClass ? true : new Error('value is not an instance of MyClass')
 		);
 	}

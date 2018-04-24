@@ -18,7 +18,7 @@ export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]>
 	constructor(q?: Query<any>, ...args) {
 		super(...args);
 
-		this.pushFirstTimeValidator(v =>
+		this.pushValidator(v =>
 			isNotAnArray(v)
 				? new Error('must-be-an-array')
 				: true

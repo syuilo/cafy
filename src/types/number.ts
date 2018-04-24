@@ -10,7 +10,7 @@ export default class NumberQuery extends Query<number> {
 	constructor(...args) {
 		super(...args);
 
-		this.pushFirstTimeValidator(v =>
+		this.pushValidator(v =>
 			isNotANumber(v)
 				? new Error('must-be-a-number')
 				: true
