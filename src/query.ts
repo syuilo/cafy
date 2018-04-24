@@ -11,6 +11,7 @@ abstract class Query<T> {
 	private lazy: boolean = false;
 
 	private validators: Validator<T>[] = [];
+	protected transform: (value: any) => T;
 
 	constructor(...args) {
 		const [optional, nullable, lazy, value] = args;
@@ -52,6 +53,8 @@ abstract class Query<T> {
 
 		if (!this.isOptional && value === undefined) return res(null, new Error('must-be-not-undefined'));
 		if (!this.isNullable && value === null) return res(null, new Error('must-be-not-null'));
+
+		if (this.transform) value = this.transform(value);
 
 		let err = null;
 		this.validators.some(validate => {
