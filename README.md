@@ -196,7 +196,7 @@ $(['a', 'b', 'c']).array().pipe(x => x[1] != 'b').ok() // false
 ``` javascript
 .any()...
 ```
-
+---
 Any型を使うと、「*undefined*や*null*はダメだけど、型は何でもいい」といった値を検証したいときに便利です:
 ``` javascript
 $('strawberry pasta').any().ok() // <= true
@@ -213,7 +213,7 @@ Any固有のメソッドはありません。
 ``` javascript
 .array(type)...
 ```
-
+---
 配列をバリデーションしたいときはこの型を使用します。
 
 #### 配列の要素をバリデーションする
@@ -273,7 +273,7 @@ $([1, 4, 3]).array().each(x => x < 4).ok() // false
 .boolean()...
 ```
 真理値(`true`か`false`)をバリデーションしたいときはこの型を使用します。
-
+---
 #### メソッド
 固有のメソッドはありません。
 
@@ -281,6 +281,7 @@ $([1, 4, 3]).array().each(x => x < 4).ok() // false
 ``` javascript
 .number()...
 ```
+---
 数値をバリデーションしたいときはこの型を使用します。
 
 #### メソッド
@@ -314,6 +315,7 @@ $(Infinity).number().int().ok() // false
 ``` javascript
 .object(strict?)...
 ```
+---
 オブジェクトをバリデーションしたいときはこの型を使用します。
 
 #### オブジェクトの厳格な検証 *(strict)*
@@ -373,6 +375,7 @@ have('x', () => true)
 ``` javascript
 .string()...
 ```
+---
 文字列をバリデーションしたいときはこの型を使用します。
 
 #### メソッド
@@ -416,7 +419,7 @@ $('strawberry pasta').string().notInclude(['strawberry', 'alice']).ok() // false
 ``` javascript
 .type(type)...
 ```
-
+---
 cafyで標準で用意されている`string`や`number`等の基本的な型以外にも、ユーザーが型を登録してバリデーションすることができます。
 型を定義するには、まずcafyの`Query`クラスを継承したクエリクラスを作ります。バリデーションするときは、`type`メソッドにクラスを渡します。
 TypeScriptでの例:
@@ -452,7 +455,7 @@ $('abc').type(MyClassQuery).ok(); // false
 ``` javascript
 .or()...
 ```
-
+---
 時には、「文字列または数値」とか「真理値または真理値の配列」のようなバリデーションを行いたいときもあるでしょう。
 そういった場合は、`or`を使うことができます。
 例:
