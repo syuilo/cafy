@@ -2,10 +2,8 @@
  * Tests!
  */
 
-'use strict';
-
 const assert = require('assert');
-import $ from '../';
+import $, { Query } from '../';
 
 it('デフォルトの値を設定できる', () => {
 	const def = 'strawberry pasta';
@@ -536,4 +534,26 @@ describe('Queries', () => {
 			assert.notEqual(validate(y), null);
 		});
 	});
+});
+
+class MyClass {
+	x: number;
+}
+
+class MyClassQuery extends Query<MyClass> {
+	constructor(optional: boolean, nullable: boolean, lazy: boolean, value?: any) {
+		super(optional, nullable, lazy, value);
+
+		this.pushFirstTimeValidator(v =>
+			v instanceof MyClass ? true : new Error('value is not an instance of MyClass')
+		);
+	}
+}
+
+it('Custom Query', () => {
+	const ok1 = $(new MyClass()).type(MyClassQuery).ok();
+	assert.equal(ok1, true);
+
+	const ok2 = $('abc').type(MyClassQuery).ok();
+	assert.equal(ok2, false);
 });

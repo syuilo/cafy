@@ -172,6 +172,40 @@ $('strawberry pasta').any().ok() // <= true
 $({ x: 'strawberry pasta' }).object().have('x', $().any()).ok() // <= true
 ```
 
+### ユーザー定義型
+cafyで標準で用意されている`string`や`number`等の基本的な型以外にも、ユーザーが型を登録してバリデーションすることができます。
+型を定義するには、まずcafyの`Query`クラスを継承したクエリクラスを作ります。バリデーションするときは、`type`メソッドにクラスを渡します。
+TypeScriptでの例:
+``` typescript
+import $, { Query } from 'cafy';
+
+// あなたのクラス
+class MyClass {
+	x: number;
+}
+
+// あなたのクラスを検証するための、cafyのQueryクラスを継承したクラス
+class MyClassQuery extends Query<MyClass> {
+	// コンストラクタは、4つの引数を受け取ります。
+	// それらの引数はすべて親クラス(=Queryクラス)に渡してください。
+	constructor(optional, nullable, lazy, value?) {
+		// ("おまじない"のようなものです)
+		super(optional, nullable, lazy, value);
+
+		// 値が MyClass のインスタンスであるかチェック
+		this.pushFirstTimeValidator(v =>
+			v instanceof MyClass ? true : new Error('not an instance of MyClass')
+		);
+	}
+}
+
+$(new MyClass()).type(MyClassQuery).ok(); // true
+
+$('abc').type(MyClassQuery).ok(); // false
+```
+また、`Query`を継承するクラスにメソッドを実装することで、クエリ中でそのメソッドを利用することもできます。
+詳しくは、cafyのソースコード内の既存の型のクラスの実装を参考にしてください。
+
 💡 Tips
 -----------------------------------------------
 ### 規定値を設定する

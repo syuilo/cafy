@@ -30,6 +30,7 @@ export type Types = {
 	boolean: () => BooleanQuery;
 	array: typeof createArrayQuery;
 	object: (strict?: boolean) => ObjectQuery;
+	type: <T>(q: { new(optional, nullable, lazy, value?): T; }) => T;
 };
 
 export type It = Types & {
@@ -52,6 +53,7 @@ function $(value?: any): It {
 			nullable: false
 		})(q),
 		object: (strict?: boolean) => new ObjectQuery(false, false, lazy, value, strict),
+		type: (q: any) => new q(false, false, lazy, value),
 		nullable: {
 			any: () => new AnyQuery(false, true, lazy, value),
 			string: () => new StringQuery(false, true, lazy, value),
@@ -64,6 +66,7 @@ function $(value?: any): It {
 				nullable: true
 			})(q),
 			object: (strict?: boolean) => new ObjectQuery(false, true, lazy, value, strict),
+			type: (q: any) => new q(false, true, lazy, value),
 			optional: {
 				any: () => new AnyQuery(true, true, lazy, value),
 				string: () => new StringQuery(true, true, lazy, value),
@@ -76,6 +79,7 @@ function $(value?: any): It {
 					nullable: true
 				})(q),
 				object: (strict?: boolean) => new ObjectQuery(true, true, lazy, value, strict),
+				type: (q: any) => new q(true, true, lazy, value),
 			}
 		},
 		optional: {
@@ -90,6 +94,7 @@ function $(value?: any): It {
 				nullable: false
 			})(q),
 			object: (strict?: boolean) => new ObjectQuery(true, false, lazy, value, strict),
+			type: (q: any) => new q(true, false, lazy, value),
 			nullable: {
 				any: () => new AnyQuery(true, true, lazy, value),
 				string: () => new StringQuery(true, true, lazy, value),
@@ -102,9 +107,12 @@ function $(value?: any): It {
 					nullable: true
 				})(q),
 				object: (strict?: boolean) => new ObjectQuery(true, true, lazy, value, strict),
+				type: (q: any) => new q(true, true, lazy, value),
 			}
 		}
 	};
 }
 
 export default $;
+
+export { Query };
