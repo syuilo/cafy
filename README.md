@@ -131,7 +131,7 @@ $().number().range(30, 50)
 ```
 `test`や`ok`メソッドに値を与えて検証します:
 ``` javascript
-$().number().range(30, 50).test(42) // <= null
+$().number().range(30, 50).ok(42) // => true
 ```
 
 この遅延検証を利用すると、配列の`some`などに渡すときに便利です:
