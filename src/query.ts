@@ -118,9 +118,13 @@ abstract class Query<T> {
 	/**
 	 * 値を検証して、値およびエラーを取得します
 	 */
-	public get $(): [T, Error] {
-		if (this.lazy) throw new Error('このインスタンスには値がセットされていません');
-		return this.exec(this.value, true);
+	public get(value?: any): [T, Error] {
+		if (this.lazy) {
+			if (arguments.length == 0) throw new Error('値が指定されていません');
+			return this.exec(value, true);
+		} else {
+			return this.exec(this.value, true);
+		}
 	}
 
 	/**

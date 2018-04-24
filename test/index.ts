@@ -7,7 +7,7 @@ import $, { Query } from '../';
 
 it('デフォルトの値を設定できる', () => {
 	const def = 'strawberry pasta';
-	const [val = def, err] = $(undefined).optional.string().$;
+	const [val = def, err] = $(undefined).optional.string().get();
 	assert.equal(val, def);
 	assert.equal(err, null);
 });
@@ -93,7 +93,7 @@ describe('Common', () => {
 	describe('optional', () => {
 		it('値を与えられる', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $(x).optional.string().$;
+			const [val, err] = $(x).optional.string().get();
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
@@ -112,7 +112,7 @@ describe('Common', () => {
 	describe('nullable', () => {
 		it('値を与えられる', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $(x).nullable.string().$;
+			const [val, err] = $(x).nullable.string().get();
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
@@ -131,7 +131,7 @@ describe('Common', () => {
 	describe('optional + nullable', () => {
 		it('値を与えられる', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $(x).nullable.optional.string().$;
+			const [val, err] = $(x).nullable.optional.string().get();
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
@@ -150,6 +150,32 @@ describe('Common', () => {
 	describe('# throw', () => {
 		it('エラーをthrowする', () => {
 			assert.throws($('strawberry pasta').number().throw);
+		});
+	});
+
+	describe('# get', () => {
+		it('GOOD', () => {
+			const [v, e] = $('strawberry pasta').string().get();
+			assert.equal(v, 'strawberry pasta');
+			assert.equal(e, null);
+		});
+
+		it('BAD', () => {
+			const [v, e] = $(42).string().get();
+			assert.equal(v, 42);
+			assert.notEqual(e, null);
+		});
+
+		it('GOOD (lazy)', () => {
+			const [v, e] = $().string().get('strawberry pasta');
+			assert.equal(v, 'strawberry pasta');
+			assert.equal(e, null);
+		});
+
+		it('BAD (lazy)', () => {
+			const [v, e] = $().string().get(42);
+			assert.equal(v, 42);
+			assert.notEqual(e, null);
 		});
 	});
 
@@ -185,14 +211,14 @@ describe('Queries', () => {
 	describe('String', () => {
 		it('正当な値を与える', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $(x).string().$;
+			const [val, err] = $(x).string().get();
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
 
 		it('文字列以外でエラー', () => {
 			const x = [1, 2, 3];
-			const [val, err] = $(x).string().$;
+			const [val, err] = $(x).string().get();
 			assert.notEqual(err, null);
 		});
 
@@ -278,14 +304,14 @@ describe('Queries', () => {
 	describe('Number', () => {
 		it('正当な値を与える', () => {
 			const x = 42;
-			const [val, err] = $(x).number().$;
+			const [val, err] = $(x).number().get();
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
 
 		it('数値以外でエラー', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $(x).number().$;
+			const [val, err] = $(x).number().get();
 			assert.notEqual(err, null);
 		});
 
@@ -329,14 +355,14 @@ describe('Queries', () => {
 	describe('Array', () => {
 		it('正当な値を与える', () => {
 			const x = [1, 2, 3];
-			const [val, err] = $(x).array().$;
+			const [val, err] = $(x).array().get();
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
 
 		it('配列以外でエラー', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $(x).array().$;
+			const [val, err] = $(x).array().get();
 			assert.notEqual(err, null);
 		});
 
@@ -429,19 +455,19 @@ describe('Queries', () => {
 	describe('Boolean', () => {
 		it('正当な値を与える', () => {
 			const x = true;
-			const [valx, errx] = $(x).boolean().$;
+			const [valx, errx] = $(x).boolean().get();
 			assert.equal(valx, x);
 			assert.equal(errx, null);
 
 			const y = false;
-			const [valy, erry] = $(y).boolean().$;
+			const [valy, erry] = $(y).boolean().get();
 			assert.equal(valy, y);
 			assert.equal(erry, null);
 		});
 
 		it('真理値以外でエラー', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $(x).boolean().$;
+			const [val, err] = $(x).boolean().get();
 			assert.notEqual(err, null);
 		});
 	});
@@ -449,7 +475,7 @@ describe('Queries', () => {
 	describe('Object', () => {
 		it('正当な値を与えられる', () => {
 			const x = { myProp: 42 };
-			const [val, err] = $(x).object().$;
+			const [val, err] = $(x).object().get();
 			assert.deepEqual(val, x);
 			assert.equal(err, null);
 		});

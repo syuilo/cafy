@@ -188,8 +188,9 @@ $(['a', 'b', 'c']).array().pipe(x => x[1] != 'b').ok() // false
 合格した場合は値を返し、そうでない場合は`Error`をthrowします。
 遅延検証を行うときは、テスト対象の値を引数として与えます。
 
-##### `.$` => `[any, Error]`
-テスト対象の値とテスト結果のペア(配列)。先行検証のときのみ利用可能です。
+##### `.get()` => `[any, Error]`
+テスト対象の値とテスト結果のペア(配列)を取得します。
+遅延検証を行うときは、テスト対象の値を引数として与えます。
 
 ### 型: **Any**
 ``` javascript
@@ -465,7 +466,7 @@ $(42).or($().string(), $().number()).ok() // <= true
 ### 規定値を設定する
 [Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
-const [val = 'desc', err] = $(x).optional.string().or('asc|desc').$;
+const [val = 'desc', err] = $(x).optional.string().or('asc|desc').get();
 // xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
