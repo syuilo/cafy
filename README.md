@@ -29,6 +29,8 @@ Happy validation👍
 -----------------------------------------------
 TL;DR
 ``` javascript
+import $ from 'cafy';
+
 const isValidGender = $.str.or('male|female').ok;
 
 isValidGender('male')   // true
