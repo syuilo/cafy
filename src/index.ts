@@ -25,7 +25,7 @@ export default {
 	or<QA extends Query<any>, QB extends Query<any>>(qA: QA, qB: QB): OrQuery<QA, QB> { return new OrQuery(qA, qB) },
 	get str() { return new StringQuery() },
 	get string() { return new StringQuery() },
-	type<T>(Q: { new(...args): T; }): T { return new Q() },
+	type<T>(Q: { new(): T; }): T { return new Q() },
 };
 
 export { Query };
