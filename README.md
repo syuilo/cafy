@@ -31,11 +31,12 @@ TL;DR
 ``` javascript
 import $ from 'cafy';
 
-const isValidGender = $.str.or('male|female').ok;
+const isValidGender = $.str.or(['male', 'female']).ok;
 
 isValidGender('male')   // true
 isValidGender('female') // true
 isValidGender('alice')  // false
+isValidGender(42)       // false
 ```
 
 ---
