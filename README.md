@@ -426,7 +426,7 @@ $('strawberry pasta').string().notInclude(['strawberry', 'alice']).ok() // false
 ```
 ---
 cafyで標準で用意されている`string`や`number`等の基本的な型以外にも、ユーザーが型を登録してバリデーションすることができます。
-型を定義するには、まずcafyの`Query`クラスを継承したクエリクラスを作ります。バリデーションするときは、`type`メソッドにクラスを渡します。
+型を定義するには、まずcafyの`Query`クラスを継承したクエリクラスを作ります。
 TypeScriptでの例:
 ``` typescript
 import $, { Query } from 'cafy';
@@ -437,7 +437,7 @@ class MyClass {
 }
 
 // あなたのクラスを検証するための、cafyのQueryクラスを継承したクラス
-class MyClassQuery extends Query<MyClass> {
+class MyQuery extends Query<MyClass> {
   constructor(...args) {
     // "おまじない"のようなものです
     super(...args);
@@ -448,13 +448,37 @@ class MyClassQuery extends Query<MyClass> {
     );
   }
 }
-
-$(new MyClass()).type(MyClassQuery).ok(); // true
-
-$('abc').type(MyClassQuery).ok(); // false
 ```
+
+バリデーションするときは、`type`メソッドにクラスを渡します:
+``` typescript
+$(new MyClass()).type(MyQuery).ok(); // true
+
+$('abc').type(MyQuery).ok(); // false
+```
+
+#### カスタムメソッド
 また、`Query`を継承するクラスにメソッドを実装することで、クエリ中でそのメソッドを利用することもできます。
-詳しくは、cafyのソースコード内の既存の型のクラスの実装を参考にしてください。
+例として、上述の`MyQuery`に、「プロパティ`x`が指定された値以上でなければならない」という制約を追加するメソッド`min`を定義してみましょう:
+``` typescript
+class MyQuery extends Query<MyClass> {
+  ...
+
+  public min(threshold: number) {
+    this.pushValidator(v => v.x < threshold ? new Error('xの値が小さすぎます') : true);
+    return this;
+  }
+}
+```
+> `return this;`しているのは、メソッドチェーンできるようにするためです。
+
+さあ、このメソッドを使いましょう:
+``` typescript
+const a = new MyClass();
+a.x = 42;
+$(a).type(MyQuery).min(40).ok(); // true
+$(a).type(MyQuery).min(48).ok(); // false
+```
 
 ### **Or**
 ``` javascript
