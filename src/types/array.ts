@@ -1,5 +1,4 @@
 import Query from '../query';
-import $ from '../index';
 import StringQuery from './string';
 import NumberQuery from './number';
 import AnyQuery from './any';
@@ -15,10 +14,10 @@ const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
  * Array
  */
 export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]> {
-	constructor(q?: Query<any>, ...args) {
-		super(...args);
+	constructor(q?: Query<any>) {
+		super();
 
-		this.pushValidator(v =>
+		this.push(v =>
 			isNotAnArray(v)
 				? new Error('must-be-an-array')
 				: true
@@ -33,7 +32,7 @@ export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]>
 	 * 配列の値がユニークでない場合(=重複した項目がある場合)エラーにします
 	 */
 	public unique() {
-		this.pushValidator(v =>
+		this.push(v =>
 			hasDuplicates(v)
 				? new Error('must-be-unique')
 				: true
@@ -57,7 +56,7 @@ export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]>
 	 * @param threshold 下限
 	 */
 	public min(threshold: number) {
-		this.pushValidator(v =>
+		this.push(v =>
 			v.length < threshold
 				? new Error('invalid-range')
 				: true
@@ -70,7 +69,7 @@ export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]>
 	 * @param threshold 上限
 	 */
 	public max(threshold: number) {
-		this.pushValidator(v =>
+		this.push(v =>
 			v.length > threshold
 				? new Error('invalid-range')
 				: true
@@ -83,7 +82,7 @@ export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]>
 	 * @param length 要素数
 	 */
 	public length(length: number) {
-		this.pushValidator(v =>
+		this.push(v =>
 			v.length !== length
 				? new Error('invalid-length')
 				: true
@@ -99,7 +98,7 @@ export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]>
 	 */
 	public item(index: number, validator: ((element: TypeOf<Q>) => boolean | Error) | Query<any>) {
 		const validate = validator instanceof Query ? validator.test : validator;
-		this.pushValidator(v => {
+		this.push(v => {
 			const result = validate(v[index]);
 			if (result === false) {
 				return new Error('invalid-item');
@@ -119,7 +118,7 @@ export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]>
 	 */
 	public each(validator: ((element: TypeOf<Q>, index: number, array: TypeOf<Q>[]) => boolean | Error) | Query<any>) {
 		const validate = validator instanceof Query ? validator.test : validator;
-		this.pushValidator(v => {
+		this.push(v => {
 			let err: Error;
 			v.some((x, i, s) => {
 				const result = validate(x, i, s);

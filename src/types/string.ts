@@ -11,10 +11,10 @@ function stringToArray(str) {
  * String
  */
 export default class StringQuery extends Query<string> {
-	constructor(...args) {
-		super(...args);
+	constructor() {
+		super();
 
-		this.pushValidator(v =>
+		this.push(v =>
 			isNotAString(v)
 				? new Error('must-be-a-string')
 				: true
@@ -37,7 +37,7 @@ export default class StringQuery extends Query<string> {
 	 * @param threshold 下限
 	 */
 	public min(threshold: number) {
-		this.pushValidator(v =>
+		this.push(v =>
 			stringToArray(v).length < threshold
 				? new Error('invalid-range')
 				: true
@@ -50,7 +50,7 @@ export default class StringQuery extends Query<string> {
 	 * @param threshold 上限
 	 */
 	public max(threshold: number) {
-		this.pushValidator(v =>
+		this.push(v =>
 			stringToArray(v).length > threshold
 				? new Error('invalid-range')
 				: true
@@ -63,7 +63,7 @@ export default class StringQuery extends Query<string> {
 	 * @param length 文字数
 	 */
 	public length(length: number) {
-		this.pushValidator(v =>
+		this.push(v =>
 			stringToArray(v).length !== length
 				? new Error('invalid-length')
 				: true
@@ -78,7 +78,7 @@ export default class StringQuery extends Query<string> {
 	 */
 	public or(pattern: string | string[]) {
 		if (typeof pattern == 'string') pattern = pattern.split('|');
-		this.pushValidator(v => {
+		this.push(v => {
 			const match = (pattern as string[]).some(x => x === v);
 			if (!match) return new Error('not-match-pattern');
 			return true;
@@ -93,7 +93,7 @@ export default class StringQuery extends Query<string> {
 	 */
 	public notInclude(str: string | string[]) {
 		if (typeof str == 'string') str = [str];
-		this.pushValidator(v => {
+		this.push(v => {
 			const match = (str as string[]).some(x => v.indexOf(x) !== -1);
 			if (match) return new Error('includes-forbidden-string');
 			return true;
@@ -107,7 +107,7 @@ export default class StringQuery extends Query<string> {
 	 * @param pattern 正規表現
 	 */
 	public match(pattern: RegExp) {
-		this.pushValidator(v =>
+		this.push(v =>
 			!pattern.test(v)
 				? new Error('not-match-pattern')
 				: true

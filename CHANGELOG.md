@@ -1,3 +1,15 @@
+8.0.0 / 2018-05-01
+------------------
+* **[BREAKING]** 先行検証廃止
+* **[BREAKING]** objectの引数廃止(代わりにstrictメソッドを使用してください)
+* **[BREAKING]** Use `push` instead of `pushValidator`
+* Add: 型の短いエイリアスを追加:
+	* str (string)
+	* arr (array)
+	* obj (object)
+	* num (number)
+	* bool (boolean)
+
 7.0.1 / 2018-04-25
 ------------------
 * Fix: サロゲートペアが正しく認識されない

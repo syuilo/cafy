@@ -8,24 +8,34 @@ export const isNotAnObject = x => !isAnObject(x);
  */
 export default class ObjectQuery extends Query<{ [x: string]: any }> {
 	private mentions: string[] = [];
+	private isStrict = false;
 
-	constructor(strict: boolean, ...args) {
-		super(...args);
+	constructor() {
+		super();
 
-		this.pushValidator(v =>
+		this.push(v =>
 			isNotAnObject(v)
 				? new Error('must-be-an-object')
 				: true
 		);
 
-		if (strict) {
-			this.pushValidator(v => {
+		this.push(v => {
+			if (this.isStrict) {
 				const properties = Object.keys(v);
 				const hasNotMentionedProperty = properties.some(p => !this.mentions.some(m => m == p));
 				if (hasNotMentionedProperty) return new Error('dirty-object');
-				return true;
-			});
-		}
+			}
+			return true;
+		});
+	}
+
+	/**
+	 * 言及したプロパティ以外のプロパティを持つことを禁止するか否かを設定します。
+	 * @param strict 禁止するか否か
+	 */
+	public strict(strict = true) {
+		this.isStrict = strict;
+		return this;
 	}
 
 	/**
@@ -38,7 +48,7 @@ export default class ObjectQuery extends Query<{ [x: string]: any }> {
 	public prop(name: string, validator: ((prop: any) => boolean | Error) | Query<any>) {
 		this.mentions.push(name);
 		const validate = validator instanceof Query ? validator.test : validator;
-		this.pushValidator(v => {
+		this.push(v => {
 			if (!v.hasOwnProperty(name)) return true;
 			const result = validate(v[name]);
 			if (result === false) {
@@ -63,7 +73,7 @@ export default class ObjectQuery extends Query<{ [x: string]: any }> {
 		this.mentions.push(name);
 		validator = arguments.length == 1 ? () => true : validator;
 		const validate = validator instanceof Query ? validator.test : validator;
-		this.pushValidator(v => {
+		this.push(v => {
 			if (!v.hasOwnProperty(name)) return new Error('prop-required');
 			const result = validate(v[name]);
 			if (result === false) {

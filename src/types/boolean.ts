@@ -7,10 +7,10 @@ export const isNotABoolean = x => !isABoolean(x);
  * Boolean
  */
 export default class BooleanQuery extends Query<boolean> {
-	constructor(...args) {
-		super(...args);
+	constructor() {
+		super();
 
-		this.pushValidator(v =>
+		this.push(v =>
 			isNotABoolean(v)
 				? new Error('must-be-a-boolean')
 				: true

@@ -17,7 +17,7 @@ cafyを使えばバリデーションを楽しく・簡単に・柔軟に書く�
 🤔 Why cafy
 -----------------------------------------------
 たとえばWeb APIを書くときに、ちゃんとクライアントから送信されてきたパラメータが正しい形式か確認しないと、プログラムの例外を引き起こしたり、非常に長い文字列を送られてサーバーがダウンしてしまうといった可能性もあります。それらを防ぐためにも値の正当性の検証は重要です。
-cafyを使えば、*「このパラメータはnullやundefinedではない文字列でなくてはならず、1文字以上100文字以下でなくてはならず、a-z0-9の文字種で構成されてなければならない」*といった長いバリデーションを、**たった一行で簡潔に**書くことができます。
+<i>「このパラメータはnullやundefinedではない文字列でなくてはならず、1文字以上100文字以下でなくてはならず、a-z0-9の文字種で構成されてなければならない」</i>といった長いバリデーションを、cafyを使えば**一行で簡潔に**書くことができます。
 例外も行うバリデーションごとに用意されているので、ユーザーにわかりやすいエラーメッセージを返すこともできます。
 
 📦 Installation
@@ -27,55 +27,67 @@ Happy validation👍
 
 ☘ Usage
 -----------------------------------------------
+TL;DR
 ``` javascript
-cafy(value)[.anyQueries()...]
+const isValidGender = $.str.or('male|female').ok;
+
+isValidGender('male')   // true
+isValidGender('female') // true
+isValidGender('alice')  // false
 ```
 
 ---
 
 まずその値がどんな型でなければならないかを示し、
-そのあとに追加の制約をメソッドチェーンで追加していくスタイルです。
+そのあとに追加の制約をメソッドチェーンで追加していきます。
 
 (以下のドキュメントでは、`import $ from 'cafy';`している前提で書いていきます(実際にはcafy関数にどんな名前を付けるかは自由です)。)
 
-たとえば*「`x`は文字列でなければならない」*はこう書きます:
+たとえば **「それは文字列でなければならない」** という制約を表すにはこう書きます:
 ``` javascript
-$(x).string()
-```
-`range`メソッドを利用して、*「10文字以上20文字以下でなければならない」*という制約を追加してみましょう:
-``` javascript
-$(x).string().range(10, 20)
-```
-検証して結果を取得するには`test`や`ok`メソッドなどを利用できます:
-``` javascript
-$('strawberry pasta').string().range(10, 20).ok()
-// => true
-
-$('alice').string().range(10, 20).ok()
-// => 短すぎるので false
-
-$('i love strawberry pasta').string().range(10, 20).ok()
-// => 長すぎるので false
+$.str
 ```
 
-`ok`メソッドはバリデーションに合格した場合は`true`を、失格した場合は`false`を返します。
-`test`メソッドはバリデーションに合格した場合は`null`を、失格した場合は`Error`を返します。
+`range`メソッドを利用して、さらに **「10文字以上20文字以下でなければならない」** という制約を追加してみましょう:
+``` javascript
+$.str.range(10, 20)
+```
+
+さあ、実際にバリデーションしてみましょう！
+`ok`メソッドに検証する値を渡すと、それが条件を満たせば`true`が返り、そうでなければ`false`が返ります:
+``` javascript
+$.str.range(10, 20).ok('strawberry pasta') // true
+
+$.str.range(10, 20).ok('alice') // false (短すぎるので)
+
+$.str.range(10, 20).ok('i love strawberry pasta') // false (長すぎるので)
+```
+
+もちろん、上記の例はこのようにまとめられます:
+``` javascript
+const validate = $.str.range(10, 20).ok;
+
+validate('strawberry pasta') // true
+validate('alice') // false (短すぎるので)
+validate('i love strawberry pasta') // false (長すぎるので)
+```
 
 ---
 
-もちろん文字列以外にも、次の型をサポートしています:
+cafyは様々な型をサポートしています:
 
-Supported types
-* **any** ... e.g.`$(x).any()...`
-* **array** ... e.g.`$(x).array()...`
-* **boolean** ... e.g.`$(x).boolean()...`
-* **number** ... e.g.`$(x).number()...`
-* **object** ... e.g.`$(x).object()...`
-* **string** ... e.g.`$(x).string()...`
+* **文字列** ... `$.str`
+* **数値** ... `$.num`
+* **真理値** ... `$.bool`
+* **配列** ... `$.arr()`
+* **オブジェクト** ... `$.obj`
+* **ユーザー定義型** ... `$.type()`
+* **ユニオン** ... `$.or()`
+* **なんでも** ... `$.any`
 
 > ℹ JavaScriptの仕様上では配列はobjectですが、cafyでは配列はobjectとは見なされません。
 
-また、後述するように**独自の型**を追加することもできます。
+後述するように、ユーザー定義型を使えば**独自の型**を追加することもできます。
 
 それぞれの型がどのようなメソッドを持っているかなどは、APIのセクションをご確認ください。
 
@@ -86,27 +98,27 @@ Supported types
 #### undefined を許可する *(optional)*
 デフォルトで`undefined`はエラーになります:
 ``` javascript
-$(undefined).string().ok() // <= false
+$.str.ok(undefined) // false
 ```
-`undefined`を許可する場合は`optional`を型の前に付けます:
+`undefined`を許可する場合は`optional`を使用します:
 ``` javascript
-$(undefined).optional.string().ok() // <= true
+$.str.optional().ok(undefined) // true
 ```
 
 #### null を許可する *(nullable)*
 デフォルトで`null`はエラーになります:
 ``` javascript
-$(null).string().ok() // <= false
+$.str.ok(null) // false
 ```
-`null`を許可する場合は`nullable`を型の前に付けます:
+`null`を許可する場合は`nullable`を使用します:
 ``` javascript
-$(null).nullable.string().ok() // <= true
+$.str.nullable().ok(null) // true
 ```
 
 #### null と undefined を許可する
 `nullable`と`optional`は併用できます:
 ``` javascript
-$(x).nullable.optional.string()
+$.str.nullable().optional()...
 ```
 
 |                         | undefined | null |
@@ -115,40 +127,6 @@ $(x).nullable.optional.string()
 | `optional`              | o         | x    |
 | `nullable`              | x         | o    |
 | `optional` + `nullable` | o         | o    |
-
-#### optional と nullable を後から設定する
-後述の遅延検証を利用してバリデータを使い回したいときに、後から`optional`および/または`nullable`の設定を上書きできると便利なことがあります。
-
-``` javascript
-$().string().optional().ok(undefined); // false
-$().optional.string().optional(false).ok(undefined); // true
-```
-
-### 遅延検証
-cafyの引数を省略することで、後から値を検証するバリデータになります:
-``` javascript
-$().number().range(30, 50)
-```
-`test`や`ok`メソッドに値を与えて検証します:
-``` javascript
-$().number().range(30, 50).ok(42) // => true
-```
-
-この遅延検証を利用すると、配列の`some`などに渡すときに便利です:
-``` javascript
-xs.some($().number().max(30).nok)
-```
-
-ℹ️ `nok`は`ok`の逆です。
-
-バリデータを使い回したいときも簡単です:
-``` javascript
-const isValidGender = $().string().or('male|female').ok;
-
-isValidGender('male')   // true
-isValidGender('female') // true
-isValidGender('alice')  // false
-```
 
 📖 API
 -----------------------------------------------
@@ -161,49 +139,44 @@ cafyの実体は`Query`クラスです。そして、cafyで実装されてい�
 カスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 ``` javascript
-$('strawberry pasta').string().pipe(x => x.indexOf('alice') == -1).ok() // true
-$(['a', 'b', 'c']).array().pipe(x => x[1] != 'b').ok() // false
+$.str.pipe(x => x.indexOf('alice') == -1).ok('strawberry pasta') // true
+$.arr().pipe(x => x[1] != 'b').ok(['a', 'b', 'c']) // false
 ```
 
-##### `.test(value?)` => `Error`
+##### `.test(value)` => `Error`
 バリデーションを実行します。
 合格した場合は`null`で、そうでない場合は`Error`です。
-遅延検証を行うときは、テスト対象の値を引数として与えます。
 
-##### `.ok(value?)` => `boolean`
+##### `.ok(value)` => `boolean`
 バリデーションを実行します。
 合格した場合は`true`で、そうでない場合は`false`です。
 `.test() == null`と同義です。
-遅延検証を行うときは、テスト対象の値を引数として与えます。
 
-##### `.nok(value?)` => `boolean`
+##### `.nok(value)` => `boolean`
 バリデーションを実行します。
 合格した場合は`false`で、そうでない場合は`true`です。
 `.ok()`の否定です。
 (*nok* は _**n**ot **ok**_ の略です)
-遅延検証を行うときは、テスト対象の値を引数として与えます。
 
-##### `.throw(value?)` => `any`
+##### `.throw(value)` => `any`
 バリデーションを実行します。
 合格した場合は値を返し、そうでない場合は`Error`をthrowします。
-遅延検証を行うときは、テスト対象の値を引数として与えます。
 
-##### `.get(value?)` => `[any, Error]`
+##### `.get(value)` => `[any, Error]`
 テスト対象の値とテスト結果のペア(配列)を取得します。
-遅延検証を行うときは、テスト対象の値を引数として与えます。
 
 ### 型: **Any**
 ``` javascript
-.any()...
+.any
 ```
 ---
 Any型を使うと、「*undefined*や*null*はダメだけど、型は何でもいい」といった値を検証したいときに便利です:
 ``` javascript
-$('strawberry pasta').any().ok() // <= true
+$.any.ok('strawberry pasta') // true
 ```
-「必ず`x`というプロパティを持っていてほしい。中身はnullやundefined以外なら何でもいい」のような場合もanyを活用できます:
+オブジェクトの検証において、「必ず`x`というプロパティを持っていてほしい。中身はnullやundefined以外なら何でもいい」のような場合もanyを活用できます:
 ``` javascript
-$({ x: 'strawberry pasta' }).object().have('x', $().any()).ok() // <= true
+$.obj.have('x', $.any).ok({ x: 'strawberry pasta' }) // true
 ```
 
 #### メソッド
@@ -211,7 +184,8 @@ Any固有のメソッドはありません。
 
 ### 型: **Array**
 ``` javascript
-.array(type)...
+.arr(query)
+.array(query)
 ```
 ---
 配列をバリデーションしたいときはこの型を使用します。
@@ -219,8 +193,13 @@ Any固有のメソッドはありません。
 #### 配列の要素をバリデーションする
 配列の各々の要素に対してバリデーションを定義できます:
 ``` javascript
-$(x).array($().number())         // xは数値の配列でなければならない
-$(x).array($().string().min(10)) // xは10文字以上の文字列の配列でなければならない
+$.arr($.num)         // 数値の配列でなければならない
+$.arr($.str.min(10)) // 10文字以上の文字列の配列でなければならない
+```
+もちろんarrayを入れ子にもできます:
+``` javascript
+$.arr($.arr($.num))         // 「数値の配列」の配列でなければならない
+$.arr($.arr($.str.min(10))) // 「10文字以上の文字列の配列」の配列でなければならない
 ```
 
 #### メソッド
@@ -233,9 +212,9 @@ $(x).array($().string().min(10)) // xは10文字以上の文字列の配列で�
 ##### `.range(min, max)`
 `min`以上`max`以下の数の要素を持っていなければならないという制約を追加します。
 ``` javascript
-$(['a', 'b', 'c']).array().range(2, 5).ok()                // true
-$(['a', 'b', 'c', 'd', 'e', 'f']).array().range(2, 5).ok() // false
-$(['a']).array().range(2, 5).ok()                          // false
+$.arr().range(2, 5).ok(['a', 'b', 'c'])                // true
+$.arr().range(2, 5).ok(['a', 'b', 'c', 'd', 'e', 'f']) // false
+$.arr().range(2, 5).ok(['a'])                          // false
 ```
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
@@ -246,8 +225,8 @@ $(['a']).array().range(2, 5).ok()                          // false
 ##### `.unique()`
 ユニークな配列(=重複した値を持っていない)でなければならないという制約を追加します。
 ``` javascript
-$(['a', 'b', 'c']).array().unique().ok()      // true
-$(['a', 'b', 'c', 'b']).array().unique().ok() // false
+$.arr().unique().ok(['a', 'b', 'c'])      // true
+$.arr().unique().ok(['a', 'b', 'c', 'b']) // false
 ```
 
 ##### `.item(index, fn)`
@@ -255,8 +234,8 @@ $(['a', 'b', 'c', 'b']).array().unique().ok() // false
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 引数にはcafyインスタンスも渡せます。
 ``` javascript
-$(['a', 42,  'c']).array().item(1, $().number()).ok() // true
-$(['a', 'b', 'c']).array().item(1, $().number()).ok() // false
+$.arr().item(1, $.num).ok(['a', 42, 'c'])  // true
+$.arr().item(1, $.num).ok(['a', 'b', 'c']) // false
 ```
 
 ##### `.each(fn)`
@@ -264,13 +243,14 @@ $(['a', 'b', 'c']).array().item(1, $().number()).ok() // false
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 引数にはcafyインスタンスも渡せます。
 ``` javascript
-$([1, 2, 3]).array().each(x => x < 4).ok() // true
-$([1, 4, 3]).array().each(x => x < 4).ok() // false
+$.arr().each(x => x < 4).ok([1, 2, 3]) // true
+$.arr().each(x => x < 4).ok([1, 4, 3]) // false
 ```
 
 ### 型: **Boolean**
 ``` javascript
-.boolean()...
+.bool
+.boolean
 ```
 ---
 真理値(`true`か`false`)をバリデーションしたいときはこの型を使用します。
@@ -280,7 +260,8 @@ $([1, 4, 3]).array().each(x => x < 4).ok() // false
 
 ### 型: **Number**
 ``` javascript
-.number()...
+.num
+.number
 ```
 ---
 数値をバリデーションしたいときはこの型を使用します。
@@ -290,15 +271,15 @@ $([1, 4, 3]).array().each(x => x < 4).ok() // false
 ##### `.int()`
 整数でなければならないという制約を追加します。
 ``` javascript
-$(0       ).number().int().ok() // true
-$(1       ).number().int().ok() // true
-$(-100    ).number().int().ok() // true
+$.num.int().ok(0)        // true
+$.num.int().ok(1)        // true
+$.num.int().ok(-100)     // true
 
-$(0.1     ).number().int().ok() // false
-$(Math.PI ).number().int().ok() // false
+$.num.int().ok(0.1)      // false
+$.num.int().ok(Math.PI)  // false
 
-$(NaN     ).number().int().ok() // false
-$(Infinity).number().int().ok() // false
+$.num.int().ok(NaN)      // false
+$.num.int().ok(Infinity) // false
 ```
 
 ##### `.min(threshold)`
@@ -314,20 +295,11 @@ $(Infinity).number().int().ok() // false
 
 ### 型: **Object**
 ``` javascript
-.object(strict?)...
+.obj
+.object
 ```
 ---
 オブジェクトをバリデーションしたいときはこの型を使用します。
-
-#### オブジェクトの厳格な検証 *(strict)*
-デフォルトでは、`have`や`prop`で言及した以外のプロパティを持っていても、問題にはしません:
-``` javascript
-$({ x: 42, y: 24 }).object().have('x', $().number()).ok() // <= true
-```
-`have`または`prop`で言及した以外のプロパティを持っている場合にエラーにしたい場合は、`object`の引数に`true`を設定します:
-``` javascript
-$({ x: 42, y: 24 }).object(true).have('x', $().number()).ok() // <= false
-```
 
 #### メソッド
 ##### `.prop(name, fn)`
@@ -336,7 +308,7 @@ $({ x: 42, y: 24 }).object(true).have('x', $().number()).ok() // <= false
 そのプロパティが存在しなかった場合は単に無視されます。
 引数にはcafyインスタンスも渡せます。
 ``` javascript
-$({ myProp: true }).object().prop('myProp', $().boolean()).ok() // true
+$.obj.prop('myProp', $.bool).ok({ myProp: true }) // true
 ```
 
 複雑な例:
@@ -352,14 +324,14 @@ const x = {
   thing: 42
 };
 
-$(x).object()
-  .prop('some', $().object()
-    .prop('strawberry', $().string())
-    .prop('alice', $().boolean())
-    .prop('tachibana'), $().object()
-      .prop('bwh', $().array($().number())))
-  .prop('thing', $().number())
-  .ok() // true
+$.obj
+  .prop('some', $.obj
+    .prop('strawberry', $.str)
+    .prop('alice', $.bool)
+    .prop('tachibana'), $.obj
+      .prop('bwh', $.arr($.num)))
+  .prop('thing', $.num)
+  .ok(x) // true
 ```
 
 ##### `.have(name, fn)`
@@ -372,9 +344,20 @@ $(x).object()
 have('x', () => true)
 ```
 
+##### `.strict()`
+デフォルトでは、`have`や`prop`で言及した以外のプロパティを持っていても、問題にはしません:
+``` javascript
+$.obj.have('x', $.num).ok({ x: 42, y: 24 }) // true
+```
+`have`または`prop`で言及した以外のプロパティを持っている場合にエラーにしたい場合は、このメソッドを使用します:
+``` javascript
+$.obj.have('x', $.num).strict().ok({ x: 42, y: 24 }) // false
+```
+
 ### 型: **String**
 ``` javascript
-.string()...
+.str
+.string
 ```
 ---
 文字列をバリデーションしたいときはこの型を使用します。
@@ -387,23 +370,23 @@ cafyは[サロゲートペア](https://ja.wikipedia.org/wiki/Unicode#%E3%82%B5%E
 ##### `.match(pattern)`
 与えられた正規表現とマッチしていなければならないという制約を追加します。
 ``` javascript
-$('2017-03-07').string().match(/^([0-9]{4})\-([0-9]{2})-([0-9]{2})$/).ok() // true
+$.str.match(/^([0-9]{4})\-([0-9]{2})-([0-9]{2})$/).ok('2017-03-07') // true
 ```
 
 ##### `.or(pattern)`
 与えられたパターン内の文字列のいずれかでなければならないという制約を追加します。
 `pattern`は文字列の配列または`|`で区切られた文字列です。
 ``` javascript
-$('strawberry').string().or(['strawberry', 'pasta']).ok() // true
-$('alice').string().or(['strawberry', 'pasta']).ok()      // false
-$('pasta').string().or('strawberry|pasta').ok()           // true
+$.str.or(['strawberry', 'pasta']).ok('strawberry') // true
+$.str.or(['strawberry', 'pasta']).ok('alice')      // false
+$.str.or('strawberry|pasta').ok('pasta')           // true
 ```
 
 ##### `.notInclude(str | str[])`
 引数に与えられた文字列を含んでいてはならないという制約を追加します。
 ``` javascript
-$('She is fucking rich.').string().notInclude('fuck').ok() // false
-$('strawberry pasta').string().notInclude(['strawberry', 'alice']).ok() // false
+$.str.notInclude('fuck').ok('She is fucking rich.') // false
+$.str.notInclude(['strawberry', 'alice']).ok('strawberry pasta') // false
 ```
 
 ##### `.min(threshold)`
@@ -420,9 +403,22 @@ $('strawberry pasta').string().notInclude(['strawberry', 'alice']).ok() // false
 ##### `.length(length)`
 文字数が`length`でなければならないという制約を追加します。
 
+### **Or**
+``` javascript
+.or(queryA, queryB)
+```
+---
+時には、「文字列または数値」とか「真理値または真理値の配列」のようなバリデーションを行いたいときもあるでしょう。
+そういった場合は、`or`を使うことができます。
+例:
+``` javascript
+// 文字列または数値
+$.or($.str, $.num).ok(42) // true
+```
+
 ### **Type** (ユーザー定義型)
 ``` javascript
-.type(type)...
+.type(type)
 ```
 ---
 cafyで標準で用意されている`string`や`number`等の基本的な型以外にも、ユーザーが型を登録してバリデーションすることができます。
@@ -438,12 +434,12 @@ class MyClass {
 
 // あなたのクラスを検証するための、cafyのQueryクラスを継承したクラス
 class MyQuery extends Query<MyClass> {
-  constructor(...args) {
+  constructor() {
     // "おまじない"のようなものです
-    super(...args);
+    super();
 
     // 値が MyClass のインスタンスであるかチェック
-    this.pushValidator(v =>
+    this.push(v =>
       v instanceof MyClass ? true : new Error('not an instance of MyClass')
     );
   }
@@ -452,9 +448,8 @@ class MyQuery extends Query<MyClass> {
 
 バリデーションするときは、`type`メソッドにクラスを渡します:
 ``` typescript
-$(new MyClass()).type(MyQuery).ok(); // true
-
-$('abc').type(MyQuery).ok(); // false
+$.type(MyQuery).ok(new MyClass()); // true
+$.type(MyQuery).ok('abc');         // false
 ```
 
 #### カスタムメソッド
@@ -465,32 +460,20 @@ class MyQuery extends Query<MyClass> {
   ...
 
   public min(threshold: number) {
-    this.pushValidator(v => v.x < threshold ? new Error('xの値が小さすぎます') : true);
+    this.push(v => v.x < threshold ? new Error('xの値が小さすぎます') : true);
     return this;
   }
 }
 ```
 > `return this;`しているのは、メソッドチェーンできるようにするためです。
 
-さあ、このメソッドを使いましょう:
+さあ、このメソッドを使いましょう！
 ``` typescript
-const a = new MyClass();
-a.x = 42;
-$(a).type(MyQuery).min(40).ok(); // true
-$(a).type(MyQuery).min(48).ok(); // false
-```
+const foo = new MyClass();
+foo.x = 42;
 
-### **Or**
-``` javascript
-.or()...
-```
----
-時には、「文字列または数値」とか「真理値または真理値の配列」のようなバリデーションを行いたいときもあるでしょう。
-そういった場合は、`or`を使うことができます。
-例:
-``` javascript
-// 文字列または数値
-$(42).or($().string(), $().number()).ok() // <= true
+$.type(MyQuery).min(40).ok(foo); // true
+$.type(MyQuery).min(48).ok(foo); // false
 ```
 
 💡 Tips
@@ -498,7 +481,7 @@ $(42).or($().string(), $().number()).ok() // <= true
 ### 規定値を設定する
 [Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
-const [val = 'desc', err] = $(x).optional.string().or('asc|desc').get();
+const [val = 'desc', err] = $.str.optional().or('asc|desc').get(x);
 // xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 

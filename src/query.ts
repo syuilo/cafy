@@ -5,28 +5,19 @@ import Validator from './validator';
  * クエリ基底クラス
  */
 abstract class Query<T> {
-	private value: T = undefined;
-	private isOptional: boolean;
-	private isNullable: boolean;
-	private lazy: boolean = false;
+	private isOptional = false;
+	private isNullable = false;
 
 	private validators: Validator<T>[] = [];
 	protected transform: (value: any) => T;
-
-	constructor(...args) {
-		const [optional, nullable, lazy, value] = args;
-		this.isOptional = optional;
-		this.isNullable = nullable;
-		this.lazy = lazy;
-		this.value = value;
-	}
 
 	/**
 	 * バリデーションを追加します
 	 * @param validator バリデータ
 	 * @param name バリデータ名
 	 */
-	protected pushValidator(validator: Validator<T>, name?: string) {
+	@autobind
+	protected push(validator: Validator<T>, name?: string) {
 		validator.toString = name ? () => name : () => null;
 		this.validators.push(validator);
 	}
@@ -39,11 +30,11 @@ abstract class Query<T> {
 			return withValue ? [val, err] : err;
 		}
 
-		if (this.isOptional && value === undefined) return res(value, null);
-		if (this.isNullable && value === null) return res(value, null);
+		if (this.isOptional && (value === undefined)) return res(value, null);
+		if (this.isNullable && (value === null)) return res(value, null);
 
-		if (!this.isOptional && value === undefined) return res(null, new Error('must-be-not-undefined'));
-		if (!this.isNullable && value === null) return res(null, new Error('must-be-not-null'));
+		if (!this.isOptional && (value === undefined)) return res(null, new Error('must-be-not-undefined'));
+		if (!this.isNullable && (value === null)) return res(null, new Error('must-be-not-null'));
 
 		if (this.transform) value = this.transform(value);
 
@@ -68,16 +59,8 @@ abstract class Query<T> {
 	 * 値を検証して、バリデーションに不合格なら Error をthrowします。
 	 */
 	@autobind
-	public throw(value?: any): void {
-		let v;
-		let e;
-
-		if (this.lazy) {
-			if (arguments.length == 0) throw new Error('値が指定されていません');
-			[v, e] = this.exec(value, true);
-		} else {
-			[v, e] = this.exec(this.value, true);
-		}
+	public throw(value: any): void {
+		const [v, e] = this.exec(value, true);
 
 		if (e) {
 			throw e;
@@ -90,20 +73,15 @@ abstract class Query<T> {
 	 * 値を検証して、妥当な場合は null を、そうでない場合は Error を返します。
 	 */
 	@autobind
-	public test(value?: any): Error {
-		if (this.lazy) {
-			if (arguments.length == 0) throw new Error('値が指定されていません');
-			return this.exec(value);
-		} else {
-			return this.exec(this.value);
-		}
+	public test(value: any): Error {
+		return this.exec(value);
 	}
 
 	/**
 	 * 値を検証して、妥当な場合は true を、そうでない場合は false を返します
 	 */
 	@autobind
-	public ok(value?: any): boolean {
+	public ok(value: any): boolean {
 		return this.test(value) == null;
 	}
 
@@ -111,20 +89,16 @@ abstract class Query<T> {
 	 * 値を検証して、妥当な場合は false を、そうでない場合は true を返します
 	 */
 	@autobind
-	public nok(value?: any): boolean {
+	public nok(value: any): boolean {
 		return !this.ok(value);
 	}
 
 	/**
 	 * 値を検証して、値およびエラーを取得します
 	 */
-	public get(value?: any): [T, Error] {
-		if (this.lazy) {
-			if (arguments.length == 0) throw new Error('値が指定されていません');
-			return this.exec(value, true);
-		} else {
-			return this.exec(this.value, true);
-		}
+	@autobind
+	public get(value: any): [T, Error] {
+		return this.exec(value, true);
 	}
 
 	/**
@@ -132,8 +106,9 @@ abstract class Query<T> {
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
 	 */
+	@autobind
 	public pipe(validator: Validator<T>) {
-		this.pushValidator(validator, 'pipe');
+		this.push(validator, 'pipe');
 		return this;
 	}
 
@@ -141,6 +116,7 @@ abstract class Query<T> {
 	 * undefined を許可するか否かを設定します。
 	 * @param optional 許可するか否か
 	 */
+	@autobind
 	public optional(optional = true) {
 		this.isOptional = optional;
 		return this;
@@ -150,6 +126,7 @@ abstract class Query<T> {
 	 * null を許可するか否かを設定します。
 	 * @param nullable 許可するか否か
 	 */
+	@autobind
 	public nullable(nullable = true) {
 		this.isNullable = nullable;
 		return this;
@@ -158,6 +135,7 @@ abstract class Query<T> {
 	/**
 	 * このcafyインスタンスを表す文字列を取得します
 	 */
+	@autobind
 	public toString(verbose = false) {
 		return this.constructor.name + ' ' + (verbose
 			? `(${this.validators.map(v => v.toString() || '[anonymous]').join(' > ')})`

@@ -7,10 +7,10 @@ export const isNotANumber = x => !isANumber(x);
  * Number
  */
 export default class NumberQuery extends Query<number> {
-	constructor(...args) {
-		super(...args);
+	constructor() {
+		super();
 
-		this.pushValidator(v =>
+		this.push(v =>
 			isNotANumber(v)
 				? new Error('must-be-a-number')
 				: true
@@ -33,7 +33,7 @@ export default class NumberQuery extends Query<number> {
 	 * @param threshold 下限
 	 */
 	public min(threshold: number) {
-		this.pushValidator(v =>
+		this.push(v =>
 			v < threshold
 				? new Error('invalid-range')
 				: true
@@ -46,7 +46,7 @@ export default class NumberQuery extends Query<number> {
 	 * @param threshold 上限
 	 */
 	public max(threshold: number) {
-		this.pushValidator(v =>
+		this.push(v =>
 			v > threshold
 				? new Error('invalid-range')
 				: true
@@ -58,7 +58,7 @@ export default class NumberQuery extends Query<number> {
 	 * このインスタンスの値が整数でなければエラーにします
 	 */
 	public int() {
-		this.pushValidator(v =>
+		this.push(v =>
 			!Number.isInteger(v)
 				? new Error('must-be-an-intager')
 				: true
