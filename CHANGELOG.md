@@ -1,6 +1,8 @@
 8.0.0 / 2018-05-01
 ------------------
 * **[BREAKING]** 先行検証廃止
+* **[BREAKING]** optional廃止(代わりにoptionalメソッドを使用してください)
+* **[BREAKING]** nullable廃止(代わりにnullableメソッドを使用してください)
 * **[BREAKING]** objectの引数廃止(代わりにstrictメソッドを使用してください)
 * **[BREAKING]** Use `push` instead of `pushValidator`
 * Add: 型の短いエイリアスを追加:
