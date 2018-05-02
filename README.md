@@ -472,7 +472,7 @@ class FooQuery extends Query<Foo> {
 バリデーションするときは、`type`メソッドにクラスを渡します:
 ``` typescript
 $.type(FooQuery).ok(new Foo()); // true
-$.type(FooQuery).ok('abc');         // false
+$.type(FooQuery).ok('abc');     // false
 ```
 
 #### カスタムメソッド
