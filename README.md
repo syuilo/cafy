@@ -1,5 +1,4 @@
-cafy
-===============================================
+# cafy
 > Simple, fun, flexible query-based validator
 
 **cafy**は、アサーションのようにメソッドチェーンで値のバリデーションを行うライブラリです。
@@ -14,19 +13,19 @@ cafyを使えばバリデーションを楽しく・簡単に・柔軟に書く�
 
 [![NPM](https://nodei.co/npm/cafy.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/cafy)
 
-🤔 Why cafy
------------------------------------------------
+## 🤔 Why cafy
 たとえばWeb APIを書くときに、ちゃんとクライアントから送信されてきたパラメータが正しい形式か確認しないと、プログラムの例外を引き起こしたり、非常に長い文字列を送られてサーバーがダウンしてしまうといった可能性もあります。それらを防ぐためにも値の正当性の検証は重要です。
 <i>「このパラメータはnullやundefinedではない文字列でなくてはならず、1文字以上100文字以下でなくてはならず、a-z0-9の文字種で構成されてなければならない」</i>といった長いバリデーションを、cafyを使えば**一行で簡潔に**書くことができます。
 例外も行うバリデーションごとに用意されているので、ユーザーにわかりやすいエラーメッセージを返すこともできます。
 
-📦 Installation
------------------------------------------------
-Just `npm install cafy`.
+## 📦 Installation
+Just:
+```
+npm install cafy
+```
 Happy validation👍
 
-☘ Usage
------------------------------------------------
+## ☘ Usage
 TL;DR
 ``` javascript
 import $ from 'cafy';
@@ -131,13 +130,32 @@ $.str.nullable().optional()...
 | `nullable`              | x         | o    |
 | `optional` + `nullable` | o         | o    |
 
-📖 API
------------------------------------------------
+## 📖 API
 ### **Query**
 cafyの実体は`Query`クラスです。そして、cafyで実装されている全ての型は`Query`クラスを継承したクラスです。
 従って、`Query`クラスにある次のメソッドは全ての型で利用可能です。
 
 #### メソッド
+##### `.get(value)` => `[any, Error]`
+テスト対象の値とテスト結果のペア(配列)を取得します。
+
+##### `.nok(value)` => `boolean`
+バリデーションを実行します。
+合格した場合は`false`で、そうでない場合は`true`です。
+`.ok()`の否定です。
+(*nok* は _**n**ot **ok**_ の略です)
+
+##### `.nullable(nullable = true)` => `Query`
+`null`を許可します。
+
+##### `.ok(value)` => `boolean`
+バリデーションを実行します。
+合格した場合は`true`で、そうでない場合は`false`です。
+`.test() == null`と同義です。
+
+##### `.optional(optional = true)` => `Query`
+`undefined`を許可します。
+
 ##### `.pipe(fn)` => `Query`
 カスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
@@ -150,29 +168,17 @@ $.arr().pipe(x => x[1] != 'b').ok(['a', 'b', 'c']) // false
 バリデーションを実行します。
 合格した場合は`null`で、そうでない場合は`Error`です。
 
-##### `.ok(value)` => `boolean`
-バリデーションを実行します。
-合格した場合は`true`で、そうでない場合は`false`です。
-`.test() == null`と同義です。
-
-##### `.nok(value)` => `boolean`
-バリデーションを実行します。
-合格した場合は`false`で、そうでない場合は`true`です。
-`.ok()`の否定です。
-(*nok* は _**n**ot **ok**_ の略です)
-
 ##### `.throw(value)` => `any`
 バリデーションを実行します。
 合格した場合は値を返し、そうでない場合は`Error`をthrowします。
 
-##### `.get(value)` => `[any, Error]`
-テスト対象の値とテスト結果のペア(配列)を取得します。
+---
 
 ### 型: **Any**
 ``` javascript
 .any
 ```
----
+
 Any型を使うと、「*undefined*や*null*はダメだけど、型は何でもいい」といった値を検証したいときに便利です:
 ``` javascript
 $.any.ok('strawberry pasta') // true
@@ -185,12 +191,14 @@ $.obj.have('x', $.any).ok({ x: 'strawberry pasta' }) // true
 #### メソッド
 Any固有のメソッドはありません。
 
+---
+
 ### 型: **Array**
 ``` javascript
 .arr(query)
 .array(query)
 ```
----
+
 配列をバリデーションしたいときはこの型を使用します。
 
 #### 配列の要素をバリデーションする
@@ -250,23 +258,27 @@ $.arr().each(x => x < 4).ok([1, 2, 3]) // true
 $.arr().each(x => x < 4).ok([1, 4, 3]) // false
 ```
 
+---
+
 ### 型: **Boolean**
 ``` javascript
 .bool
 .boolean
 ```
----
+
 真理値(`true`か`false`)をバリデーションしたいときはこの型を使用します。
 
 #### メソッド
 固有のメソッドはありません。
+
+---
 
 ### 型: **Number**
 ``` javascript
 .num
 .number
 ```
----
+
 数値をバリデーションしたいときはこの型を使用します。
 
 #### メソッド
@@ -296,12 +308,14 @@ $.num.int().ok(Infinity) // false
 
 ℹ️ `range(30, 50)`は`min(30).max(50)`と同義です。
 
+---
+
 ### 型: **Object**
 ``` javascript
 .obj
 .object
 ```
----
+
 オブジェクトをバリデーションしたいときはこの型を使用します。
 
 #### メソッド
@@ -357,12 +371,14 @@ $.obj.have('x', $.num).ok({ x: 42, y: 24 }) // true
 $.obj.have('x', $.num).strict().ok({ x: 42, y: 24 }) // false
 ```
 
+---
+
 ### 型: **String**
 ``` javascript
 .str
 .string
 ```
----
+
 文字列をバリデーションしたいときはこの型を使用します。
 
 #### サロゲートペアについて
@@ -406,11 +422,13 @@ $.str.notInclude(['strawberry', 'alice']).ok('strawberry pasta') // false
 ##### `.length(length)`
 文字数が`length`でなければならないという制約を追加します。
 
+---
+
 ### **Or**
 ``` javascript
 .or(queryA, queryB)
 ```
----
+
 時には、「文字列または数値」とか「真理値または真理値の配列」のようなバリデーションを行いたいときもあるでしょう。
 そういった場合は、`or`を使うことができます。
 例:
@@ -419,11 +437,13 @@ $.str.notInclude(['strawberry', 'alice']).ok('strawberry pasta') // false
 $.or($.str, $.num).ok(42) // true
 ```
 
+---
+
 ### **Type** (ユーザー定義型)
 ``` javascript
 .type(type)
 ```
----
+
 cafyで標準で用意されている`string`や`number`等の基本的な型以外にも、ユーザーが型を登録してバリデーションすることができます。
 型を定義するには、まずcafyの`Query`クラスを継承したクエリクラスを作ります。
 TypeScriptでの例:
@@ -431,19 +451,19 @@ TypeScriptでの例:
 import $, { Query } from 'cafy';
 
 // あなたのクラス
-class MyClass {
-  x: number;
+class Foo {
+  bar: number;
 }
 
 // あなたのクラスを検証するための、cafyのQueryクラスを継承したクラス
-class MyQuery extends Query<MyClass> {
+class FooQuery extends Query<Foo> {
   constructor() {
     // "おまじない"のようなものです
     super();
 
-    // 値が MyClass のインスタンスであるかチェック
+    // 値が Foo のインスタンスであるかチェック
     this.push(v =>
-      v instanceof MyClass ? true : new Error('not an instance of MyClass')
+      v instanceof Foo ? true : new Error('not an instance of Foo')
     );
   }
 }
@@ -451,19 +471,19 @@ class MyQuery extends Query<MyClass> {
 
 バリデーションするときは、`type`メソッドにクラスを渡します:
 ``` typescript
-$.type(MyQuery).ok(new MyClass()); // true
-$.type(MyQuery).ok('abc');         // false
+$.type(FooQuery).ok(new Foo()); // true
+$.type(FooQuery).ok('abc');         // false
 ```
 
 #### カスタムメソッド
 また、`Query`を継承するクラスにメソッドを実装することで、クエリ中でそのメソッドを利用することもできます。
-例として、上述の`MyQuery`に、「プロパティ`x`が指定された値以上でなければならない」という制約を追加するメソッド`min`を定義してみましょう:
+例として、上述の`FooQuery`に、「プロパティ`bar`が指定された値以上でなければならない」という制約を追加するメソッド`min`を定義してみましょう:
 ``` typescript
-class MyQuery extends Query<MyClass> {
+class FooQuery extends Query<Foo> {
   ...
 
   public min(threshold: number) {
-    this.push(v => v.x < threshold ? new Error('xの値が小さすぎます') : true);
+    this.push(v => v.bar < threshold ? new Error('barの値が小さすぎます') : true);
     return this;
   }
 }
@@ -472,15 +492,14 @@ class MyQuery extends Query<MyClass> {
 
 さあ、このメソッドを使いましょう！
 ``` typescript
-const foo = new MyClass();
-foo.x = 42;
+const foo = new Foo();
+foo.bar = 42;
 
 $.type(MyQuery).min(40).ok(foo); // true
 $.type(MyQuery).min(48).ok(foo); // false
 ```
 
-💡 Tips
------------------------------------------------
+## 💡 Tips
 ### 規定値を設定する
 [Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
@@ -488,12 +507,10 @@ const [val = 'desc', err] = $.str.optional().or('asc|desc').get(x);
 // xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 
-Release Notes
------------------------------------------------
+## Release Notes
 Please see [ChangeLog](CHANGELOG.md)!
 
-License
------------------------------------------------
+## License
 [MIT](LICENSE)
 
 [npm-link]:       https://www.npmjs.com/package/cafy
