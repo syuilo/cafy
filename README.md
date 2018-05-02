@@ -495,8 +495,8 @@ class FooQuery extends Query<Foo> {
 const foo = new Foo();
 foo.bar = 42;
 
-$.type(MyQuery).min(40).ok(foo); // true
-$.type(MyQuery).min(48).ok(foo); // false
+$.type(FooQuery).min(40).ok(foo); // true
+$.type(FooQuery).min(48).ok(foo); // false
 ```
 
 ## 💡 Tips
