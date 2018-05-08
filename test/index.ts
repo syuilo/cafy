@@ -422,87 +422,81 @@ describe('Queries', () => {
 	describe('Object', () => {
 		it('正当な値を与えられる', () => {
 			const x = { myProp: 42 };
-			const [val, err] = $.obj.get(x);
+			const [val, err] = $.obj().get(x);
 			assert.deepEqual(val, x);
 			assert.equal(err, null);
 		});
 
 		it('オブジェクト以外でエラー', () => {
 			const x = 'strawberry pasta';
-			const err = $.obj.test(x);
+			const err = $.obj().test(x);
 			assert.notEqual(err, null);
 		});
 
 		it('オブジェクト以外でエラー (配列)', () => {
 			const x = [];
-			const err = $.obj.test(x);
+			const err = $.obj().test(x);
 			assert.notEqual(err, null);
 		});
 
 		it('strict', () => {
-			const err1 = $.obj.strict().have('x', $.num).test({ x: 42 });
+			const err1 = $.obj({
+				x: $.num
+			}).strict().test({ x: 42 });
 			assert.equal(err1, null);
 
-			const err2 = $.obj.strict().have('x', $.num).test({ x: 42, y: 24 });
+			const err2 = $.obj({
+				x: $.num
+			}).strict().test({ x: 42, y: 24 });
 			assert.notEqual(err2, null);
 
-			const err3 = $.obj.strict()
-				.have('x', $.num)
-				.have('y', $.num)
-				.test({ x: 42, y: 24 });
+			const err3 = $.obj({
+				x: $.num,
+				y: $.num
+			}).strict().test({ x: 42, y: 24 });
 			assert.equal(err3, null);
 
-			const err4 = $.obj.have('x', $.num).test({ x: 42, y: 24 });
+			const err4 = $.obj({
+				x: $.num
+			}).test({ x: 42, y: 24 });
 			assert.equal(err4, null);
 		});
 
 		it('strict (null)', () => {
-			const err1 = $.obj.strict().have('x', $.num).test(null);
+			const err1 = $.obj({
+				x: $.num
+			}).strict().test(null);
 			assert.notEqual(err1, null);
 
-			const err2 = $.obj.strict().nullable().have('x', $.num).test(null);
+			const err2 = $.obj({
+				x: $.num
+			}).strict().nullable().test(null);
 			assert.equal(err2, null);
 		});
 
 		it('strict (undefined)', () => {
-			const err1 = $.obj.strict().have('x', $.num).test(undefined);
+			const err1 = $.obj({
+				x: $.num
+			}).strict().test(undefined);
 			assert.notEqual(err1, null);
 
-			const err2 = $.obj.strict().optional().have('x', $.num).test(undefined);
+			const err2 = $.obj({
+				x: $.num
+			}).strict().optional().test(undefined);
 			assert.equal(err2, null);
 		});
 
-		it('# have', () => {
-			const err1 = $.obj.have('myProp', $.num).test({ myProp: 42 });
-			assert.equal(err1, null);
-
-			const err2 = $.obj.have('myProp', $.num).test({});
-			assert.notEqual(err2, null);
-
-			const err3 = $.obj.have('myProp', $.num).test({ myProp: 'strawberry pasta' });
-			assert.notEqual(err3, null);
-		});
-
-		it('# prop', () => {
-			const err1 = $.obj.prop('myProp', $.num).test({ myProp: 42 });
-			assert.equal(err1, null);
-
-			const err2 = $.obj.prop('myProp', $.num).test({});
-			assert.equal(err2, null);
-
-			const err3 = $.obj.prop('myProp', $.num).test({ myProp: 'strawberry pasta' });
-			assert.notEqual(err3, null);
-		});
-
-		it('入れ子prop', () => {
-			const validate = $.obj
-				.prop('some', $.obj
-					.prop('strawberry', $.str)
-					.prop('alice', $.bool)
-					.prop('tachibana', $.obj
-						.prop('bwh', $.arr($.num))))
-				.prop('thing', $.num)
-				.test;
+		it('入れ子', () => {
+			const validate = $.obj({
+				some: $.obj({
+					strawberry: $.str,
+					alice: $.bool,
+					tachibana: $.obj({
+						bwh: $.arr($.num)
+					})
+				}),
+				thing: $.number
+			}).test;
 
 			const x = {
 				some: {

@@ -312,23 +312,14 @@ $.num.int().ok(Infinity) // false
 
 ### 型: **Object**
 ``` javascript
-.obj
-.object
+.obj(props)
+.object(props)
 ```
 
 オブジェクトをバリデーションしたいときはこの型を使用します。
 
-#### メソッド
-##### `.prop(name, fn)`
-特定のプロパティにカスタムのバリデーションを実行できます。
-引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
-そのプロパティが存在しなかった場合は単に無視されます。
-引数にはcafyインスタンスも渡せます。
-``` javascript
-$.obj.prop('myProp', $.bool).ok({ myProp: true }) // true
-```
-
-複雑な例:
+#### プロパティを定義する
+引数にプロパティの定義を与えてバリデーションできます:
 ``` javascript
 const x = {
   some: {
@@ -341,34 +332,31 @@ const x = {
   thing: 42
 };
 
-$.obj
-  .prop('some', $.obj
-    .prop('strawberry', $.str)
-    .prop('alice', $.bool)
-    .prop('tachibana'), $.obj
-      .prop('bwh', $.arr($.num)))
-  .prop('thing', $.num)
-  .ok(x) // true
+$.obj({
+  some: $.obj({
+    strawberry: $.str,
+    alice: $.bool,
+    tachibana: $.obj({
+      bwh: $.arr($.num)
+    })
+  }),
+  thing: $.number
+}).ok(x) // true
 ```
 
-##### `.have(name, fn)`
-特定のプロパティにカスタムのバリデーションを実行できます。
-引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
-引数にはcafyインスタンスも渡せます。
-
-`fn`を省略することもできます。その場合、次と等価です:
-``` javascript
-have('x', () => true)
-```
+#### メソッド
 
 ##### `.strict()`
-デフォルトでは、`have`や`prop`で言及した以外のプロパティを持っていても、問題にはしません:
+引数のプロパティ定義で言及した以外のプロパティを持っている場合にエラーにします。
+
+デフォルト:
 ``` javascript
-$.obj.have('x', $.num).ok({ x: 42, y: 24 }) // true
+$.obj({ foo: $.num }).ok({ foo: 42, bar: 24 }) // true
 ```
-`have`または`prop`で言及した以外のプロパティを持っている場合にエラーにしたい場合は、このメソッドを使用します:
+
+strict:
 ``` javascript
-$.obj.have('x', $.num).strict().ok({ x: 42, y: 24 }) // false
+$.obj({ foo: $.num }).strict().ok({ foo: 42, bar: 24 }) // false
 ```
 
 ---

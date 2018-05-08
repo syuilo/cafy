@@ -1,4 +1,5 @@
 import Query from '../query';
+import { TypeOf } from '.';
 
 export const isAnObject = x => typeof x == 'object' && !(x instanceof Array);
 export const isNotAnObject = x => !isAnObject(x);
@@ -6,11 +7,10 @@ export const isNotAnObject = x => !isAnObject(x);
 /**
  * Object
  */
-export default class ObjectQuery extends Query<{ [x: string]: any }> {
-	private mentions: string[] = [];
+export default class ObjectQuery<Qs extends { [key: string]: Query }> extends Query<{ [P in keyof Qs]: TypeOf<Qs[P]> }> {
 	private isStrict = false;
 
-	constructor() {
+	constructor(q?: { [key: string]: Query }) {
 		super();
 
 		this.push(v =>
@@ -19,10 +19,17 @@ export default class ObjectQuery extends Query<{ [x: string]: any }> {
 				: true
 		);
 
+		if (q) {
+			Object.entries(q).forEach(([k, q]) => {
+				this.push(v => q.test(v[k]));
+			});
+		}
+
 		this.push(v => {
 			if (this.isStrict) {
-				const properties = Object.keys(v);
-				const hasNotMentionedProperty = properties.some(p => !this.mentions.some(m => m == p));
+				const actual = Object.keys(v);
+				const expect = Object.keys(q);
+				const hasNotMentionedProperty = actual.some(p => !expect.some(m => m == p));
 				if (hasNotMentionedProperty) return new Error('dirty-object');
 			}
 			return true;
@@ -35,55 +42,6 @@ export default class ObjectQuery extends Query<{ [x: string]: any }> {
 	 */
 	public strict(strict = true) {
 		this.isStrict = strict;
-		return this;
-	}
-
-	/**
-	 * 指定されたプロパティに対して妥当性を検証します
-	 * プロパティが存在しない場合無視されます
-	 * バリデータが false またはエラーを返した場合エラーにします
-	 * @param name プロパティ名
-	 * @param validator バリデータ
-	 */
-	public prop(name: string, validator: ((prop: any) => boolean | Error) | Query) {
-		this.mentions.push(name);
-		const validate = validator instanceof Query ? validator.test : validator;
-		this.push(v => {
-			if (!v.hasOwnProperty(name)) return true;
-			const result = validate(v[name]);
-			if (result === false) {
-				return new Error('invalid-prop');
-			} else if (result instanceof Error) {
-				return result;
-			} else {
-				return true;
-			}
-		}, 'prop');
-		return this;
-	}
-
-	/**
-	 * 指定されたプロパティに対して妥当性を検証します
-	 * プロパティが存在しない場合エラーにします
-	 * バリデータが false またはエラーを返した場合エラーにします
-	 * @param name プロパティ名
-	 * @param validator バリデータ
-	 */
-	public have(name: string, validator?: ((prop: any) => boolean | Error) | Query) {
-		this.mentions.push(name);
-		validator = arguments.length == 1 ? () => true : validator;
-		const validate = validator instanceof Query ? validator.test : validator;
-		this.push(v => {
-			if (!v.hasOwnProperty(name)) return new Error('prop-required');
-			const result = validate(v[name]);
-			if (result === false) {
-				return new Error('invalid-prop');
-			} else if (result instanceof Error) {
-				return result;
-			} else {
-				return true;
-			}
-		}, 'have');
 		return this;
 	}
 }
