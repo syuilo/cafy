@@ -3,4 +3,4 @@ import Query from '../query';
 /**
  * Any
  */
-export default class AnyQuery extends Query<any> { }
+export default class AnyQuery extends Query { }

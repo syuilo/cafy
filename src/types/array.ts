@@ -13,8 +13,8 @@ const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 /**
  * Array
  */
-export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]> {
-	constructor(q?: Query<any>) {
+export default class ArrayQuery<Q extends Query> extends Query<TypeOf<Q>[]> {
+	constructor(q?: Query) {
 		super();
 
 		this.push(v =>
@@ -96,7 +96,7 @@ export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]>
 	 * @param index インデックス
 	 * @param validator バリデータ
 	 */
-	public item(index: number, validator: ((element: TypeOf<Q>) => boolean | Error) | Query<any>) {
+	public item(index: number, validator: ((element: TypeOf<Q>) => boolean | Error) | Query) {
 		const validate = validator instanceof Query ? validator.test : validator;
 		this.push(v => {
 			const result = validate(v[index]);
@@ -116,7 +116,7 @@ export default class ArrayQuery<Q extends Query<any>> extends Query<TypeOf<Q>[]>
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
 	 */
-	public each(validator: ((element: TypeOf<Q>, index: number, array: TypeOf<Q>[]) => boolean | Error) | Query<any>) {
+	public each(validator: ((element: TypeOf<Q>, index: number, array: TypeOf<Q>[]) => boolean | Error) | Query) {
 		const validate = validator instanceof Query ? validator.test : validator;
 		this.push(v => {
 			let err: Error;

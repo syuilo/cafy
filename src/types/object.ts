@@ -45,7 +45,7 @@ export default class ObjectQuery extends Query<{ [x: string]: any }> {
 	 * @param name プロパティ名
 	 * @param validator バリデータ
 	 */
-	public prop(name: string, validator: ((prop: any) => boolean | Error) | Query<any>) {
+	public prop(name: string, validator: ((prop: any) => boolean | Error) | Query) {
 		this.mentions.push(name);
 		const validate = validator instanceof Query ? validator.test : validator;
 		this.push(v => {
@@ -69,7 +69,7 @@ export default class ObjectQuery extends Query<{ [x: string]: any }> {
 	 * @param name プロパティ名
 	 * @param validator バリデータ
 	 */
-	public have(name: string, validator?: ((prop: any) => boolean | Error) | Query<any>) {
+	public have(name: string, validator?: ((prop: any) => boolean | Error) | Query) {
 		this.mentions.push(name);
 		validator = arguments.length == 1 ? () => true : validator;
 		const validate = validator instanceof Query ? validator.test : validator;

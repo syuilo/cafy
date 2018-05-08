@@ -4,7 +4,7 @@ import Validator from './validator';
 /**
  * クエリ基底クラス
  */
-abstract class Query<T> {
+abstract class Query<T = any> {
 	private isOptional = false;
 	private isNullable = false;
 

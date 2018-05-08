@@ -14,15 +14,15 @@ import Query from './query';
 
 export default {
 	get any() { return new AnyQuery() },
-	arr<T extends Query<any> = Query<any>>(q?: T): ArrayQuery<T> { return new ArrayQuery(q) },
-	array<T extends Query<any> = Query<any>>(q?: T): ArrayQuery<T> { return new ArrayQuery(q) },
+	arr<T extends Query = Query>(q?: T): ArrayQuery<T> { return new ArrayQuery(q) },
+	array<T extends Query = Query>(q?: T): ArrayQuery<T> { return new ArrayQuery(q) },
 	get bool() { return new BooleanQuery() },
 	get boolean() { return new BooleanQuery() },
 	get num() { return new NumberQuery() },
 	get number() { return new NumberQuery() },
 	get obj() { return new ObjectQuery() },
 	get object() { return new ObjectQuery() },
-	or<QA extends Query<any>, QB extends Query<any>>(qA: QA, qB: QB): OrQuery<QA, QB> { return new OrQuery(qA, qB) },
+	or<QA extends Query, QB extends Query>(qA: QA, qB: QB): OrQuery<QA, QB> { return new OrQuery(qA, qB) },
 	get str() { return new StringQuery() },
 	get string() { return new StringQuery() },
 	type<T>(Q: { new(): T; }): T { return new Q() },
