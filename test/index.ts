@@ -495,7 +495,7 @@ describe('Queries', () => {
 						bwh: $.arr($.num)
 					})
 				}),
-				thing: $.number
+				thing: $.num
 			}).test;
 
 			const x = {

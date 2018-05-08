@@ -340,7 +340,7 @@ $.obj({
       bwh: $.arr($.num)
     })
   }),
-  thing: $.number
+  thing: $.num
 }).ok(x) // true
 ```
 
