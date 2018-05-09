@@ -11,6 +11,7 @@ import StringQuery from './types/string';
 import OrQuery from './types/or';
 
 import Query from './query';
+import { TypeOf } from './types';
 
 export default {
 	get any() { return new AnyQuery() },
@@ -26,6 +27,9 @@ export default {
 	get str() { return new StringQuery() },
 	get string() { return new StringQuery() },
 	type<T>(Q: { new(): T; }): T { return new Q() },
+	use<T extends Query = Query>(q: T): AnyQuery<TypeOf<T>> {
+		return new AnyQuery<TypeOf<T>>().pipe(q.test);
+	}
 };
 
 export { Query };

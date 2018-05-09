@@ -540,6 +540,28 @@ describe('Queries', () => {
 			assert.equal(ok, true);
 		});
 	});
+
+	describe('use', () => {
+		it('OK', () => {
+			const ok = $.use($.num).ok(42);
+			assert.equal(ok, true);
+		});
+
+		it('NOT OK', () => {
+			const ok = $.use($.num).ok('foo');
+			assert.equal(ok, false);
+		});
+
+		it('optional', () => {
+			const base = $.num;
+
+			const ok1 = $.use(base).optional().ok(undefined);
+			assert.equal(ok1, true);
+
+			const ok2 = $.use(base).ok(undefined);
+			assert.equal(ok2, false);
+		});
+	});
 });
 
 class MyClass {

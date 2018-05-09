@@ -427,6 +427,20 @@ $.or($.str, $.num).ok(42) // true
 
 ---
 
+### **Use**
+``` javascript
+.use(query)
+```
+
+既存のクエリを拡張したいときに使います。
+``` javascript
+const other = $.str;
+$.use(other).optional().ok(undefined) // true
+$.use(other).nullable().ok(null) // true
+```
+
+---
+
 ### **Type** (ユーザー定義型)
 ``` javascript
 .type(type)
