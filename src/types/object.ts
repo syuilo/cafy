@@ -4,13 +4,15 @@ import { TypeOf } from '.';
 export const isAnObject = x => typeof x == 'object' && !(x instanceof Array);
 export const isNotAnObject = x => !isAnObject(x);
 
+export type Props = { [key: string]: Query };
+
 /**
  * Object
  */
-export default class ObjectQuery<Qs extends { [key: string]: Query }> extends Query<{ [P in keyof Qs]: TypeOf<Qs[P]> }> {
+export default class ObjectQuery<Ps extends Props> extends Query<{ [P in keyof Ps]: TypeOf<Ps[P]> }> {
 	private isStrict = false;
 
-	constructor(q?: { [key: string]: Query }) {
+	constructor(props?: Props) {
 		super();
 
 		this.push(v =>
@@ -19,8 +21,8 @@ export default class ObjectQuery<Qs extends { [key: string]: Query }> extends Qu
 				: true
 		);
 
-		if (q) {
-			Object.entries(q).forEach(([k, q]) => {
+		if (props) {
+			Object.entries(props).forEach(([k, q]) => {
 				this.push(v => q.test(v[k]));
 			});
 		}
@@ -28,7 +30,7 @@ export default class ObjectQuery<Qs extends { [key: string]: Query }> extends Qu
 		this.push(v => {
 			if (this.isStrict) {
 				const actual = Object.keys(v);
-				const expect = Object.keys(q);
+				const expect = Object.keys(props);
 				const hasNotMentionedProperty = actual.some(p => !expect.some(m => m == p));
 				if (hasNotMentionedProperty) return new Error('dirty-object');
 			}
