@@ -7,7 +7,7 @@ import $, { Query } from '../';
 
 it('デフォルトの値を設定できる', () => {
 	const def = 'strawberry pasta';
-	const [val = def, err] = $.str.optional().get(undefined);
+	const [val = def, err] = $.str.optional.get(undefined);
 	assert.equal(val, def);
 	assert.equal(err, null);
 });
@@ -33,18 +33,18 @@ describe('Common', () => {
 	describe('optional', () => {
 		it('値を与えられる', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $.str.optional().get(x);
+			const [val, err] = $.str.optional.get(x);
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
 
 		it('nullを与えられない', () => {
-			const err = $.str.optional().test(null);
+			const err = $.str.optional.test(null);
 			assert.notEqual(err, null);
 		});
 
 		it('undefinedを与えられる', () => {
-			const err = $.str.optional().test(undefined);
+			const err = $.str.optional.test(undefined);
 			assert.equal(err, null);
 		});
 	});
@@ -52,18 +52,18 @@ describe('Common', () => {
 	describe('nullable', () => {
 		it('値を与えられる', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $.str.nullable().get(x);
+			const [val, err] = $.str.nullable.get(x);
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
 
 		it('nullを与えられる', () => {
-			const err = $.str.nullable().test(null);
+			const err = $.str.nullable.test(null);
 			assert.equal(err, null);
 		});
 
 		it('undefinedを与えられない', () => {
-			const err = $.str.nullable().test(undefined);
+			const err = $.str.nullable.test(undefined);
 			assert.notEqual(err, null);
 		});
 	});
@@ -71,18 +71,18 @@ describe('Common', () => {
 	describe('optional + nullable', () => {
 		it('値を与えられる', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $.str.nullable().optional().get(x);
+			const [val, err] = $.str.nullable.optional.get(x);
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
 
 		it('nullを与えられる', () => {
-			const err = $.str.nullable().optional().test(null);
+			const err = $.str.nullable.optional.test(null);
 			assert.equal(err, null);
 		});
 
 		it('undefinedを与えらる', () => {
-			const err = $.str.nullable().optional().test(undefined);
+			const err = $.str.nullable.optional.test(undefined);
 			assert.equal(err, null);
 		});
 	});
@@ -126,12 +126,12 @@ describe('Common', () => {
 		});
 
 		it('nullのときには実行されない', () => {
-			const err = $.str.nullable().pipe(x => x[0] == 'a').test(null);
+			const err = $.str.nullable.pipe(x => x[0] == 'a').test(null);
 			assert.equal(err, null);
 		});
 
 		it('undefinedのときには実行されない', () => {
-			const err = $.str.optional().pipe(x => x[0] == 'a').test(undefined);
+			const err = $.str.optional.pipe(x => x[0] == 'a').test(undefined);
 			assert.equal(err, null);
 		});
 	});
@@ -470,7 +470,7 @@ describe('Queries', () => {
 
 			const err2 = $.obj({
 				x: $.num
-			}).strict().nullable().test(null);
+			}).strict().nullable.test(null);
 			assert.equal(err2, null);
 		});
 
@@ -482,7 +482,7 @@ describe('Queries', () => {
 
 			const err2 = $.obj({
 				x: $.num
-			}).strict().optional().test(undefined);
+			}).strict().optional.test(undefined);
 			assert.equal(err2, null);
 		});
 
@@ -555,7 +555,7 @@ describe('Queries', () => {
 		it('optional', () => {
 			const base = $.num;
 
-			const ok1 = $.use(base).optional().ok(undefined);
+			const ok1 = $.use(base).optional.ok(undefined);
 			assert.equal(ok1, true);
 
 			const ok2 = $.use(base).ok(undefined);

@@ -37,11 +37,10 @@ export default class ObjectQuery<Qs extends { [key: string]: Query }> extends Qu
 	}
 
 	/**
-	 * 言及したプロパティ以外のプロパティを持つことを禁止するか否かを設定します。
-	 * @param strict 禁止するか否か
+	 * 言及したプロパティ以外のプロパティを持つことを禁止します。
 	 */
-	public strict(strict = true) {
-		this.isStrict = strict;
+	public strict() {
+		this.isStrict = true;
 		return this;
 	}
 }

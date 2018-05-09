@@ -104,7 +104,7 @@ $.str.ok(undefined) // false
 ```
 `undefined`を許可する場合は`optional`を使用します:
 ``` javascript
-$.str.optional().ok(undefined) // true
+$.str.optional.ok(undefined) // true
 ```
 
 #### null を許可する *(nullable)*
@@ -114,13 +114,13 @@ $.str.ok(null) // false
 ```
 `null`を許可する場合は`nullable`を使用します:
 ``` javascript
-$.str.nullable().ok(null) // true
+$.str.nullable.ok(null) // true
 ```
 
 #### null と undefined を許可する
 `nullable`と`optional`は併用できます:
 ``` javascript
-$.str.nullable().optional()...
+$.str.nullable.optional...
 ```
 
 |                         | undefined | null |
@@ -435,8 +435,8 @@ $.or($.str, $.num).ok(42) // true
 既存のクエリを拡張したいときに使います。
 ``` javascript
 const other = $.str;
-$.use(other).optional().ok(undefined) // true
-$.use(other).nullable().ok(null) // true
+$.use(other).optional.ok(undefined) // true
+$.use(other).nullable.ok(null) // true
 ```
 
 ---
@@ -505,7 +505,7 @@ $.type(FooQuery).min(48).ok(foo); // false
 ### 規定値を設定する
 [Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
 ``` javascript
-const [val = 'desc', err] = $.str.optional().or('asc|desc').get(x);
+const [val = 'desc', err] = $.str.optional.or('asc|desc').get(x);
 // xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
 

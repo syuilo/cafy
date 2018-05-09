@@ -1,3 +1,9 @@
+10.0.0 / 2018-05-09
+------------------
+* **[BREAKING]** `optional()` --> `optional`
+* **[BREAKING]** `nullable()` --> `nullable`
+* **[BREAKING]** strictの引数廃止
+
 9.1.0 / 2018-05-09
 ------------------
 * Add: use

@@ -113,22 +113,18 @@ abstract class Query<T = any> {
 	}
 
 	/**
-	 * undefined を許可するか否かを設定します。
-	 * @param optional 許可するか否か
+	 * undefined を許可します。
 	 */
-	@autobind
-	public optional(optional = true) {
-		this.isOptional = optional;
+	get optional() {
+		this.isOptional = true;
 		return this;
 	}
 
 	/**
-	 * null を許可するか否かを設定します。
-	 * @param nullable 許可するか否か
+	 * null を許可します。
 	 */
-	@autobind
-	public nullable(nullable = true) {
-		this.isNullable = nullable;
+	get nullable() {
+		this.isNullable = true;
 		return this;
 	}
 
