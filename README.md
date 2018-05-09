@@ -183,10 +183,6 @@ Any型を使うと、「*undefined*や*null*はダメだけど、型は何でも
 ``` javascript
 $.any.ok('strawberry pasta') // true
 ```
-オブジェクトの検証において、「必ず`x`というプロパティを持っていてほしい。中身はnullやundefined以外なら何でもいい」のような場合もanyを活用できます:
-``` javascript
-$.obj.have('x', $.any).ok({ x: 'strawberry pasta' }) // true
-```
 
 #### メソッド
 Any固有のメソッドはありません。
