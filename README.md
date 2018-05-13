@@ -460,9 +460,7 @@ class FooQuery extends Query<Foo> {
     super();
 
     // 値が Foo のインスタンスであるかチェック
-    this.push(v =>
-      v instanceof Foo ? true : new Error('not an instance of Foo')
-    );
+    this.push(v => v instanceof Foo);
   }
 }
 ```
@@ -481,7 +479,7 @@ class FooQuery extends Query<Foo> {
   ...
 
   public min(threshold: number) {
-    this.push(v => v.bar < threshold ? new Error('barの値が小さすぎます') : true);
+    this.push(v => v.bar >= threshold);
     return this;
   }
 }
