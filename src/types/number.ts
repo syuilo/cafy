@@ -1,4 +1,4 @@
-import Query from '../query';
+import Context from '../ctx';
 
 export const isANumber = x => Number.isFinite(x);
 export const isNotANumber = x => !isANumber(x);
@@ -6,7 +6,7 @@ export const isNotANumber = x => !isANumber(x);
 /**
  * Number
  */
-export default class NumberQuery extends Query<number> {
+export default class NumberContext extends Context<number> {
 	constructor() {
 		super();
 

@@ -1,4 +1,4 @@
-import Query from '../query';
+import Context from '../ctx';
 
 export const isABoolean = x => typeof x == 'boolean';
 export const isNotABoolean = x => !isABoolean(x);
@@ -6,7 +6,7 @@ export const isNotABoolean = x => !isABoolean(x);
 /**
  * Boolean
  */
-export default class BooleanQuery extends Query<boolean> {
+export default class BooleanContext extends Context<boolean> {
 	constructor() {
 		super();
 

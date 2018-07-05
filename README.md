@@ -131,9 +131,9 @@ $.str.nullable.optional...
 | `optional` + `nullable` | o         | o    |
 
 ## 📖 API
-### **Query**
-cafyの実体は`Query`クラスです。そして、cafyで実装されている全ての型は`Query`クラスを継承したクラスです。
-従って、`Query`クラスにある次のメソッドは全ての型で利用可能です。
+### **Context**
+cafyの実体は`Context`クラスです。そして、cafyで実装されている全ての型は`Context`クラスを継承したクラスです。
+従って、`Context`クラスにある次のメソッドは全ての型で利用可能です。
 
 #### メソッド
 ##### `.get(value)` => `[any, Error]`
@@ -145,7 +145,7 @@ cafyの実体は`Query`クラスです。そして、cafyで実装されてい�
 `.ok()`の否定です。
 (*nok* は _**n**ot **ok**_ の略です)
 
-##### `.nullable(nullable = true)` => `Query`
+##### `.nullable(nullable = true)` => `Context`
 `null`を許可します。
 
 ##### `.ok(value)` => `boolean`
@@ -153,10 +153,10 @@ cafyの実体は`Query`クラスです。そして、cafyで実装されてい�
 合格した場合は`true`で、そうでない場合は`false`です。
 `.test() == null`と同義です。
 
-##### `.optional(optional = true)` => `Query`
+##### `.optional(optional = true)` => `Context`
 `undefined`を許可します。
 
-##### `.pipe(fn)` => `Query`
+##### `.pipe(fn)` => `Context`
 カスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
 ``` javascript
@@ -428,7 +428,7 @@ $.or($.str, $.num).ok(42) // true
 .use(query)
 ```
 
-既存のクエリを拡張したいときに使います。
+既存のContextを拡張したいときに使います。
 ``` javascript
 const other = $.str;
 $.use(other).optional.ok(undefined) // true
@@ -443,18 +443,18 @@ $.use(other).nullable.ok(null) // true
 ```
 
 cafyで標準で用意されている`string`や`number`等の基本的な型以外にも、ユーザーが型を登録してバリデーションすることができます。
-型を定義するには、まずcafyの`Query`クラスを継承したクエリクラスを作ります。
+型を定義するには、まずcafyの`Context`クラスを継承したContextクラスを作ります。
 TypeScriptでの例:
 ``` typescript
-import $, { Query } from 'cafy';
+import $, { Context } from 'cafy';
 
 // あなたのクラス
 class Foo {
   bar: number;
 }
 
-// あなたのクラスを検証するための、cafyのQueryクラスを継承したクラス
-class FooQuery extends Query<Foo> {
+// あなたのクラスを検証するための、cafyのContextクラスを継承したクラス
+class FooContext extends Context<Foo> {
   constructor() {
     // "おまじない"のようなものです
     super();
@@ -467,15 +467,15 @@ class FooQuery extends Query<Foo> {
 
 バリデーションするときは、`type`メソッドにクラスを渡します:
 ``` typescript
-$.type(FooQuery).ok(new Foo()); // true
-$.type(FooQuery).ok('abc');     // false
+$.type(FooContext).ok(new Foo()); // true
+$.type(FooContext).ok('abc');     // false
 ```
 
 #### カスタムメソッド
-また、`Query`を継承するクラスにメソッドを実装することで、クエリ中でそのメソッドを利用することもできます。
-例として、上述の`FooQuery`に、「プロパティ`bar`が指定された値以上でなければならない」という制約を追加するメソッド`min`を定義してみましょう:
+また、`Context`を継承するクラスにメソッドを実装することで、Context中でそのメソッドを利用することもできます。
+例として、上述の`FooContext`に、「プロパティ`bar`が指定された値以上でなければならない」という制約を追加するメソッド`min`を定義してみましょう:
 ``` typescript
-class FooQuery extends Query<Foo> {
+class FooContext extends Context<Foo> {
   ...
 
   public min(threshold: number) {
@@ -491,8 +491,8 @@ class FooQuery extends Query<Foo> {
 const foo = new Foo();
 foo.bar = 42;
 
-$.type(FooQuery).min(40).ok(foo); // true
-$.type(FooQuery).min(48).ok(foo); // false
+$.type(FooContext).min(40).ok(foo); // true
+$.type(FooContext).min(48).ok(foo); // false
 ```
 
 ## 💡 Tips

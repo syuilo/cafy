@@ -1,15 +1,15 @@
-import Query from '../query';
+import Context from '../ctx';
 import { TypeOf } from '.';
 
 /**
  * Or
  */
-export default class OrQuery<QA extends Query, QB extends Query> extends Query<TypeOf<QA> | TypeOf<QB>> {
-	constructor(qA: Query, qB: Query) {
+export default class OrContext<CtxA extends Context, CtxB extends Context> extends Context<TypeOf<CtxA> | TypeOf<CtxB>> {
+	constructor(ctxA: Context, ctxB: Context) {
 		super();
 
 		this.push(v =>
-			qA.nok(v) && qB.nok(v) ? new Error('not match') : true
+			ctxA.nok(v) && ctxB.nok(v) ? new Error('not match') : true
 		);
 	}
 }

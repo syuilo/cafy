@@ -2,34 +2,34 @@
  * cafy
  */
 
-import AnyQuery from './types/any';
-import ArrayQuery from './types/array';
-import BooleanQuery from './types/boolean';
-import NumberQuery from './types/number';
-import ObjectQuery, { Props } from './types/object';
-import StringQuery from './types/string';
-import OrQuery from './types/or';
+import AnyContext from './types/any';
+import ArrayContext from './types/array';
+import BooleanContext from './types/boolean';
+import NumberContext from './types/number';
+import ObjectContext, { Props } from './types/object';
+import StringContext from './types/string';
+import OrContext from './types/or';
 
-import Query from './query';
+import Context from './ctx';
 import { TypeOf } from './types';
 
 export default {
-	get any() { return new AnyQuery() },
-	arr<T extends Query = Query>(q?: T): ArrayQuery<T> { return new ArrayQuery(q) },
-	array<T extends Query = Query>(q?: T): ArrayQuery<T> { return new ArrayQuery(q) },
-	get bool() { return new BooleanQuery() },
-	get boolean() { return new BooleanQuery() },
-	get num() { return new NumberQuery() },
-	get number() { return new NumberQuery() },
-	obj<T extends Props>(q?: T): ObjectQuery<T> { return new ObjectQuery(q) },
-	object<T extends Props>(q?: T): ObjectQuery<T> { return new ObjectQuery(q) },
-	or<QA extends Query, QB extends Query>(qA: QA, qB: QB): OrQuery<QA, QB> { return new OrQuery(qA, qB) },
-	get str() { return new StringQuery() },
-	get string() { return new StringQuery() },
-	type<T>(Q: { new(): T; }): T { return new Q() },
-	use<T extends Query = Query>(q: T): AnyQuery<TypeOf<T>> {
-		return new AnyQuery<TypeOf<T>>().pipe(q.test);
+	get any() { return new AnyContext() },
+	arr<T extends Context = Context>(ctx?: T): ArrayContext<T> { return new ArrayContext(ctx) },
+	array<T extends Context = Context>(ctx?: T): ArrayContext<T> { return new ArrayContext(ctx) },
+	get bool() { return new BooleanContext() },
+	get boolean() { return new BooleanContext() },
+	get num() { return new NumberContext() },
+	get number() { return new NumberContext() },
+	obj<T extends Props>(ctx?: T): ObjectContext<T> { return new ObjectContext(ctx) },
+	object<T extends Props>(ctx?: T): ObjectContext<T> { return new ObjectContext(ctx) },
+	or<CtxA extends Context, CtxB extends Context>(ctxA: CtxA, ctxB: CtxB): OrContext<CtxA, CtxB> { return new OrContext(ctxA, ctxB) },
+	get str() { return new StringContext() },
+	get string() { return new StringContext() },
+	type<T>(Ctx: { new(): T; }): T { return new Ctx() },
+	use<T extends Context = Context>(ctx: T): AnyContext<TypeOf<T>> {
+		return new AnyContext<TypeOf<T>>().pipe(ctx.test);
 	}
 };
 
-export { Query };
+export { Context };

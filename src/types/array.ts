@@ -1,9 +1,9 @@
-import Query from '../query';
-import StringQuery from './string';
-import NumberQuery from './number';
-import AnyQuery from './any';
-import BooleanQuery from './boolean';
-import ObjectQuery from './object';
+import Context from '../ctx';
+import StringContext from './string';
+import NumberContext from './number';
+import AnyContext from './any';
+import BooleanContext from './boolean';
+import ObjectContext from './object';
 import { TypeOf } from '.';
 
 export const isAnArray = x => Array.isArray(x);
@@ -13,8 +13,8 @@ const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 /**
  * Array
  */
-export default class ArrayQuery<Q extends Query> extends Query<TypeOf<Q>[]> {
-	constructor(q?: Query) {
+export default class ArrayContext<Ctx extends Context> extends Context<TypeOf<Ctx>[]> {
+	constructor(ctx?: Context) {
 		super();
 
 		this.push(v =>
@@ -23,8 +23,8 @@ export default class ArrayQuery<Q extends Query> extends Query<TypeOf<Q>[]> {
 				: true
 		);
 
-		if (q) {
-			this.each(q);
+		if (ctx) {
+			this.each(ctx);
 		}
 	}
 
@@ -96,8 +96,8 @@ export default class ArrayQuery<Q extends Query> extends Query<TypeOf<Q>[]> {
 	 * @param index インデックス
 	 * @param validator バリデータ
 	 */
-	public item(index: number, validator: ((element: TypeOf<Q>) => boolean | Error) | Query) {
-		const validate = validator instanceof Query ? validator.test : validator;
+	public item(index: number, validator: ((element: TypeOf<Ctx>) => boolean | Error) | Context) {
+		const validate = validator instanceof Context ? validator.test : validator;
 		this.push(v => {
 			const result = validate(v[index]);
 			if (result === false) {
@@ -116,8 +116,8 @@ export default class ArrayQuery<Q extends Query> extends Query<TypeOf<Q>[]> {
 	 * バリデータが false またはエラーを返した場合エラーにします
 	 * @param validator バリデータ
 	 */
-	public each(validator: ((element: TypeOf<Q>, index: number, array: TypeOf<Q>[]) => boolean | Error) | Query) {
-		const validate = validator instanceof Query ? validator.test : validator;
+	public each(validator: ((element: TypeOf<Ctx>, index: number, array: TypeOf<Ctx>[]) => boolean | Error) | Context) {
+		const validate = validator instanceof Context ? validator.test : validator;
 		this.push(v => {
 			let err: Error;
 			v.some((x, i, s) => {

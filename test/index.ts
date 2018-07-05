@@ -3,7 +3,7 @@
  */
 
 import * as assert from 'assert';
-import $, { Query } from '../';
+import $, { Context } from '../';
 
 it('デフォルトの値を設定できる', () => {
 	const def = 'strawberry pasta';
@@ -568,7 +568,7 @@ class MyClass {
 	x: number;
 }
 
-class MyClassQuery extends Query<MyClass> {
+class MyClassContext extends Context<MyClass> {
 	constructor() {
 		super();
 
@@ -578,16 +578,16 @@ class MyClassQuery extends Query<MyClass> {
 	}
 }
 
-it('Custom Query', () => {
-	const ok1 = $.type(MyClassQuery).ok(new MyClass());
+it('Custom Context', () => {
+	const ok1 = $.type(MyClassContext).ok(new MyClass());
 	assert.equal(ok1, true);
 
-	const ok2 = $.type(MyClassQuery).ok('abc');
+	const ok2 = $.type(MyClassContext).ok('abc');
 	assert.equal(ok2, false);
 
-	const ok3 = $.arr($.type(MyClassQuery)).ok([new MyClass(), new MyClass()]);
+	const ok3 = $.arr($.type(MyClassContext)).ok([new MyClass(), new MyClass()]);
 	assert.equal(ok3, true);
 
-	const ok4 = $.arr($.type(MyClassQuery)).ok([new MyClass(), 42]);
+	const ok4 = $.arr($.type(MyClassContext)).ok([new MyClass(), 42]);
 	assert.equal(ok4, false);
 });

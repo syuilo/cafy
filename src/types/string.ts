@@ -1,4 +1,4 @@
-import Query from '../query';
+import Context from '../ctx';
 
 export const isAString = x => typeof x == 'string';
 export const isNotAString = x => !isAString(x);
@@ -10,7 +10,7 @@ function stringToArray(str) {
 /**
  * String
  */
-export default class StringQuery extends Query<string> {
+export default class StringContext extends Context<string> {
 	constructor() {
 		super();
 

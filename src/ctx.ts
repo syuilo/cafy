@@ -2,9 +2,9 @@ import autobind from './autobind';
 import Validator from './validator';
 
 /**
- * クエリ基底クラス
+ * Context基底クラス
  */
-abstract class Query<T = any> {
+abstract class Context<T = any> {
 	private isOptional = false;
 	private isNullable = false;
 
@@ -139,4 +139,4 @@ abstract class Query<T = any> {
 	}
 }
 
-export default Query;
+export default Context;

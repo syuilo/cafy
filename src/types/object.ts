@@ -1,15 +1,15 @@
-import Query from '../query';
+import Context from '../ctx';
 import { TypeOf } from '.';
 
 export const isAnObject = x => typeof x == 'object' && !(x instanceof Array);
 export const isNotAnObject = x => !isAnObject(x);
 
-export type Props = { [key: string]: Query };
+export type Props = { [key: string]: Context };
 
 /**
  * Object
  */
-export default class ObjectQuery<Ps extends Props> extends Query<{ [P in keyof Ps]: TypeOf<Ps[P]> }> {
+export default class ObjectContext<Ps extends Props> extends Context<{ [P in keyof Ps]: TypeOf<Ps[P]> }> {
 	private isStrict = false;
 
 	constructor(props?: Props) {
@@ -22,8 +22,8 @@ export default class ObjectQuery<Ps extends Props> extends Query<{ [P in keyof P
 		);
 
 		if (props) {
-			Object.entries(props).forEach(([k, q]) => {
-				this.push(v => q.test(v[k]));
+			Object.entries(props).forEach(([k, ctx]) => {
+				this.push(v => ctx.test(v[k]));
 			});
 		}
 
