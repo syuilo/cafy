@@ -172,6 +172,19 @@ $.arr().pipe(x => x[1] != 'b').ok(['a', 'b', 'c']) // false
 バリデーションを実行します。
 合格した場合は値を返し、そうでない場合は`Error`をthrowします。
 
+##### `.note(data)` => `Context`
+cafyインスタンスに任意のデータを保存できます。バリデータの説明を保存するといった使い方が想定されます。
+
+#### プロパティ
+##### `.isOptional`: `Boolean`
+`optional`か否か
+
+##### `.isNullable`: `Boolean`
+`nullable`か否か
+
+##### `.data`: `any`
+`note`メソッドで保存したデータ
+
 ---
 
 ### 型: **Any**
