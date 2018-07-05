@@ -5,8 +5,8 @@ import Validator from './validator';
  * Context基底クラス
  */
 abstract class Context<T = any> {
-	private isOptional = false;
-	private isNullable = false;
+	public isOptional = false;
+	public isNullable = false;
 
 	private validators: Validator<T>[] = [];
 	protected transform: (value: any) => T;
