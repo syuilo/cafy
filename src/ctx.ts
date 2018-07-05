@@ -8,6 +8,8 @@ abstract class Context<T = any> {
 	public isOptional = false;
 	public isNullable = false;
 
+	public data: any;
+
 	private validators: Validator<T>[] = [];
 	protected transform: (value: any) => T;
 
@@ -109,6 +111,16 @@ abstract class Context<T = any> {
 	@autobind
 	public pipe(validator: Validator<T>) {
 		this.push(validator, 'pipe');
+		return this;
+	}
+
+	/**
+	 * このインスタンスに任意のデータを保存します
+	 * @param data データ
+	 */
+	@autobind
+	public note(data: any) {
+		this.data = data;
 		return this;
 	}
 
