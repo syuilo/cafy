@@ -11,9 +11,12 @@ export type Props = { [key: string]: Context };
  */
 export default class ObjectContext<Ps extends Props> extends Context<{ [P in keyof Ps]: TypeOf<Ps[P]> }> {
 	private isStrict = false;
+	public props: Props;
 
 	constructor(props?: Props) {
 		super();
+
+		this.props = props;
 
 		this.push(v =>
 			isNotAnObject(v)
@@ -44,5 +47,9 @@ export default class ObjectContext<Ps extends Props> extends Context<{ [P in key
 	public strict() {
 		this.isStrict = true;
 		return this;
+	}
+
+	public getType(): string {
+		return 'object';
 	}
 }

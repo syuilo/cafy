@@ -65,4 +65,8 @@ export default class NumberContext extends Context<number> {
 		, 'int');
 		return this;
 	}
+
+	public getType(): string {
+		return 'number';
+	}
 }

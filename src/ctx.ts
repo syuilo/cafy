@@ -149,6 +149,13 @@ abstract class Context<T = any> {
 			? `(${this.validators.map(v => v.toString() || '[anonymous]').join(' > ')})`
 			: `(${this.validators.map(v => v.toString()).filter(n => n != null).join(' > ')})`);
 	}
+
+	/**
+	 * このcafyインスタンスの型を表す文字列を取得します
+	 */
+	public getType() {
+		return '?';
+	}
 }
 
 export default Context;

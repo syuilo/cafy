@@ -16,4 +16,8 @@ export default class BooleanContext extends Context<boolean> {
 				: true
 		);
 	}
+
+	public getType(): string {
+		return 'boolean';
+	}
 }

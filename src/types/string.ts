@@ -114,4 +114,8 @@ export default class StringContext extends Context<string> {
 		, 'match');
 		return this;
 	}
+
+	public getType(): string {
+		return 'string';
+	}
 }

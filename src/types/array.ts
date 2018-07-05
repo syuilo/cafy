@@ -14,8 +14,12 @@ const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
  * Array
  */
 export default class ArrayContext<Ctx extends Context> extends Context<TypeOf<Ctx>[]> {
+	private ctx: Context;
+
 	constructor(ctx?: Context) {
 		super();
+
+		this.ctx = ctx;
 
 		this.push(v =>
 			isNotAnArray(v)
@@ -136,5 +140,9 @@ export default class ArrayContext<Ctx extends Context> extends Context<TypeOf<Ct
 			return true;
 		}, 'each');
 		return this;
+	}
+
+	public getType(): string {
+		return this.ctx ? this.ctx.getType() + '[]' : 'array';
 	}
 }
