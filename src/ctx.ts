@@ -153,8 +153,11 @@ abstract class Context<T = any> {
 	/**
 	 * このcafyインスタンスの型を表す文字列を取得します
 	 */
-	public getType() {
-		return '?';
+	public getType(type = 'unknown') {
+		return this.isNullable && this.isOptional ? `(${type} | null)?` :
+			this.isNullable && !this.isOptional ? `(${type} | null)` :
+			!this.isNullable && this.isOptional ? `${type}?` :
+			type;
 	}
 }
 

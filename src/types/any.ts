@@ -5,6 +5,6 @@ import Context from '../ctx';
  */
 export default class AnyContext<T = any> extends Context<T> {
 	public getType(): string {
-		return 'any';
+		return super.getType('any');
 	}
 }

@@ -67,6 +67,6 @@ export default class NumberContext extends Context<number> {
 	}
 
 	public getType(): string {
-		return 'number';
+		return super.getType('number');
 	}
 }

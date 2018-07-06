@@ -18,6 +18,6 @@ export default class BooleanContext extends Context<boolean> {
 	}
 
 	public getType(): string {
-		return 'boolean';
+		return super.getType('boolean');
 	}
 }

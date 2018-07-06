@@ -116,6 +116,6 @@ export default class StringContext extends Context<string> {
 	}
 
 	public getType(): string {
-		return 'string';
+		return super.getType('string');
 	}
 }

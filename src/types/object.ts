@@ -50,6 +50,6 @@ export default class ObjectContext<Ps extends Props> extends Context<{ [P in key
 	}
 
 	public getType(): string {
-		return 'object';
+		return super.getType('object');
 	}
 }

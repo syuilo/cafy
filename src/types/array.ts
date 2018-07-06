@@ -143,6 +143,6 @@ export default class ArrayContext<Ctx extends Context> extends Context<TypeOf<Ct
 	}
 
 	public getType(): string {
-		return this.ctx ? this.ctx.getType() + '[]' : 'array';
+		return super.getType(this.ctx ? this.ctx.getType() + '[]' : 'array');
 	}
 }

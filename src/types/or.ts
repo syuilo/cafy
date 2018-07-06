@@ -20,6 +20,6 @@ export default class OrContext<CtxA extends Context, CtxB extends Context> exten
 	}
 
 	public getType(): string {
-		return `(${this.ctxA.getType()} | ${this.ctxA.getType()})`;
+		return super.getType(`(${this.ctxA.getType()} | ${this.ctxA.getType()})`);
 	}
 }
