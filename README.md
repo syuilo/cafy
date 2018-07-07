@@ -172,6 +172,19 @@ $.arr().pipe(x => x[1] != 'b').ok(['a', 'b', 'c']) // false
 バリデーションを実行します。
 合格した場合は値を返し、そうでない場合は`Error`をthrowします。
 
+##### `.getType()` => `string`
+このインスタンスの型を表す文字列を取得します。
+
+###### 例
+|                           | 型                  |
+| -------------------------:|:-------------------:|
+| `$.str`                   | `string`            |
+| `$.str.optional`          | `string?`           |
+| `$.str.nullable`          | `(string | null)`   |
+| `$.str.optional.nullable` | `(string | null)?`  |
+| `$.arr($.str)`            | `string[]`          |
+| `$.or($.str, $.num)`      | `(string | number)` |
+
 ##### `.note(data)` => `Context`
 cafyインスタンスに任意のデータを保存できます。バリデータの説明を保存するといった使い方が想定されます。
 
@@ -506,6 +519,22 @@ foo.bar = 42;
 
 $.type(FooContext).min(40).ok(foo); // true
 $.type(FooContext).min(48).ok(foo); // false
+```
+
+#### `getType`メソッドのオーバーライド
+`getType`メソッドでユーザー定義型の型文字列を取得できるようにするには、メソッドをオーバーライドします。
+`optional`などの情報も反映させるために、`super.getType`を呼ぶのを忘れないでください。例:
+``` typescript
+class FooContext extends Context<Foo> {
+  ...
+
+  public getType() {
+    return super.getType('Foo');
+  }
+}
+```
+``` typescript
+$.type(FooContext).getType(); // 'Foo'
 ```
 
 ## 💡 Tips
