@@ -1,4 +1,4 @@
-# cafy
+# ☕ cafy
 > Simple, fun, flexible query-based validator
 
 **cafy**は、アサーションのようにメソッドチェーンで値のバリデーションを行うライブラリです。
