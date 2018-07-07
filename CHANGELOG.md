@@ -1,3 +1,7 @@
+11.3.0 / 2018-07-07
+-------------------
+* Export each contexts for typescript
+
 11.2.0 / 2018-07-06
 -------------------
 * Improve: `getType` method

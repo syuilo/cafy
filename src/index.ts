@@ -32,4 +32,13 @@ export default {
 	}
 };
 
-export { Context };
+export {
+	Context,
+	AnyContext,
+	ArrayContext,
+	BooleanContext,
+	NumberContext,
+	ObjectContext,
+	StringContext,
+	OrContext
+};
