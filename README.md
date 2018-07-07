@@ -354,7 +354,8 @@ const x = {
   },
   thing: 42
 };
-
+```
+``` javascript
 $.obj({
   some: $.obj({
     strawberry: $.str,
@@ -545,6 +546,10 @@ $.type(FooContext).getType(); // 'Foo'
 const [val = 'desc', err] = $.str.optional.or('asc|desc').get(x);
 // xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
 ```
+
+## ブラウザでの使用
+cafyは**依存関係がありません。**
+従って、ブラウザでも利用することができます。
 
 ## Release Notes
 Please see [ChangeLog](CHANGELOG.md)!
