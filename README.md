@@ -177,14 +177,14 @@ $.arr().pipe(x => x[1] != 'b').ok(['a', 'b', 'c']) // false
 このインスタンスの型を表す文字列を取得します。
 
 ###### 例
-|                           | 型                  |
-| -------------------------:|:-------------------:|
-| `$.str`                   | `string`            |
-| `$.str.optional`          | `string?`           |
-| `$.str.nullable`          | `(string | null)`   |
-| `$.str.optional.nullable` | `(string | null)?`  |
-| `$.arr($.str)`            | `string[]`          |
-| `$.or($.str, $.num)`      | `(string | number)` |
+|                           | 型                   |
+| -------------------------:|:--------------------:|
+| `$.str`                   | `string`             |
+| `$.str.optional`          | `string?`            |
+| `$.str.nullable`          | `(string \| null)`   |
+| `$.str.optional.nullable` | `(string \| null)?`  |
+| `$.arr($.str)`            | `string[]`           |
+| `$.or($.str, $.num)`      | `(string \| number)` |
 
 ##### `.note(data)` => `Context`
 cafyインスタンスに任意のデータを保存できます。バリデータの説明を保存するといった使い方が想定されます。
