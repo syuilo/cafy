@@ -544,6 +544,11 @@ describe('Queries', () => {
 			const ok = $.arr($.or($.str, $.num)).ok(['x', 42]);
 			assert.equal(ok, true);
 		});
+
+		it('Type', () => {
+			const type = $.or($.str, $.num).getType();
+			assert.equal(type, '(string | number)');
+		});
 	});
 
 	describe('use', () => {
