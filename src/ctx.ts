@@ -11,7 +11,6 @@ abstract class Context<T = any> {
 	public data: any;
 
 	private validators: Validator<T>[] = [];
-	protected transform: (value: any) => T;
 
 	/**
 	 * バリデーションを追加します
@@ -37,8 +36,6 @@ abstract class Context<T = any> {
 
 		if (!this.isOptional && (value === undefined)) return res(null, new Error('must-be-not-undefined'));
 		if (!this.isNullable && (value === null)) return res(null, new Error('must-be-not-null'));
-
-		if (this.transform) value = this.transform(value);
 
 		let err = null;
 		this.validators.some(validate => {
