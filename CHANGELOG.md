@@ -1,3 +1,8 @@
+12.0.0 / 2018-11-01
+-------------------
+* **[BREAKING]** Remove `transform` property in user defined type
+* Fix: Got wrong type string when use Or query
+
 11.3.0 / 2018-07-07
 -------------------
 * Export each contexts for typescript
