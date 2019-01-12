@@ -416,6 +416,9 @@ cafyは[サロゲートペア](https://ja.wikipedia.org/wiki/Unicode#%E3%82%B5%E
 $.str.match(/^([0-9]{4})\-([0-9]{2})-([0-9]{2})$/).ok('2017-03-07') // true
 ```
 
+##### `.notMatch(pattern)`
+`match`の否定。
+
 ##### `.or(pattern)`
 与えられたパターン内の文字列のいずれかでなければならないという制約を追加します。
 `pattern`は文字列の配列または`|`で区切られた文字列です。
