@@ -1,3 +1,7 @@
+12.1.0 / 2018-11-01
+-------------------
+* Add: `notMatch` method
+
 12.0.0 / 2018-11-01
 -------------------
 * **[BREAKING]** Remove `transform` property in user defined type
