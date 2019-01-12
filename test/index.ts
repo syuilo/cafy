@@ -196,6 +196,30 @@ describe('Queries', () => {
 			assert.notEqual(validate(y), null);
 		});
 
+		describe('# match', () => {
+			it('マッチして成功', () => {
+				const err = $.str.match(/^[a-z]+$/).test('foo');
+				assert.equal(err, null);
+			});
+
+			it('マッチせず失敗', () => {
+				const err = $.str.match(/^[a-z]+$/).test('foo123');
+				assert.notEqual(err, null);
+			});
+		});
+
+		describe('# notMatch', () => {
+			it('マッチして失敗', () => {
+				const err = $.str.notMatch(/^[a-z]+$/).test('foo');
+				assert.notEqual(err, null);
+			});
+
+			it('マッチせず成功', () => {
+				const err = $.str.notMatch(/^[a-z]+$/).test('foo123');
+				assert.equal(err, null);
+			});
+		});
+
 		describe('# or', () => {
 			it('合致する文字列で成功 (配列)', () => {
 				const err = $.str.or(['strawberry', 'pasta']).test('strawberry');

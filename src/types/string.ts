@@ -115,6 +115,20 @@ export default class StringContext extends Context<string> {
 		return this;
 	}
 
+	/**
+	 * このインスタンスの文字列が、与えられた正規表現と一致しないか検証します
+	 * 一致する場合エラーにします
+	 * @param pattern 正規表現
+	 */
+	public notMatch(pattern: RegExp) {
+		this.push(v =>
+			pattern.test(v)
+				? new Error('match-pattern')
+				: true
+		, 'notMatch');
+		return this;
+	}
+
 	public getType(): string {
 		return super.getType('string');
 	}
