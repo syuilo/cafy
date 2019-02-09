@@ -58,7 +58,7 @@ abstract class Context<T = any> {
 	 * 値を検証して、バリデーションに不合格なら Error をthrowします。
 	 */
 	@autobind
-	public throw(value: any): void {
+	public throw(value: any): T {
 		const [v, e] = this.exec(value, true);
 
 		if (e) {
