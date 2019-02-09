@@ -96,6 +96,7 @@ describe('Common', () => {
 		it('エラーをthrowする', () => {
 			assert.throws(() => $.num.throw('strawberry pasta'));
 		});
+
 		it('正しい値のときにはエラーがthrowされない', () => {
 			assert.equal($.num.throw(1), 1)
 		})
