@@ -1,3 +1,7 @@
+12.1.1 / 2019-02-10
+-------------------
+* Fix type of `throw` method (Thanks @rinsuki)
+
 12.1.0 / 2019-01-12
 -------------------
 * Add: `notMatch` method
