@@ -1,9 +1,4 @@
 import Context from '../ctx';
-import StringContext from './string';
-import NumberContext from './number';
-import AnyContext from './any';
-import BooleanContext from './boolean';
-import ObjectContext from './object';
 import { TypeOf } from '.';
 
 export const isAnArray = x => Array.isArray(x);
