@@ -7,7 +7,6 @@ export const isNotAnObject = x => !isAnObject(x);
 export type Props = { [key: string]: Context };
 
 export class ObjError extends Error {
-	public prop: string;
 	public path: string[];
 	public error: Error;
 
@@ -29,7 +28,6 @@ export class ObjError extends Error {
 
 		super(`${path.join('.')}: ${leaf.message}`);
 
-		this.prop = prop;
 		this.path = path;
 		this.error = leaf;
 	}

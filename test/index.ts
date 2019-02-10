@@ -476,7 +476,8 @@ describe('Queries', () => {
 		it('エラーにプロパティ情報が含まれる', () => {
 			const err: any = $.obj({ x: $.num }).test({});
 			assert.notEqual(err, null);
-			assert.equal(err.prop, 'x');
+			assert.deepStrictEqual(err.path, ['x']);
+			assert.equal(err.error.message, 'must-be-a-number');
 		});
 
 		it('エラーにプロパティ情報が含まれる (ネスト)', () => {
@@ -495,7 +496,6 @@ describe('Queries', () => {
 			});
 
 			assert.notEqual(err, null);
-			assert.equal(err.prop, 'x');
 			assert.deepStrictEqual(err.path, ['x', 'y', 'z']);
 			assert.equal(err.error.message, 'must-be-a-number');
 		});

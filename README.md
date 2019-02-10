@@ -407,7 +407,6 @@ $.obj({
 Thrown:
 { Error: x.y.z: must-be-a-number
     at ...
-  prop: 'x',
   path: [ 'x', 'y', 'z' ],
   error:
    Error: must-be-a-number
