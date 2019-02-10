@@ -496,10 +496,8 @@ describe('Queries', () => {
 
 			assert.notEqual(err, null);
 			assert.equal(err.prop, 'x');
-			assert.notEqual(err.valueError, null);
-			assert.equal((err.valueError as ObjError).prop, 'y');
-			assert.notEqual((err.valueError as ObjError).valueError, null);
-			assert.equal(((err.valueError as ObjError).valueError as ObjError).prop, 'z');
+			assert.deepStrictEqual(err.path, ['x', 'y', 'z']);
+			assert.equal(err.error.message, 'must-be-a-number');
 		});
 
 		it('strict', () => {

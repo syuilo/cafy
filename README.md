@@ -383,6 +383,7 @@ $.obj({
 #### エラー
 この型では、エラーに次のプロパティが含まれています:
 * `prop` ... バリデーションに不合格になったプロパティ名
+* `path` ... 不合格になった子のプロパティまでのパス
 * `valueError` ... バリデーションに不合格に際のエラー
 
 例えば次のような検証を行った時、エラーは次のようになります:
@@ -403,20 +404,14 @@ $.obj({
 ```
 
 ```
+Thrown:
 { Error: x.y.z: must-be-a-number
     at ...
   prop: 'x',
-  valueError:
-   { Error: y.z: must-be-a-number
-       at ...
-     prop: 'y',
-     valueError:
-      { Error: z: must-be-a-number
-          at ...
-        prop: 'z',
-        valueError:
-         Error: must-be-a-number
-             at ... } } }
+  path: [ 'x', 'y', 'z' ],
+  error:
+   Error: must-be-a-number
+       at ... }
 ```
 
 #### メソッド

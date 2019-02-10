@@ -8,7 +8,8 @@ export type Props = { [key: string]: Context };
 
 export class ObjError extends Error {
 	public prop: string;
-	public valueError: Error;
+	public path: string[];
+	public error: Error;
 
 	constructor(prop: string | null, error: Error | string) {
 		if (prop == null) {
@@ -16,21 +17,21 @@ export class ObjError extends Error {
 			return;
 		}
 
-		let path = prop;
-		let leafError: Error = null;
-		const digg = (e: Error) => {
-			if (e instanceof ObjError) {
-				path += '.' + e.prop;
-				digg(e.valueError);
-			} else {
-				leafError = e;
-			}
-		};
-		digg(error as Error);
-		super(`${path}: ${leafError.message}`);
+		let leaf = null;
+
+		let path = [prop];
+		if (error instanceof ObjError) {
+			path = path.concat(error.path);
+			leaf = error.error;
+		} else {
+			leaf = error as Error;
+		}
+
+		super(`${path.join('.')}: ${leaf.message}`);
 
 		this.prop = prop;
-		this.valueError = error as Error;
+		this.path = path;
+		this.error = leaf;
 	}
 }
 
