@@ -4,7 +4,7 @@ import Validator from './validator';
 /**
  * Context基底クラス
  */
-abstract class Context<T = any> {
+abstract class Context<T = any, E extends Error = Error> {
 	public isOptional = false;
 	public isNullable = false;
 
@@ -23,10 +23,10 @@ abstract class Context<T = any> {
 		this.validators.push(validator);
 	}
 
-	private exec(value: any): Error;
-	private exec(value: any, withValue: boolean): [any, Error];
+	private exec(value: any): E;
+	private exec(value: any, withValue: boolean): [any, E];
 	@autobind
-	private exec(value: any, withValue?: boolean): Error | [any, Error] {
+	private exec(value: any, withValue?: boolean): E | [any, E] {
 		function res(val, err) {
 			return withValue ? [val, err] : err;
 		}
@@ -72,7 +72,7 @@ abstract class Context<T = any> {
 	 * 値を検証して、妥当な場合は null を、そうでない場合は Error を返します。
 	 */
 	@autobind
-	public test(value: any): Error {
+	public test(value: any): E {
 		return this.exec(value);
 	}
 

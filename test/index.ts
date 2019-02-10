@@ -4,6 +4,7 @@
 
 import * as assert from 'assert';
 import $, { Context } from '../';
+import { ObjError } from '../built/types/object';
 
 it('デフォルトの値を設定できる', () => {
 	const def = 'strawberry pasta';
@@ -470,6 +471,35 @@ describe('Queries', () => {
 			const x = [];
 			const err = $.obj().test(x);
 			assert.notEqual(err, null);
+		});
+
+		it('エラーにプロパティ情報が含まれる', () => {
+			const err: any = $.obj({ x: $.num }).test({});
+			assert.notEqual(err, null);
+			assert.equal(err.prop, 'x');
+		});
+
+		it('エラーにプロパティ情報が含まれる (ネスト)', () => {
+			const err = $.obj({
+				x: $.obj({
+					y: $.obj({
+						z: $.num
+					})
+				})
+			}).test({
+				x: {
+					y: {
+						z: 'foo'
+					}
+				}
+			});
+
+			assert.notEqual(err, null);
+			assert.equal(err.prop, 'x');
+			assert.notEqual(err.valueError, null);
+			assert.equal((err.valueError as ObjError).prop, 'y');
+			assert.notEqual((err.valueError as ObjError).valueError, null);
+			assert.equal(((err.valueError as ObjError).valueError as ObjError).prop, 'z');
 		});
 
 		it('strict', () => {
