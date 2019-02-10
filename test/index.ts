@@ -474,7 +474,7 @@ describe('Queries', () => {
 		});
 
 		it('エラーにプロパティ情報が含まれる', () => {
-			const err: any = $.obj({ x: $.num }).test({});
+			const err: any = $.obj({ x: $.num }).test({ x: 'foo' });
 			assert.notEqual(err, null);
 			assert.deepStrictEqual(err.path, ['x']);
 			assert.equal(err.error.message, 'must-be-a-number');
