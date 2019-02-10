@@ -1,3 +1,8 @@
+13.0.0 / 2019-02-11
+-------------------
+* **[BREAKING]** Drop surrogate pair support
+* Error of object ctx improved
+
 12.1.1 / 2019-02-10
 -------------------
 * Fix type of `throw` method (Thanks @rinsuki)

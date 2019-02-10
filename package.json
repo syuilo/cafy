@@ -1,7 +1,7 @@
 {
   "name": "cafy",
-  "version": "12.1.1",
-  "description": "Simple, fun, flexible validator",
+  "version": "13.0.0",
+  "description": "Simple, lightweight, flexible validator generator",
   "keywords": [
     "validator"
   ],

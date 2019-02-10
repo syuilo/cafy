@@ -2,7 +2,7 @@
 > Simple, fun, flexible query-based validator
 
 **cafy**は、アサーションのようにメソッドチェーンで値のバリデーションを行うライブラリです。
-cafyを使えばバリデーションを楽しく・簡単に・柔軟に書くことができます。TypeScriptを完全にサポートしています💪
+cafyを使えばバリデーションを簡単かつ柔軟に書くことができます。TypeScriptをサポートしています。
 [Try it out!](https://runkit.com/npm/cafy)
 
 [![][npm-badge]][npm-link]
@@ -18,13 +18,6 @@ cafyを使えばバリデーションを楽しく・簡単に・柔軟に書く�
 <i>「このパラメータはnullやundefinedではない文字列でなくてはならず、1文字以上100文字以下でなくてはならず、a-z0-9の文字種で構成されてなければならない」</i>といった長いバリデーションを、cafyを使えば**一行で簡潔に**書くことができます。
 例外も行うバリデーションごとに用意されているので、ユーザーにわかりやすいエラーメッセージを返すこともできます。
 また、バリデータの型文字列を取得する機能や、バリデータに任意の情報を埋め込む機能があるので、それを使えばドキュメントを生成するときにも役立ちます。
-
-### 特徴
-
-- **シンプルで軽量** - コードも必要最小限で少なく、依存関係もありません。そのためブラウザでの使用にも適しています。
-- **柔軟** - 様々なバリデーションを表現できます。(しかも簡潔！)
-- **型定義** - cafyはTypeScriptで書かれているため、ほとんど完璧な型定義を持ちます。
-- **楽しい** - バリデーションを定義することに、楽しさは重要です✌️😎✌️
 
 ## 📦 Installation
 Just:
@@ -58,12 +51,12 @@ isValidGender(42)       // false
 $.str
 ```
 
-`range`メソッドを利用して、さらに **「10文字以上20文字以下でなければならない」** という制約を追加してみましょう:
+`range`メソッドを利用して、さらに **「10文字以上20文字以下でなければならない」** という制約を追加してみます:
 ``` javascript
 $.str.range(10, 20)
 ```
 
-さあ、実際にバリデーションしてみましょう！
+実際にバリデーションしてみましょう。
 `ok`メソッドに検証する値を渡すと、それが条件を満たせば`true`が返り、そうでなければ`false`が返ります:
 ``` javascript
 $.str.range(10, 20).ok('strawberry pasta') // true
@@ -582,18 +575,6 @@ class FooContext extends Context<Foo> {
 ``` typescript
 $.type(FooContext).getType(); // 'Foo'
 ```
-
-## 💡 Tips
-### 規定値を設定する
-[Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)の規定値構文を使うことができます。
-``` javascript
-const [val = 'desc', err] = $.str.optional.or('asc|desc').get(x);
-// xは文字列でなければならず、'asc'または'desc'でなければならない。省略された場合は'desc'とする。
-```
-
-## ブラウザでの使用
-cafyは**依存関係がありません。**
-従って、ブラウザでも利用することができます。
 
 ## Release Notes
 Please see [ChangeLog](CHANGELOG.md)!
