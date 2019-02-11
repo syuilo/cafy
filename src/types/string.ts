@@ -6,9 +6,9 @@ export const isNotAString = x => !isAString(x);
 /**
  * String
  */
-export default class StringContext extends Context<string> {
-	constructor() {
-		super();
+export default class StringContext<Maybe extends null | undefined | string = string> extends Context<string | Maybe> {
+	constructor(optional = false, nullable = false) {
+		super(optional, nullable);
 
 		this.push(v =>
 			isNotAString(v)
@@ -128,4 +128,18 @@ export default class StringContext extends Context<string> {
 	public getType(): string {
 		return super.getType('string');
 	}
+
+	//#region ✨ Some magicks ✨
+	public makeOptional(): StringContext<undefined> {
+		return new StringContext(true, false);
+	}
+
+	public makeNullable(): StringContext<null> {
+		return new StringContext(false, true);
+	}
+
+	public makeOptionalNullable(): StringContext<undefined | null> {
+		return new StringContext(true, true);
+	}
+	//#endregion
 }

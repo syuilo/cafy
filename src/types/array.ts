@@ -8,11 +8,11 @@ const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
 /**
  * Array
  */
-export default class ArrayContext<Ctx extends Context> extends Context<TypeOf<Ctx>[]> {
-	private ctx: Context;
+export default class ArrayContext<Ctx extends Context, Maybe extends null | undefined | TypeOf<Ctx>[] = TypeOf<Ctx>[]> extends Context<TypeOf<Ctx>[] | Maybe> {
+	private ctx: Context | undefined;
 
-	constructor(ctx?: Context) {
-		super();
+	constructor(ctx?: Context, optional = false, nullable = false) {
+		super(optional, nullable);
 
 		this.ctx = ctx;
 
@@ -118,7 +118,7 @@ export default class ArrayContext<Ctx extends Context> extends Context<TypeOf<Ct
 	public each(validator: ((element: TypeOf<Ctx>, index: number, array: TypeOf<Ctx>[]) => boolean | Error) | Context) {
 		const validate = validator instanceof Context ? validator.test : validator;
 		this.push(v => {
-			let err: Error;
+			let err: Error | undefined;
 			v.some((x, i, s) => {
 				const result = validate(x, i, s);
 				if (result === false) {
@@ -140,4 +140,18 @@ export default class ArrayContext<Ctx extends Context> extends Context<TypeOf<Ct
 	public getType(): string {
 		return super.getType(this.ctx ? this.ctx.getType() + '[]' : 'array');
 	}
+
+	//#region ✨ Some magicks ✨
+	public makeOptional(): ArrayContext<Ctx, undefined> {
+		return new ArrayContext(this.ctx, true, false);
+	}
+
+	public makeNullable(): ArrayContext<Ctx, null> {
+		return new ArrayContext(this.ctx, false, true);
+	}
+
+	public makeOptionalNullable(): ArrayContext<Ctx, undefined | null> {
+		return new ArrayContext(this.ctx, true, true);
+	}
+	//#endregion
 }

@@ -12,7 +12,8 @@
 		"removeComments": false,
 		"noLib": false,
 		"outDir": "built",
-		"rootDir": "src"
+		"rootDir": "src",
+		"strictNullChecks": true
 	},
 	"compileOnSave": false,
 	"include": [

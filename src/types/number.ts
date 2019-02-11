@@ -6,9 +6,9 @@ export const isNotANumber = x => !isANumber(x);
 /**
  * Number
  */
-export default class NumberContext extends Context<number> {
-	constructor() {
-		super();
+export default class NumberContext<Maybe extends null | undefined | number = number> extends Context<number | Maybe> {
+	constructor(optional = false, nullable = false) {
+		super(optional, nullable);
 
 		this.push(v =>
 			isNotANumber(v)
@@ -69,4 +69,18 @@ export default class NumberContext extends Context<number> {
 	public getType(): string {
 		return super.getType('number');
 	}
+
+	//#region ✨ Some magicks ✨
+	public makeOptional(): NumberContext<undefined> {
+		return new NumberContext(true, false);
+	}
+
+	public makeNullable(): NumberContext<null> {
+		return new NumberContext(false, true);
+	}
+
+	public makeOptionalNullable(): NumberContext<undefined | null> {
+		return new NumberContext(true, true);
+	}
+	//#endregion
 }

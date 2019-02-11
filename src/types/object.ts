@@ -1,5 +1,5 @@
 import Context from '../ctx';
-import { TypeOf } from '.';
+import { TypeOf, Dummy } from '.';
 
 export const isAnObject = x => typeof x == 'object' && !(x instanceof Array);
 export const isNotAnObject = x => !isAnObject(x);
@@ -16,7 +16,7 @@ export class ObjError extends Error {
 			return;
 		}
 
-		let leaf = null;
+		let leaf: Error | null = null;
 
 		let path = [prop];
 		if (error instanceof ObjError) {
@@ -36,12 +36,12 @@ export class ObjError extends Error {
 /**
  * Object
  */
-export default class ObjectContext<Ps extends Props> extends Context<{ [P in keyof Ps]: TypeOf<Ps[P]> }, ObjError> {
+export default class ObjectContext<Ps extends Props, Maybe extends null | undefined | { [P in keyof Ps]: TypeOf<Ps[P]> } = { [P in keyof Ps]: TypeOf<Ps[P]> }> extends Context<Maybe extends { [P in keyof Ps]: TypeOf<Ps[P]> } ? { [P in keyof Ps]: TypeOf<Ps[P]> } : ({ [P in keyof Ps]: TypeOf<Ps[P]> } | Maybe), ObjError> {
 	private isStrict = false;
-	public props: Props;
+	public props: Props | undefined;
 
-	constructor(props?: Props) {
-		super();
+	constructor(props?: Props, optional = false, nullable = false) {
+		super(optional, nullable);
 
 		this.props = props;
 
@@ -67,7 +67,7 @@ export default class ObjectContext<Ps extends Props> extends Context<{ [P in key
 		this.push(v => {
 			if (this.isStrict) {
 				const actual = Object.keys(v);
-				const expect = Object.keys(props);
+				const expect = Object.keys(props as NonNullable<Props>);
 				const hasNotMentionedProperty = actual.some(p => !expect.some(m => m == p));
 				if (hasNotMentionedProperty) return new ObjError(null, 'dirty-object');
 			}
@@ -86,4 +86,18 @@ export default class ObjectContext<Ps extends Props> extends Context<{ [P in key
 	public getType(): string {
 		return super.getType('object');
 	}
+
+	//#region ✨ Some magicks ✨
+	public makeOptional(): ObjectContext<Props, undefined> {
+		return new ObjectContext(this.props, true, false);
+	}
+
+	public makeNullable(): ObjectContext<Props, null> {
+		return new ObjectContext(this.props, false, true);
+	}
+
+	public makeOptionalNullable(): ObjectContext<Props, undefined | null> {
+		return new ObjectContext(this.props, true, true);
+	}
+	//#endregion
 }

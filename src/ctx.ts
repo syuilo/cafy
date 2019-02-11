@@ -1,16 +1,20 @@
 import autobind from './autobind';
-import Validator from './validator';
 
 /**
  * Context基底クラス
  */
 abstract class Context<T = any, E extends Error = Error> {
-	public isOptional = false;
-	public isNullable = false;
+	private readonly isOptional: boolean;
+	private readonly isNullable: boolean;
 
 	public data: any;
 
 	private validators: Validator<T>[] = [];
+
+	constructor(optional = false, nullable = false) {
+		this.isOptional = optional;
+		this.isNullable = nullable;
+	}
 
 	/**
 	 * バリデーションを追加します
@@ -18,8 +22,8 @@ abstract class Context<T = any, E extends Error = Error> {
 	 * @param name バリデータ名
 	 */
 	@autobind
-	protected push(validator: Validator<T>, name?: string) {
-		validator.toString = name ? () => name : () => null;
+	protected push(validator: Validator<NonNullable<T>>, name?: string) {
+		validator.toString = name ? () => name : () => '';
 		this.validators.push(validator);
 	}
 
@@ -37,7 +41,7 @@ abstract class Context<T = any, E extends Error = Error> {
 		if (!this.isOptional && (value === undefined)) return res(null, new Error('must-be-not-undefined'));
 		if (!this.isNullable && (value === null)) return res(null, new Error('must-be-not-null'));
 
-		let err = null;
+		let err: Error | undefined;
 		this.validators.some(validate => {
 			const result = validate(value);
 			if (result === false) {
@@ -122,29 +126,13 @@ abstract class Context<T = any, E extends Error = Error> {
 	}
 
 	/**
-	 * undefined を許可します。
-	 */
-	get optional() {
-		this.isOptional = true;
-		return this;
-	}
-
-	/**
-	 * null を許可します。
-	 */
-	get nullable() {
-		this.isNullable = true;
-		return this;
-	}
-
-	/**
 	 * このcafyインスタンスを表す文字列を取得します
 	 */
 	@autobind
 	public toString(verbose = false) {
 		return this.constructor.name + ' ' + (verbose
 			? `(${this.validators.map(v => v.toString() || '[anonymous]').join(' > ')})`
-			: `(${this.validators.map(v => v.toString()).filter(n => n != null).join(' > ')})`);
+			: `(${this.validators.map(v => v.toString()).filter(n => n != '').join(' > ')})`);
 	}
 
 	/**
@@ -159,3 +147,5 @@ abstract class Context<T = any, E extends Error = Error> {
 }
 
 export default Context;
+
+export type Validator<T> = (value: T) => boolean | Error | null;

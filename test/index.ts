@@ -4,11 +4,10 @@
 
 import * as assert from 'assert';
 import $, { Context } from '../';
-import { ObjError } from '../built/types/object';
 
 it('デフォルトの値を設定できる', () => {
 	const def = 'strawberry pasta';
-	const [val = def, err] = $.str.optional.get(undefined);
+	const [val = def, err] = $.optional.str.get(undefined);
 	assert.equal(val, def);
 	assert.equal(err, null);
 });
@@ -39,18 +38,18 @@ describe('Common', () => {
 	describe('optional', () => {
 		it('値を与えられる', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $.str.optional.get(x);
+			const [val, err] = $.optional.str.get(x);
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
 
 		it('nullを与えられない', () => {
-			const err = $.str.optional.test(null);
+			const err = $.optional.str.test(null);
 			assert.notEqual(err, null);
 		});
 
 		it('undefinedを与えられる', () => {
-			const err = $.str.optional.test(undefined);
+			const err = $.optional.str.test(undefined);
 			assert.equal(err, null);
 		});
 	});
@@ -58,18 +57,18 @@ describe('Common', () => {
 	describe('nullable', () => {
 		it('値を与えられる', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $.str.nullable.get(x);
+			const [val, err] = $.nullable.str.get(x);
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
 
 		it('nullを与えられる', () => {
-			const err = $.str.nullable.test(null);
+			const err = $.nullable.str.test(null);
 			assert.equal(err, null);
 		});
 
 		it('undefinedを与えられない', () => {
-			const err = $.str.nullable.test(undefined);
+			const err = $.nullable.str.test(undefined);
 			assert.notEqual(err, null);
 		});
 	});
@@ -77,18 +76,18 @@ describe('Common', () => {
 	describe('optional + nullable', () => {
 		it('値を与えられる', () => {
 			const x = 'strawberry pasta';
-			const [val, err] = $.str.nullable.optional.get(x);
+			const [val, err] = $.nullable.optional.str.get(x);
 			assert.equal(val, x);
 			assert.equal(err, null);
 		});
 
 		it('nullを与えられる', () => {
-			const err = $.str.nullable.optional.test(null);
+			const err = $.nullable.optional.str.test(null);
 			assert.equal(err, null);
 		});
 
 		it('undefinedを与えらる', () => {
-			const err = $.str.nullable.optional.test(undefined);
+			const err = $.nullable.optional.str.test(undefined);
 			assert.equal(err, null);
 		});
 	});
@@ -136,12 +135,12 @@ describe('Common', () => {
 		});
 
 		it('nullのときには実行されない', () => {
-			const err = $.str.nullable.pipe(x => x[0] == 'a').test(null);
+			const err = $.nullable.str.pipe(x => x[0] == 'a').test(null);
 			assert.equal(err, null);
 		});
 
 		it('undefinedのときには実行されない', () => {
-			const err = $.str.optional.pipe(x => x[0] == 'a').test(undefined);
+			const err = $.optional.str.pipe(x => x[0] == 'a').test(undefined);
 			assert.equal(err, null);
 		});
 	});
@@ -524,9 +523,9 @@ describe('Queries', () => {
 			}).strict().test(null);
 			assert.notEqual(err1, null);
 
-			const err2 = $.obj({
+			const err2 = $.nullable.obj({
 				x: $.num
-			}).strict().nullable.test(null);
+			}).strict().test(null);
 			assert.equal(err2, null);
 		});
 
@@ -536,9 +535,9 @@ describe('Queries', () => {
 			}).strict().test(undefined);
 			assert.notEqual(err1, null);
 
-			const err2 = $.obj({
+			const err2 = $.optional.obj({
 				x: $.num
-			}).strict().optional.test(undefined);
+			}).strict().test(undefined);
 			assert.equal(err2, null);
 		});
 
@@ -616,7 +615,7 @@ describe('Queries', () => {
 		it('optional', () => {
 			const base = $.num;
 
-			const ok1 = $.use(base).optional.ok(undefined);
+			const ok1 = $.optional.use(base).ok(undefined);
 			assert.equal(ok1, true);
 
 			const ok2 = $.use(base).ok(undefined);
@@ -629,13 +628,25 @@ class MyClass {
 	x: number;
 }
 
-class MyClassContext extends Context<MyClass> {
-	constructor() {
-		super();
+class MyClassContext<Maybe = MyClass> extends Context<MyClass | Maybe> {
+	constructor(optional = false, nullable = false) {
+		super(optional, nullable);
 
 		this.push(v =>
 			v instanceof MyClass ? true : new Error('value is not an instance of MyClass')
 		);
+	}
+
+	public makeOptional(): MyClassContext<undefined> {
+		return new MyClassContext(true, false);
+	}
+
+	public makeNullable(): MyClassContext<null> {
+		return new MyClassContext(false, true);
+	}
+
+	public makeOptionalNullable(): MyClassContext<undefined | null> {
+		return new MyClassContext(true, true);
 	}
 }
 

@@ -6,9 +6,9 @@ export const isNotABoolean = x => !isABoolean(x);
 /**
  * Boolean
  */
-export default class BooleanContext extends Context<boolean> {
-	constructor() {
-		super();
+export default class BooleanContext<Maybe = boolean> extends Context<boolean | Maybe> {
+	constructor(optional = false, nullable = false) {
+		super(optional, nullable);
 
 		this.push(v =>
 			isNotABoolean(v)
@@ -20,4 +20,18 @@ export default class BooleanContext extends Context<boolean> {
 	public getType(): string {
 		return super.getType('boolean');
 	}
+
+	//#region ✨ Some magicks ✨
+	public makeOptional(): BooleanContext<undefined> {
+		return new BooleanContext(true, false);
+	}
+
+	public makeNullable(): BooleanContext<null> {
+		return new BooleanContext(false, true);
+	}
+
+	public makeOptionalNullable(): BooleanContext<undefined | null> {
+		return new BooleanContext(true, true);
+	}
+	//#endregion
 }
