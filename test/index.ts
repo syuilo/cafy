@@ -29,11 +29,6 @@ it('undefinedを与えられない', () => {
 	assert.notEqual(err, null);
 });
 
-it('note', () => {
-	const x = $.str.note(42);
-	assert.equal(x.data, 42);
-});
-
 describe('Common', () => {
 	describe('optional', () => {
 		it('値を与えられる', () => {
