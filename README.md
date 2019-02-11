@@ -140,8 +140,8 @@ $.optionalNullable.str...
 ### `strictNullChecks`と一緒に使う
 cafyはTypeScriptの`strictNullChecks`をサポートしていて、型定義において`null`、`undefined`、またはそうでないかを区別できます。例:
 ``` ts
-const x = $.str.get('foo')[0];                   // x の型は string
-const y = $.optional.str.get('foo')[0];          // y の型は string | undefined
+const x =                   $.str.get('foo')[0]; // x の型は string
+const y =          $.optional.str.get('foo')[0]; // y の型は string | undefined
 const z = $.optional.nullable.str.get('foo')[0]; // z の型は string | undefined | null
 ```
 
