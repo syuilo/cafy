@@ -1,3 +1,10 @@
+14.0.0 / 2019-02-12
+-------------------
+* **[BREAKING]** `optional` and `nullable` is now can't used as a method. Please use these options as prefix. e.g. `$.str.optional` --> `$.optional.str`
+* **[BREAKING]** The spec of custom type class changed. for more details, please see README.
+* **[BREAKING]** Drop `note` feature
+* Improve: `strictNullChecks` support
+
 13.0.0 / 2019-02-11
 -------------------
 * **[BREAKING]** Drop surrogate pair support

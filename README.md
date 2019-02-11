@@ -17,7 +17,8 @@ cafyを使えばバリデーションを簡単かつ柔軟に書くことがで�
 たとえばWeb APIを書くときに、ちゃんとクライアントから送信されてきたパラメータが正しい形式か確認しないと、プログラムの例外を引き起こしたりする可能性があります。
 <i>「このパラメータはnullやundefinedではない文字列でなくてはならず、1文字以上100文字以下でなくてはならず、a-z0-9の文字種で構成されてなければならない」</i>といった長いバリデーションを、cafyを使えば**一行で簡潔に**書くことができます。
 例外も行うバリデーションごとに用意されているので、ユーザーにわかりやすいエラーメッセージを返すこともできます。
-また、バリデータの型文字列を取得する機能や、バリデータに任意の情報を埋め込む機能があるので、それを使えばドキュメントを生成するときにも役立ちます。
+また、バリデータの型文字列を取得する機能があるので、それを使えばドキュメントを生成するときにも役立ちます。
+TypeScriptの`strictNullChecks`オプションもサポートしています。
 
 ## 📦 Installation
 Just:
@@ -103,9 +104,9 @@ cafyは様々な型をサポートしています:
 ``` javascript
 $.str.ok(undefined) // false
 ```
-`undefined`を許可する場合は`optional`を使用します:
+`undefined`を許可する場合は`optional`を型の前にプリフィクスします:
 ``` javascript
-$.str.optional.ok(undefined) // true
+$.optional.str.ok(undefined) // true
 ```
 
 #### null を許可する *(nullable)*
@@ -113,15 +114,20 @@ $.str.optional.ok(undefined) // true
 ``` javascript
 $.str.ok(null) // false
 ```
-`null`を許可する場合は`nullable`を使用します:
+`null`を許可する場合は`nullable`を型の前にプリフィクスします:
 ``` javascript
-$.str.nullable.ok(null) // true
+$.nullable.str.ok(null) // true
 ```
 
 #### null と undefined を許可する
 `nullable`と`optional`は併用できます:
 ``` javascript
 $.str.nullable.optional...
+$.str.optional.nullable...
+
+// または
+
+$.str.optionalNullable...
 ```
 
 |                         | undefined | null |
@@ -130,6 +136,14 @@ $.str.nullable.optional...
 | `optional`              | o         | x    |
 | `nullable`              | x         | o    |
 | `optional` + `nullable` | o         | o    |
+
+### `strictNullChecks`と一緒に使う
+cafyはTypeScriptの`strictNullChecks`をサポートしていて、型定義において`null`、`undefined`、またはそうでないかを区別できます。例:
+``` ts
+const x = $.str.get('foo')[0];                   // x の型は string
+const y = $.optional.str.get('foo')[0];          // y の型は string | undefined
+const z = $.optional.nullable.str.get('foo')[0]; // z の型は string | undefined | null
+```
 
 ## 📖 API
 ### **Context**
@@ -146,16 +160,10 @@ cafyの実体は`Context`クラスです。そして、cafyで実装されてい
 `.ok()`の否定です。
 (*nok* は _**n**ot **ok**_ の略です)
 
-##### `.nullable(nullable = true)` => `Context`
-`null`を許可します。
-
 ##### `.ok(value)` => `boolean`
 バリデーションを実行します。
 合格した場合は`true`で、そうでない場合は`false`です。
 `.test() == null`と同義です。
-
-##### `.optional(optional = true)` => `Context`
-`undefined`を許可します。
 
 ##### `.pipe(fn)` => `Context`
 カスタムのバリデーションを実行できます。
@@ -180,25 +188,18 @@ $.arr().pipe(x => x[1] != 'b').ok(['a', 'b', 'c']) // false
 |                           | 型                   |
 | -------------------------:|:--------------------:|
 | `$.str`                   | `string`             |
-| `$.str.optional`          | `string?`            |
-| `$.str.nullable`          | `(string \| null)`   |
-| `$.str.optional.nullable` | `(string \| null)?`  |
+| `$.optional.str`          | `string?`            |
+| `$.nullable.str`          | `(string \| null)`   |
+| `$.optional.nullable.str` | `(string \| null)?`  |
 | `$.arr($.str)`            | `string[]`           |
 | `$.or($.str, $.num)`      | `(string \| number)` |
 
-##### `.note(data)` => `Context`
-cafyインスタンスに任意のデータを保存できます。バリデータの説明を保存するといった使い方が想定されます。
-保存したデータは`.data`プロパティから参照できます。
-
 #### プロパティ
 ##### `.isOptional`: `Boolean`
-`optional`か否か
+`optional`か否か(読み取り専用)
 
 ##### `.isNullable`: `Boolean`
-`nullable`か否か
-
-##### `.data`: `any`
-`note`メソッドで保存したデータ
+`nullable`か否か(読み取り専用)
 
 ---
 
@@ -478,8 +479,7 @@ $.str.notInclude(['strawberry', 'alice']).ok('strawberry pasta') // false
 .or(queryA, queryB)
 ```
 
-時には、「文字列または数値」とか「真理値または真理値の配列」のようなバリデーションを行いたいときもあるでしょう。
-そういった場合は、`or`を使うことができます。
+「文字列または数値」とか「真理値または真理値の配列」のようなバリデーションを行いたいときは、`or`を使うことができます。
 例:
 ``` javascript
 // 文字列または数値
@@ -496,8 +496,8 @@ $.or($.str, $.num).ok(42) // true
 既存のContextを拡張したいときに使います。
 ``` javascript
 const other = $.str;
-$.use(other).optional.ok(undefined) // true
-$.use(other).nullable.ok(null) // true
+$.optional.use(other).ok(undefined) // true
+$.nullable.use(other).ok(null) // true
 ```
 
 ---
@@ -519,14 +519,28 @@ class Foo {
 }
 
 // あなたのクラスを検証するための、cafyのContextクラスを継承したクラス
-class FooContext extends Context<Foo> {
-  constructor() {
-    // "おまじない"のようなものです
-    super();
+class FooContext<Maybe = Foo> extends Context<Foo | Maybe> {
+  constructor(optional = false, nullable = false) {
+    // ✨おまじない✨
+    super(optional, nullable);
 
     // 値が Foo のインスタンスであるかチェック
     this.push(v => v instanceof Foo);
   }
+
+  //#region ✨もっとおまじない✨
+  public makeOptional(): FooContext<undefined> {
+    return new FooContext(true, false);
+  }
+
+  public makeNullable(): FooContext<null> {
+    return new FooContext(false, true);
+  }
+
+  public makeOptionalNullable(): FooContext<undefined | null> {
+    return new FooContext(true, true);
+  }
+  //#endregion
 }
 ```
 
@@ -540,7 +554,7 @@ $.type(FooContext).ok('abc');     // false
 また、`Context`を継承するクラスにメソッドを実装することで、Context中でそのメソッドを利用することもできます。
 例として、上述の`FooContext`に、「プロパティ`bar`が指定された値以上でなければならない」という制約を追加するメソッド`min`を定義してみましょう:
 ``` typescript
-class FooContext extends Context<Foo> {
+class FooContext<Maybe = Foo> extends Context<Foo | Maybe> {
   ...
 
   public min(threshold: number) {
@@ -551,7 +565,7 @@ class FooContext extends Context<Foo> {
 ```
 > `return this;`しているのは、メソッドチェーンできるようにするためです。
 
-さあ、このメソッドを使いましょう！
+このメソッドを使う例:
 ``` typescript
 const foo = new Foo();
 foo.bar = 42;
@@ -564,7 +578,7 @@ $.type(FooContext).min(48).ok(foo); // false
 `getType`メソッドでユーザー定義型の型文字列を取得できるようにするには、メソッドをオーバーライドします。
 `optional`などの情報も反映させるために、`super.getType`を呼ぶのを忘れないでください。例:
 ``` typescript
-class FooContext extends Context<Foo> {
+class FooContext<Maybe = Foo> extends Context<Foo | Maybe> {
   ...
 
   public getType() {
