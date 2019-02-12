@@ -6,3 +6,4 @@ npm-debug.log
 gulpfile.js
 tsconfig.json
 .editorconfig
+.travis.yml
