@@ -6,7 +6,7 @@
 		"noFallthroughCasesInSwitch": true,
 		"experimentalDecorators": true,
 		"declaration": true,
-		"sourceMap": false,
+		"sourceMap": true,
 		"target": "es2017",
 		"module": "commonjs",
 		"removeComments": false,
