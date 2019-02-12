@@ -486,6 +486,13 @@ $.str.notInclude(['strawberry', 'alice']).ok('strawberry pasta') // false
 $.or($.str, $.num).ok(42) // true
 ```
 
+#### 3種類以上の型
+`or`を任意の数入れ子にする事で実現できます:
+``` javascript
+// 文字列または数値または真理
+$.or($.str, $.or($.num, $.bool)).ok(42) // true
+```
+
 ---
 
 ### **Use**
