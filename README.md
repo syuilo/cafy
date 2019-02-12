@@ -1,5 +1,5 @@
 # ☕ cafy
-> Simple, fun, flexible query-based validator
+> Simple, lightweight, flexible validator generator
 
 **cafy**は、アサーションのようにメソッドチェーンで値のバリデーションを行うライブラリです。
 cafyを使えばバリデーションを簡単かつ柔軟に書くことができます。TypeScriptをサポートしています。
@@ -19,6 +19,13 @@ cafyを使えばバリデーションを簡単かつ柔軟に書くことがで�
 例外も行うバリデーションごとに用意されているので、ユーザーにわかりやすいエラーメッセージを返すこともできます。
 また、バリデータの型文字列を取得する機能があるので、それを使えばドキュメントを生成するときにも役立ちます。
 TypeScriptの`strictNullChecks`オプションもサポートしています。
+
+### ✨ 特徴
+* 軽量
+* 簡単
+* 柔軟
+* 強力な型サポート
+  * `strictNullChecks`サポートも含む
 
 ## 📦 Installation
 Just:
