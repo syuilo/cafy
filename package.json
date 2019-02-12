@@ -13,9 +13,9 @@
   "types": "./built/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "mocha": "mocha test/index.ts --require ts-node/register",
+    "mocha": "mocha test/index.ts",
     "dtslint": "dtslint test/types",
-    "test": "mocha test/index.ts --require ts-node/register & dtslint test/types"
+    "test": "mocha test/index.ts & dtslint test/types"
   },
   "devDependencies": {
     "@types/mocha": "5.2.0",
