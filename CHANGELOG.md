@@ -1,3 +1,7 @@
+14.0.1 / 2019-02-12
+-------------------
+* Improve document
+
 14.0.0 / 2019-02-12
 -------------------
 * **[BREAKING]** `optional` and `nullable` is now can't used as a method. Please use these options as prefix. e.g. `$.str.optional` --> `$.optional.str`
