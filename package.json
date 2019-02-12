@@ -15,7 +15,7 @@
     "build": "tsc",
     "mocha": "mocha test/index.ts",
     "dtslint": "dtslint test/types",
-    "test": "mocha test/index.ts & dtslint test/types"
+    "test": "npm run mocha & npm run dtslint"
   },
   "devDependencies": {
     "@types/mocha": "5.2.0",
