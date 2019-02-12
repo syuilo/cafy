@@ -1,5 +1,5 @@
 import Context from '../ctx';
-import { TypeOf, Dummy } from '.';
+import { TypeOf } from '.';
 
 export const isAnObject = x => typeof x == 'object' && !(x instanceof Array);
 export const isNotAnObject = x => !isAnObject(x);
