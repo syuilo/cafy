@@ -626,9 +626,10 @@ const d = $.obj({
 ### `strictNullChecks`と一緒に使う
 cafyはTypeScriptの`strictNullChecks`をサポートしていて、型定義において`null`、`undefined`、またはそうでないかを区別できます。例:
 ``` ts
-const x =                   $.str.get(foo)[0]; // x の型は string
-const y =          $.optional.str.get(foo)[0]; // y の型は string | undefined
-const z = $.optional.nullable.str.get(foo)[0]; // z の型は string | undefined | null
+const a =                   $.str.get(foo)[0]; // a の型は string
+const b =          $.optional.str.get(foo)[0]; // b の型は string | undefined
+const c =          $.nullable.str.get(foo)[0]; // c の型は string | null
+const d = $.optional.nullable.str.get(foo)[0]; // d の型は string | undefined | null
 ```
 
 ## Release Notes
