@@ -105,36 +105,33 @@ cafyは様々な型をサポートしています:
 
 ### null と undefined の扱い
 **cafyは、デフォルトで`null`も`undefined`も許容しません。**
-`null`や`undefined`を許可したい場合は、これらのオプションを使用します:
+`null`や`undefined`を許容したい場合は、これらのオプションを使用します:
 
-#### undefined を許可する *(optional)*
+#### undefined を許容する *(optional)*
 デフォルトで`undefined`はエラーになります:
 ``` javascript
 $.str.ok(undefined) // false
 ```
-`undefined`を許可する場合は`optional`を型の前にプリフィクスします:
+`undefined`を許容する場合は`optional`を型の前にプリフィクスします:
 ``` javascript
 $.optional.str.ok(undefined) // true
 ```
 
-#### null を許可する *(nullable)*
+#### null を許容する *(nullable)*
 デフォルトで`null`はエラーになります:
 ``` javascript
 $.str.ok(null) // false
 ```
-`null`を許可する場合は`nullable`を型の前にプリフィクスします:
+`null`を許容する場合は`nullable`を型の前にプリフィクスします:
 ``` javascript
 $.nullable.str.ok(null) // true
 ```
 
-#### null と undefined を許可する
+#### null と undefined を許容する
 `nullable`と`optional`は併用できます:
 ``` javascript
 $.nullable.optional.str...
 $.optional.nullable.str...
-
-// または
-
 $.optionalNullable.str...
 ```
 
@@ -378,7 +375,7 @@ $.obj({
 この型では、エラーに次のプロパティが含まれています:
 * `prop` ... バリデーションに不合格になったプロパティ名
 * `path` ... 不合格になった子のプロパティまでのパス
-* `valueError` ... バリデーションに不合格に際のエラー
+* `error` ... エラー内容
 
 例えば次のような検証を行った時、エラーは次のようになります:
 ``` javascript
@@ -489,7 +486,7 @@ $.or($.str, $.num).ok(42) // true
 #### 3種類以上の型
 `or`を任意の数入れ子にする事で実現できます:
 ``` javascript
-// 文字列または数値または真理
+// 文字列または数値または真理値
 $.or($.str, $.or($.num, $.bool)).ok(42) // true
 ```
 
