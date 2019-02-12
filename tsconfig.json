@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"noEmitOnError": true,
+		"noEmitOnError": false,
 		"noImplicitAny": false,
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
