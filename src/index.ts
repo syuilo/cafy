@@ -1,5 +1,7 @@
-/**
+/*!
  * cafy
+ * Copyright(c) 2017-2019 syuilo
+ * MIT Licensed
  */
 
 import AnyContext from './types/any';
@@ -52,6 +54,9 @@ const $ = {
 	type<T>(Ctx: { new(): T; }): T { return new Ctx() },
 	use<T extends Context = Context>(ctx: T): AnyContext<TypeOf<T>> { return new AnyContext<TypeOf<T>>().pipe(ctx.test); },
 
+	/**
+	 * undefined を許容します
+	 */
 	optional: {
 		get any() { return new AnyContext().makeOptional() },
 		arr<T extends Context = Context>(ctx?: T): ArrayContext<T, undefined> { return new ArrayContext(ctx).makeOptional() },
@@ -68,9 +73,15 @@ const $ = {
 		type<T extends Context & TypeContext>(Ctx: { new(): T; }): ReturnType<T['makeOptional']> { return new Ctx().makeOptional() as any },
 		use<T extends Context = Context>(ctx: T): AnyContext<TypeOf<T>, undefined> { return new AnyContext<TypeOf<T>>().makeOptional().pipe(ctx.test); },
 
+		/**
+		 * undefined と null を許容します
+		 */
 		nullable: optionalNullable
 	},
 
+	/**
+	 * null を許容します
+	 */
 	nullable: {
 		get any() { return new AnyContext().makeNullable() },
 		arr<T extends Context = Context>(ctx?: T): ArrayContext<T, null> { return new ArrayContext(ctx).makeNullable() },
@@ -87,9 +98,15 @@ const $ = {
 		type<T extends Context & TypeContext>(Ctx: { new(): T; }): ReturnType<T['makeNullable']> { return new Ctx().makeNullable() as any },
 		use<T extends Context = Context>(ctx: T): AnyContext<TypeOf<T>, null> { return new AnyContext<TypeOf<T>>().makeNullable().pipe(ctx.test); },
 
+		/**
+		 * undefined と null を許容します
+		 */
 		optional: optionalNullable
 	},
 
+	/**
+	 * undefined と null を許容します
+	 */
 	optionalNullable: optionalNullable
 };
 
