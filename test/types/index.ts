@@ -5,9 +5,7 @@
 
 import $ from 'cafy';
 
-// $ExpectType string
-$.str.get(42)[0];
-
+//#region null and undefined
 // $ExpectType string | undefined
 $.optional.str.get(42)[0];
 
@@ -16,6 +14,25 @@ $.nullable.str.get(42)[0];
 
 // $ExpectType string | null | undefined
 $.optional.nullable.str.get(42)[0];
+//#endregion
+
+// $ExpectType any
+$.any.get(42)[0];
+
+// $ExpectType any[]
+$.arr().get(42)[0];
+
+// $ExpectType boolean
+$.bool.get(42)[0];
+
+// $ExpectType number
+$.num.get(42)[0];
+
+// $ExpectType string | number
+$.or($.str, $.num).get(42)[0];
+
+// $ExpectType string
+$.str.get(42)[0];
 
 /*
 $ExpectType { x: { y: { z: number; }; }; }
