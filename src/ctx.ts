@@ -7,7 +7,7 @@ abstract class Context<T = any, E extends Error = Error> {
 	private readonly isOptional: boolean;
 	private readonly isNullable: boolean;
 
-	private validators: Validator<T>[] = [];
+	private validators: Validator<NonNullable<T>>[] = [];
 
 	constructor(optional = false, nullable = false) {
 		this.isOptional = optional;

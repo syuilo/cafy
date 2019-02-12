@@ -130,12 +130,12 @@ describe('Common', () => {
 		});
 
 		it('nullのときには実行されない', () => {
-			const err = $.nullable.str.pipe(x => x[0] == 'a').test(null);
+			const err = ($.nullable.str as any).pipe(x => x[0] == 'a').test(null);
 			assert.equal(err, null);
 		});
 
 		it('undefinedのときには実行されない', () => {
-			const err = $.optional.str.pipe(x => x[0] == 'a').test(undefined);
+			const err = ($.optional.str as any).pipe(x => x[0] == 'a').test(undefined);
 			assert.equal(err, null);
 		});
 	});
@@ -482,7 +482,7 @@ describe('Queries', () => {
 						z: 'foo'
 					}
 				}
-			});
+			}) as any;
 
 			assert.notEqual(err, null);
 			assert.deepStrictEqual(err.path, ['x', 'y', 'z']);

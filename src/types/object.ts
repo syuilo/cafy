@@ -7,8 +7,8 @@ export const isNotAnObject = x => !isAnObject(x);
 export type Props = { [key: string]: Context };
 
 export class ObjError extends Error {
-	public path: string[];
-	public error: Error;
+	public path: string[] | undefined;
+	public error: Error | undefined;
 
 	constructor(prop: string | null, error: Error | string) {
 		if (prop == null) {
@@ -16,10 +16,10 @@ export class ObjError extends Error {
 			return;
 		}
 
-		let leaf: Error | null = null;
+		let leaf: Error;
 
 		let path = [prop];
-		if (error instanceof ObjError) {
+		if (error instanceof ObjError && error.path && error.error) {
 			path = path.concat(error.path);
 			leaf = error.error;
 		} else {
