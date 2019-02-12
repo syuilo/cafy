@@ -16,24 +16,39 @@ $.nullable.str.get(42)[0];
 $.optional.nullable.str.get(42)[0];
 //#endregion
 
+// Any
 // $ExpectType any
 $.any.get(42)[0];
 
+// Array
 // $ExpectType any[]
 $.arr().get(42)[0];
 
+// Array (with child context)
+// $ExpectType string[]
+$.arr($.str).get(42)[0];
+
+// Array (nested)
+// $ExpectType any[][]
+$.arr($.arr()).get(42)[0];
+
+// Boolean
 // $ExpectType boolean
 $.bool.get(42)[0];
 
+// Number
 // $ExpectType number
 $.num.get(42)[0];
 
+// Object
 // $ExpectType { [x: string]: any; }
 $.obj().get(42)[0];
 
+// Or
 // $ExpectType string | number
 $.or($.str, $.num).get(42)[0];
 
+// String
 // $ExpectType string
 $.str.get(42)[0];
 
