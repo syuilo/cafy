@@ -39,12 +39,13 @@ TL;DR
 ``` javascript
 import $ from 'cafy';
 
-const isValidGender = $.str.or(['male', 'female']).ok;
+const isFruits = $.str.or(['apple', 'banana', 'orange']).ok;
 
-isValidGender('male')   // true
-isValidGender('female') // true
-isValidGender('alice')  // false
-isValidGender(42)       // false
+isFruits('apple')  // true
+isFruits('banana') // true
+isFruits('alice')  // false
+isFruits(42)       // false
+isFruits(null)     // false
 ```
 
 ---
