@@ -144,14 +144,6 @@ $.optionalNullable.str...
 | `nullable`              | x         | o    |
 | `optional` + `nullable` | o         | o    |
 
-### `strictNullChecks`と一緒に使う
-cafyはTypeScriptの`strictNullChecks`をサポートしていて、型定義において`null`、`undefined`、またはそうでないかを区別できます。例:
-``` ts
-const x =                   $.str.get('foo')[0]; // x の型は string
-const y =          $.optional.str.get('foo')[0]; // y の型は string | undefined
-const z = $.optional.nullable.str.get('foo')[0]; // z の型は string | undefined | null
-```
-
 ## 📖 API
 ### **Context**
 cafyの実体は`Context`クラスです。そして、cafyで実装されている全ての型は`Context`クラスを継承したクラスです。
@@ -595,6 +587,48 @@ class FooContext<Maybe = Foo> extends Context<Foo | Maybe> {
 ```
 ``` typescript
 $.type(FooContext).getType(); // 'Foo'
+```
+
+## TypeScriptで使う
+cafyはTypeScriptで書かれているため、強力な型定義を持ちます。
+例えば、「`x`は*文字列*でなければならない」とバリデーションした後の`x`の型は明らかに*文字列*です。
+いくつかバリデーション後の型定義がどうなるのかの例を示します:
+``` ts
+const a = $.str.get(foo)[0];
+// ↑ a の型は string
+
+const b = $.arr($.num).get(foo)[0];
+// ↑ b の型は number[]
+
+const c = $.or($.str, $.num).get(foo)[0];
+// ↑ c の型は string | number
+
+const d = $.obj({
+  foo: $.obj({
+    bar: $.obj({
+      baz: $.num
+    }),
+    qux: $.arr($.arr($.bool))
+  })
+}).get(foo)[0];
+/* ↑ d の型は:
+{
+  foo: {
+    bar: {
+      baz: number;
+    };
+    qux: boolean[][];
+  };
+}
+*/
+```
+
+### `strictNullChecks`と一緒に使う
+cafyはTypeScriptの`strictNullChecks`をサポートしていて、型定義において`null`、`undefined`、またはそうでないかを区別できます。例:
+``` ts
+const x =                   $.str.get(foo)[0]; // x の型は string
+const y =          $.optional.str.get(foo)[0]; // y の型は string | undefined
+const z = $.optional.nullable.str.get(foo)[0]; // z の型は string | undefined | null
 ```
 
 ## Release Notes
