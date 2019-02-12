@@ -28,6 +28,9 @@ $.bool.get(42)[0];
 // $ExpectType number
 $.num.get(42)[0];
 
+// $ExpectType { [x: string]: any; }
+$.obj().get(42)[0];
+
 // $ExpectType string | number
 $.or($.str, $.num).get(42)[0];
 
