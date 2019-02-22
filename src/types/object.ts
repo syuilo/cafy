@@ -37,8 +37,10 @@ export class ObjError extends Error {
  * Object
  */
 export default class ObjectContext<Ps extends Props, Maybe extends null | undefined | { [P in keyof Ps]: TypeOf<Ps[P]> } = { [P in keyof Ps]: TypeOf<Ps[P]> }> extends Context<Maybe extends { [P in keyof Ps]: TypeOf<Ps[P]> } ? { [P in keyof Ps]: TypeOf<Ps[P]> } : ({ [P in keyof Ps]: TypeOf<Ps[P]> } | Maybe), ObjError> {
+	public readonly name = 'Object';
+
 	private isStrict = false;
-	public props: Props | undefined;
+	public readonly props: Props | undefined;
 
 	constructor(props?: Props, optional = false, nullable = false) {
 		super(optional, nullable);
@@ -84,7 +86,12 @@ export default class ObjectContext<Ps extends Props, Maybe extends null | undefi
 	}
 
 	public getType(): string {
-		return super.getType('object');
+		if (this.props) {
+			const entries = Object.entries(this.props).map(([k, v]) => `k: ${v.getType()}`).join(', ');
+			return super.getType(`{ ${entries} }`);
+		} else {
+			return super.getType();
+		}
 	}
 
 	//#region ✨ Some magicks ✨

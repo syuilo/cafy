@@ -4,9 +4,7 @@ import Context from '../ctx';
  * Any
  */
 export default class AnyContext<T = any, Maybe extends null | undefined | T = T> extends Context<T | Maybe> {
-	public getType(): string {
-		return super.getType('any');
-	}
+	public readonly name = 'Any';
 
 	//#region ✨ Some magicks ✨
 	public makeOptional(): AnyContext<T, undefined> {

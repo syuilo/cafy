@@ -9,7 +9,9 @@ const hasDuplicates = (array: any[]) => (new Set(array)).size !== array.length;
  * Array
  */
 export default class ArrayContext<Ctx extends Context, Maybe extends null | undefined | TypeOf<Ctx>[] = TypeOf<Ctx>[]> extends Context<TypeOf<Ctx>[] | Maybe> {
-	private ctx: Context | undefined;
+	public readonly name = 'Array';
+
+	public readonly ctx: Context | undefined;
 
 	constructor(ctx?: Context, optional = false, nullable = false) {
 		super(optional, nullable);
@@ -138,7 +140,11 @@ export default class ArrayContext<Ctx extends Context, Maybe extends null | unde
 	}
 
 	public getType(): string {
-		return super.getType(this.ctx ? this.ctx.getType() + '[]' : 'array');
+		if (this.ctx) {
+			return super.getType(this.ctx.getType() + '[]');
+		} else {
+			return super.getType();
+		}
 	}
 
 	//#region ✨ Some magicks ✨

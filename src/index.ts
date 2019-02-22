@@ -10,7 +10,7 @@ import BooleanContext from './types/boolean';
 import NumberContext from './types/number';
 import ObjectContext, { Props } from './types/object';
 import StringContext from './types/string';
-import OrContext from './types/or';
+import EitherContext from './types/either';
 
 import Context from './ctx';
 import { TypeOf } from './types';
@@ -31,7 +31,7 @@ const optionalNullable = {
 	get number() { return new NumberContext().makeOptionalNullable() },
 	obj<T extends Props>(ctx?: T): ObjectContext<T, undefined | null> { return new ObjectContext(ctx).makeOptionalNullable() as any },
 	object<T extends Props>(ctx?: T): ObjectContext<T, undefined | null> { return new ObjectContext(ctx).makeOptionalNullable() as any },
-	or<CtxA extends Context, CtxB extends Context>(ctxA: CtxA, ctxB: CtxB): OrContext<CtxA, CtxB, undefined | null> { return new OrContext(ctxA, ctxB).makeOptionalNullable() },
+	either<CtxA extends Context, CtxB extends Context>(ctxA: CtxA, ctxB: CtxB): EitherContext<CtxA, CtxB, undefined | null> { return new EitherContext(ctxA, ctxB).makeOptionalNullable() },
 	get str() { return new StringContext().makeOptionalNullable() },
 	get string() { return new StringContext().makeOptionalNullable() },
 	type<T extends Context & TypeContext>(Ctx: { new(): T; }): ReturnType<T['makeOptionalNullable']> { return new Ctx().makeOptionalNullable() as any },
@@ -48,7 +48,7 @@ const $ = {
 	get number() { return new NumberContext() },
 	obj<T extends Props>(ctx?: T): ObjectContext<T> { return new ObjectContext(ctx) },
 	object<T extends Props>(ctx?: T): ObjectContext<T> { return new ObjectContext(ctx) },
-	or<CtxA extends Context, CtxB extends Context>(ctxA: CtxA, ctxB: CtxB): OrContext<CtxA, CtxB> { return new OrContext(ctxA, ctxB) },
+	either<CtxA extends Context, CtxB extends Context>(ctxA: CtxA, ctxB: CtxB): EitherContext<CtxA, CtxB> { return new EitherContext(ctxA, ctxB) },
 	get str() { return new StringContext() },
 	get string() { return new StringContext() },
 	type<T>(Ctx: { new(): T; }): T { return new Ctx() },
@@ -67,7 +67,7 @@ const $ = {
 		get number() { return new NumberContext().makeOptional() },
 		obj<T extends Props>(ctx?: T): ObjectContext<T, undefined> { return new ObjectContext(ctx).makeOptional() as any },
 		object<T extends Props>(ctx?: T): ObjectContext<T, undefined> { return new ObjectContext(ctx).makeOptional() as any },
-		or<CtxA extends Context, CtxB extends Context>(ctxA: CtxA, ctxB: CtxB): OrContext<CtxA, CtxB, undefined> { return new OrContext(ctxA, ctxB).makeOptional() },
+		either<CtxA extends Context, CtxB extends Context>(ctxA: CtxA, ctxB: CtxB): EitherContext<CtxA, CtxB, undefined> { return new EitherContext(ctxA, ctxB).makeOptional() },
 		get str() { return new StringContext().makeOptional() },
 		get string() { return new StringContext().makeOptional() },
 		type<T extends Context & TypeContext>(Ctx: { new(): T; }): ReturnType<T['makeOptional']> { return new Ctx().makeOptional() as any },
@@ -92,7 +92,7 @@ const $ = {
 		get number() { return new NumberContext().makeNullable() },
 		obj<T extends Props>(ctx?: T): ObjectContext<T, null> { return new ObjectContext(ctx).makeNullable() as any },
 		object<T extends Props>(ctx?: T): ObjectContext<T, null> { return new ObjectContext(ctx).makeNullable() as any },
-		or<CtxA extends Context, CtxB extends Context>(ctxA: CtxA, ctxB: CtxB): OrContext<CtxA, CtxB, null> { return new OrContext(ctxA, ctxB).makeNullable() },
+		either<CtxA extends Context, CtxB extends Context>(ctxA: CtxA, ctxB: CtxB): EitherContext<CtxA, CtxB, null> { return new EitherContext(ctxA, ctxB).makeNullable() },
 		get str() { return new StringContext().makeNullable() },
 		get string() { return new StringContext().makeNullable() },
 		type<T extends Context & TypeContext>(Ctx: { new(): T; }): ReturnType<T['makeNullable']> { return new Ctx().makeNullable() as any },
@@ -120,5 +120,5 @@ export {
 	NumberContext,
 	ObjectContext,
 	StringContext,
-	OrContext
+	EitherContext
 };

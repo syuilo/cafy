@@ -7,6 +7,8 @@ export const isNotABoolean = x => !isABoolean(x);
  * Boolean
  */
 export default class BooleanContext<Maybe = boolean> extends Context<boolean | Maybe> {
+	public readonly name = 'Boolean';
+
 	constructor(optional = false, nullable = false) {
 		super(optional, nullable);
 
@@ -15,10 +17,6 @@ export default class BooleanContext<Maybe = boolean> extends Context<boolean | M
 				? new Error('must-be-a-boolean')
 				: true
 		);
-	}
-
-	public getType(): string {
-		return super.getType('boolean');
 	}
 
 	//#region ✨ Some magicks ✨

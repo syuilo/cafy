@@ -94,7 +94,7 @@ cafyは様々な型をサポートしています:
 * **配列** ... `$.arr()`
 * **オブジェクト** ... `$.obj`
 * **ユーザー定義型** ... `$.type()`
-* **ユニオン** ... `$.or()`
+* **ユニオン** ... `$.either()`
 * **なんでも** ... `$.any`
 
 > ℹ JavaScriptの仕様上では配列はobjectですが、cafyでは配列はobjectとは見なされません。
@@ -189,7 +189,7 @@ $.arr().pipe(x => x[1] != 'b').ok(['a', 'b', 'c']) // false
 | `$.nullable.str`          | `(string \| null)`   |
 | `$.optional.nullable.str` | `(string \| null)?`  |
 | `$.arr($.str)`            | `string[]`           |
-| `$.or($.str, $.num)`      | `(string \| number)` |
+| `$.either($.str, $.num)`  | `(string \| number)` |
 
 #### プロパティ
 ##### `.isOptional`: `Boolean`
@@ -471,23 +471,23 @@ $.str.notInclude(['strawberry', 'alice']).ok('strawberry pasta') // false
 
 ---
 
-### **Or**
+### **Either**
 ``` javascript
-.or(queryA, queryB)
+.either(queryA, queryB)
 ```
 
-「文字列または数値」とか「真理値または真理値の配列」のようなバリデーションを行いたいときは、`or`を使うことができます。
+「文字列または数値」とか「真理値または真理値の配列」のようなバリデーションを行いたいときは、`either`を使うことができます。
 例:
 ``` javascript
 // 文字列または数値
-$.or($.str, $.num).ok(42) // true
+$.either($.str, $.num).ok(42) // true
 ```
 
 #### 3種類以上の型
-`or`を任意の数入れ子にする事で実現できます:
+`either`を任意の数入れ子にする事で実現できます:
 ``` javascript
 // 文字列または数値または真理値
-$.or($.str, $.or($.num, $.bool)).ok(42) // true
+$.either($.str, $.either($.num, $.bool)).ok(42) // true
 ```
 
 ---
@@ -524,6 +524,9 @@ class Foo {
 
 // あなたのクラスを検証するための、cafyのContextクラスを継承したクラス
 class FooContext<Maybe = Foo> extends Context<Foo | Maybe> {
+  // 型の名前
+  public readonly name = 'Foo';
+
   constructor(optional = false, nullable = false) {
     // ✨おまじない✨
     super(optional, nullable);
@@ -578,22 +581,6 @@ $.type(FooContext).min(40).ok(foo); // true
 $.type(FooContext).min(48).ok(foo); // false
 ```
 
-#### `getType`メソッドのオーバーライド
-`getType`メソッドでユーザー定義型の型文字列を取得できるようにするには、メソッドをオーバーライドします。
-`optional`などの情報も反映させるために、`super.getType`を呼ぶのを忘れないでください。例:
-``` typescript
-class FooContext<Maybe = Foo> extends Context<Foo | Maybe> {
-  ...
-
-  public getType() {
-    return super.getType('Foo');
-  }
-}
-```
-``` typescript
-$.type(FooContext).getType(); // 'Foo'
-```
-
 ## TypeScriptで使う
 cafyはTypeScriptで書かれているため、強力な型定義を持ちます。
 例えば、「`x`は*文字列*でなければならない」とバリデーションした後の`x`の型は明らかに*文字列*です。
@@ -605,7 +592,7 @@ const a = $.str.get(foo)[0];
 const b = $.arr($.num).get(foo)[0];
 // ↑ b の型は number[]
 
-const c = $.or($.str, $.num).get(foo)[0];
+const c = $.either($.str, $.num).get(foo)[0];
 // ↑ c の型は string | number
 
 const d = $.obj({

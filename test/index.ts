@@ -574,25 +574,25 @@ describe('Queries', () => {
 		});
 	});
 
-	describe('Or', () => {
+	describe('Either', () => {
 		it('OK', () => {
-			const ok = $.or($.str, $.num).ok(42);
+			const ok = $.either($.str, $.num).ok(42);
 			assert.equal(ok, true);
 		});
 
 		it('NOT OK', () => {
-			const ok = $.or($.str, $.num).ok({});
+			const ok = $.either($.str, $.num).ok({});
 			assert.equal(ok, false);
 		});
 
 		it('With array', () => {
-			const ok = $.arr($.or($.str, $.num)).ok(['x', 42]);
+			const ok = $.arr($.either($.str, $.num)).ok(['x', 42]);
 			assert.equal(ok, true);
 		});
 
 		it('Type', () => {
-			const type = $.or($.str, $.num).getType();
-			assert.equal(type, '(string | number)');
+			const type = $.either($.str, $.num).getType();
+			assert.equal(type, '(String | Number)');
 		});
 	});
 
@@ -624,6 +624,8 @@ class MyClass {
 }
 
 class MyClassContext<Maybe = MyClass> extends Context<MyClass | Maybe> {
+	public readonly name = 'MyClass';
+
 	constructor(optional = false, nullable = false) {
 		super(optional, nullable);
 

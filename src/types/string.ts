@@ -7,6 +7,8 @@ export const isNotAString = x => !isAString(x);
  * String
  */
 export default class StringContext<Maybe extends null | undefined | string = string> extends Context<string | Maybe> {
+	public readonly name = 'String';
+
 	constructor(optional = false, nullable = false) {
 		super(optional, nullable);
 
@@ -123,10 +125,6 @@ export default class StringContext<Maybe extends null | undefined | string = str
 				: true
 		, 'notMatch');
 		return this;
-	}
-
-	public getType(): string {
-		return super.getType('string');
 	}
 
 	//#region ✨ Some magicks ✨

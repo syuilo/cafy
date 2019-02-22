@@ -4,8 +4,10 @@ import autobind from './autobind';
  * Context基底クラス
  */
 abstract class Context<T = any, E extends Error = Error> {
-	private readonly isOptional: boolean;
-	private readonly isNullable: boolean;
+	abstract readonly name: string;
+
+	public readonly isOptional: boolean;
+	public readonly isNullable: boolean;
 
 	private validators: Validator<NonNullable<T>>[] = [];
 
@@ -126,7 +128,7 @@ abstract class Context<T = any, E extends Error = Error> {
 	/**
 	 * このcafyインスタンスの型を表す文字列を取得します
 	 */
-	public getType(type = 'unknown') {
+	public getType(type = this.name) {
 		return this.isNullable && this.isOptional ? `(${type} | null)?` :
 			this.isNullable && !this.isOptional ? `(${type} | null)` :
 			!this.isNullable && this.isOptional ? `${type}?` :

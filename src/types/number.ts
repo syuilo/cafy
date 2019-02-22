@@ -7,6 +7,8 @@ export const isNotANumber = x => !isANumber(x);
  * Number
  */
 export default class NumberContext<Maybe extends null | undefined | number = number> extends Context<number | Maybe> {
+	public readonly name = 'Number';
+
 	constructor(optional = false, nullable = false) {
 		super(optional, nullable);
 
@@ -64,10 +66,6 @@ export default class NumberContext<Maybe extends null | undefined | number = num
 				: true
 		, 'int');
 		return this;
-	}
-
-	public getType(): string {
-		return super.getType('number');
 	}
 
 	//#region ✨ Some magicks ✨

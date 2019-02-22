@@ -44,9 +44,9 @@ $.num.get(42)[0];
 // $ExpectType { [x: string]: any; }
 $.obj().get(42)[0];
 
-// Or
+// Either
 // $ExpectType string | number
-$.or($.str, $.num).get(42)[0];
+$.either($.str, $.num).get(42)[0];
 
 // String
 // $ExpectType string
