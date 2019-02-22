@@ -9,6 +9,10 @@ export const isNotAString = x => !isAString(x);
 export default class StringContext<Maybe extends null | undefined | string = string> extends Context<string | Maybe> {
 	public readonly name = 'String';
 
+	public enum: string[] | null = null;
+	public minLength: number | null = null;
+	public maxLength: number | null = null;
+
 	constructor(optional = false, nullable = false) {
 		super(optional, nullable);
 
@@ -17,6 +21,24 @@ export default class StringContext<Maybe extends null | undefined | string = str
 				? new Error('must-be-a-string')
 				: true
 		);
+
+		this.push(v => this.minLength != null ?
+			v.length < this.minLength
+				? new Error('invalid-range')
+				: true
+		: true, 'min');
+
+		this.push(v => this.maxLength != null ?
+			v.length > this.maxLength
+				? new Error('invalid-range')
+				: true
+		: true, 'max');
+
+		this.push(v => this.enum != null ?
+			!this.enum.some(x => x === v)
+				? new Error('not-match-pattern')
+				: true
+		: true, 'enum');
 	}
 
 	/**
@@ -35,11 +57,7 @@ export default class StringContext<Maybe extends null | undefined | string = str
 	 * @param threshold 下限
 	 */
 	public min(threshold: number) {
-		this.push(v =>
-			v.length < threshold
-				? new Error('invalid-range')
-				: true
-		, 'min');
+		this.minLength = threshold;
 		return this;
 	}
 
@@ -48,11 +66,7 @@ export default class StringContext<Maybe extends null | undefined | string = str
 	 * @param threshold 上限
 	 */
 	public max(threshold: number) {
-		this.push(v =>
-			v.length > threshold
-				? new Error('invalid-range')
-				: true
-		, 'max');
+		this.maxLength = threshold;
 		return this;
 	}
 
@@ -61,11 +75,8 @@ export default class StringContext<Maybe extends null | undefined | string = str
 	 * @param length 文字数
 	 */
 	public length(length: number) {
-		this.push(v =>
-			v.length !== length
-				? new Error('invalid-length')
-				: true
-		, 'length');
+		this.min(length);
+		this.max(length);
 		return this;
 	}
 
@@ -76,11 +87,7 @@ export default class StringContext<Maybe extends null | undefined | string = str
 	 */
 	public or(pattern: string | string[]) {
 		if (typeof pattern == 'string') pattern = pattern.split('|');
-		this.push(v => {
-			const match = (pattern as string[]).some(x => x === v);
-			if (!match) return new Error('not-match-pattern');
-			return true;
-		}, 'or');
+		this.enum = pattern;
 		return this;
 	}
 

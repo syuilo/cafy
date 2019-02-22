@@ -9,6 +9,9 @@ export const isNotANumber = x => !isANumber(x);
 export default class NumberContext<Maybe extends null | undefined | number = number> extends Context<number | Maybe> {
 	public readonly name = 'Number';
 
+	public minimum: number | null = null;
+	public maximum: number | null = null;
+
 	constructor(optional = false, nullable = false) {
 		super(optional, nullable);
 
@@ -17,6 +20,18 @@ export default class NumberContext<Maybe extends null | undefined | number = num
 				? new Error('must-be-a-number')
 				: true
 		);
+
+		this.push(v => this.minimum != null ?
+			v < this.minimum
+				? new Error('invalid-range')
+				: true
+		: true, 'min');
+
+		this.push(v => this.maximum != null ?
+			v > this.maximum
+				? new Error('invalid-range')
+				: true
+		: true, 'max');
 	}
 
 	/**
@@ -35,11 +50,7 @@ export default class NumberContext<Maybe extends null | undefined | number = num
 	 * @param threshold 下限
 	 */
 	public min(threshold: number) {
-		this.push(v =>
-			v < threshold
-				? new Error('invalid-range')
-				: true
-		, 'min');
+		this.minimum = threshold;
 		return this;
 	}
 
@@ -48,11 +59,7 @@ export default class NumberContext<Maybe extends null | undefined | number = num
 	 * @param threshold 上限
 	 */
 	public max(threshold: number) {
-		this.push(v =>
-			v > threshold
-				? new Error('invalid-range')
-				: true
-		, 'max');
+		this.maximum = threshold;
 		return this;
 	}
 
