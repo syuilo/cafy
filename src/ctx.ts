@@ -9,6 +9,8 @@ abstract class Context<T = any, E extends Error = Error> {
 	public readonly isOptional: boolean;
 	public readonly isNullable: boolean;
 
+	public data: any;
+
 	private validators: Validator<NonNullable<T>>[] = [];
 
 	constructor(optional = false, nullable = false) {
@@ -112,6 +114,16 @@ abstract class Context<T = any, E extends Error = Error> {
 	@autobind
 	public pipe(validator: Validator<T>) {
 		this.push(validator, 'pipe');
+		return this;
+	}
+
+	/**
+	 * このインスタンスに任意のデータを保存します
+	 * @param data データ
+	 */
+	@autobind
+	public note(data: any) {
+		this.data = data;
 		return this;
 	}
 
