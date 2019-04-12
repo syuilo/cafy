@@ -170,6 +170,8 @@ $.str.pipe(x => x.indexOf('alice') == -1).ok('strawberry pasta') // true
 $.arr().pipe(x => x[1] != 'b').ok(['a', 'b', 'c']) // false
 ```
 
+> 値が`null`または`undefined`のときは`pipe`は実行されないため、`pipe`内でnullチェックする必要はありません。
+
 ##### `.test(value)` => `Error`
 バリデーションを実行します。
 合格した場合は`null`で、そうでない場合は`Error`です。
