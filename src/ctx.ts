@@ -112,7 +112,7 @@ abstract class Context<T = any, E extends Error = Error> {
 	 * @param validator バリデータ
 	 */
 	@autobind
-	public pipe(validator: Validator<T>) {
+	public pipe(validator: Validator<NonNullable<T>>) {
 		this.push(validator, 'pipe');
 		return this;
 	}
