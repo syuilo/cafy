@@ -609,6 +609,7 @@ const x = 42 as unknown;
 if ($.str.ok(x)) {
 	x;
 	// ↑この時点でxの型は string
+	// この例ではxはnumberなので、実際にはここに到達することはない
 }
 ```
 
@@ -625,6 +626,7 @@ $.str.assert(x);
 
 x;
 // ↑この時点でxの型は string
+// この例ではxはnumberなので、実際にはここに到達することはない
 ```
 
 ### Array, Object, Unionな型
