@@ -613,6 +613,18 @@ if ($.str.ok(x)) {
 }
 ```
 
+次のように書いても同じです:
+``` ts
+function something(x: unknown) {
+	// この時点でxの型は unknown
+
+	if (!$.str.ok(x)) return;
+
+	x;
+	// ↑この時点でxの型は string
+}
+```
+
 ### Assertion Functions
 また、TypeScript 3.7で導入された[Assertion Functions](https://devblogs.microsoft.com/typescript/announcing-typescript-3-7-rc/#assertion-functions)もサポートしていて、
 `assert`メソッドにある変数を渡して呼び出すと、その後の変数の型はバリデーションされた型になります。これは、`assert`メソッドにバリデーションに合格しない値を渡すと、即座に例外がthrowされるので、
