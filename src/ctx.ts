@@ -64,6 +64,18 @@ abstract class Context<T = any, E extends Error = Error> {
 	 * 値を検証して、バリデーションに不合格なら Error をthrowします。
 	 */
 	@autobind
+	public assert(value: any): asserts value is T {
+		const [, e] = this.exec(value, true);
+
+		if (e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * 値を検証して、バリデーションに不合格なら Error をthrowします。
+	 */
+	@autobind
 	public throw(value: any): T {
 		const [v, e] = this.exec(value, true);
 
@@ -86,7 +98,7 @@ abstract class Context<T = any, E extends Error = Error> {
 	 * 値を検証して、妥当な場合は true を、そうでない場合は false を返します
 	 */
 	@autobind
-	public ok(value: any): boolean {
+	public ok(value: any): value is T {
 		return this.test(value) == null;
 	}
 

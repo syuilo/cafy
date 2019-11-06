@@ -25,7 +25,9 @@ TypeScriptの`strictNullChecks`オプションもサポートしています。
 * **簡単** ... 複雑にネストされたオブジェクトも直感的にバリデーションできる
 * **柔軟** ... メソッドチェーンで制約を追加したり、独自の型を追加できる
 * **強力な型サポート** ... 型注釈不要で、バリデータに即した型を取得できる
-  * `strictNullChecks`サポートも含む
+	* `strictNullChecks`サポート
+	* `Type Guard`サポート
+	* `Assertion Functions`サポート
 
 ## 📦 Installation
 Just:
@@ -162,6 +164,8 @@ cafyの実体は`Context`クラスです。そして、cafyで実装されてい
 合格した場合は`true`で、そうでない場合は`false`です。
 `.test() == null`と同義です。
 
+> ℹ TypeScriptを使っているなら、このメソッドの結果で分岐を行うことで、以後対象の変数の型を推論することができます（Type Guard）。これについては、後述の「TypeScriptとの親和性」で詳しく説明します。
+
 ##### `.pipe(fn)` => `Context`
 カスタムのバリデーションを実行できます。
 引数の関数が`true`を返すと妥当ということになり、`false`または`Error`を返すと不正な値とします。
@@ -171,6 +175,13 @@ $.arr().pipe(x => x[1] != 'b').ok(['a', 'b', 'c']) // false
 ```
 
 > 値が`null`または`undefined`のときは`pipe`は実行されないため、`pipe`内でnullチェックする必要はありません。
+
+##### `.assert(value)` => `void`
+バリデーションを実行します。
+不合格の場合は`Error`をthrowします。
+
+> ℹ ~~TypeScriptを使っているなら、このメソッドを呼び出すことで、以後対象の変数の型を推論することができます。これについては、後述の「TypeScriptとの親和性」で詳しく説明します。~~
+> 現在正しく動作しません。詳しくは: https://github.com/microsoft/TypeScript/issues/34596
 
 ##### `.test(value)` => `Error`
 バリデーションを実行します。
@@ -583,14 +594,43 @@ $.type(FooContext).min(40).ok(foo); // true
 $.type(FooContext).min(48).ok(foo); // false
 ```
 
-## TypeScriptで使う
-cafyはTypeScriptで書かれているため、強力な型定義を持ちます。
-例えば、「`x`は*文字列*でなければならない」とバリデーションした後の`x`の型は明らかに*文字列*です。
-いくつかバリデーション後の型定義がどうなるのかの例を示します:
-``` ts
-const a = $.str.get(foo)[0];
-// ↑ a の型は string
+## TypeScriptとの親和性
+cafyはTypeScriptで書かれているため、強力な型定義を持ち、バリデーションに応じて変数の型を推論し、それ以降のフローで型を絞り込むことができます。
 
+### Type Guard
+例えば、「`x`は*文字列*でなければならない」とバリデーションした後の`x`の型は明らかに*文字列*です。
+`ok`メソッドは型定義においてTypeScriptの[Type Guard](http://www.typescriptlang.org/docs/handbook/advanced-types.html#type-guards-and-differentiating-types)を実装しており、`ok`メソッドの返り値を使って条件分岐を行うと、そのスコープではバリデーションした変数の型が正しいものに絞り込まれます。
+例:
+``` ts
+const x = 42 as unknown;
+
+// この時点でxの型は unknown
+
+if ($.str.ok(x)) {
+	x;
+	// ↑この時点でxの型は string
+}
+```
+
+### Assertion Functions
+また、TypeScript 3.7で導入された[Assertion Functions](https://devblogs.microsoft.com/typescript/announcing-typescript-3-7-rc/#assertion-functions)もサポートしていて、
+`assert`メソッドにある変数を渡して呼び出すと、その後の変数の型はバリデーションされた型になります。これは、`assert`メソッドにバリデーションに合格しない値を渡すと、即座に例外がthrowされるので、
+その後の変数の型は必ず求めている型になることが保証されるからです。TypeScript 3.7のAssertion Functionsによりこれを推論することが可能になります。例:
+``` ts
+const x = 42 as unknown;
+
+// この時点でxの型は unknown
+
+$.str.assert(x);
+
+x;
+// ↑この時点でxの型は string
+```
+
+### Array, Object, Unionな型
+配列、オブジェクト、ユニオン型といった複雑な型も、正しく推論することができます。
+いくつかバリデーション後の型がどうなるのかの例を示します:
+``` ts
 const b = $.arr($.num).get(foo)[0];
 // ↑ b の型は number[]
 
@@ -617,7 +657,7 @@ const d = $.obj({
 */
 ```
 
-### `strictNullChecks`と一緒に使う
+### strictNullChecks
 cafyはTypeScriptの`strictNullChecks`をサポートしていて、型定義において`null`、`undefined`、またはそうでないかを区別できます。例:
 ``` ts
 const a =                   $.str.get(foo)[0]; // a の型は string
