@@ -598,7 +598,7 @@ $.type(FooContext).min(48).ok(foo); // false
 cafyはTypeScriptで書かれているため、強力な型定義を持ち、バリデーションに応じて変数の型を推論し、それ以降のフローで型を絞り込むことができます。
 
 ### Type Guard
-例えば、「`x`は*文字列*でなければならない」とバリデーションした後の`x`の型は明らかに*文字列*です。
+例えば、「`x`は*文字列*でなければならない」とバリデーションした後の`x`の型は明らかに*文字列*です(バリデータの実装にミスが無いと仮定した場合)。
 `ok`メソッドは型定義においてTypeScriptの[Type Guard](http://www.typescriptlang.org/docs/handbook/advanced-types.html#type-guards-and-differentiating-types)を実装しており、`ok`メソッドの返り値を使って条件分岐を行うと、そのスコープではバリデーションした変数の型が正しいものに絞り込まれます。
 例:
 ``` ts
