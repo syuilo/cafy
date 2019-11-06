@@ -214,12 +214,12 @@ $.arr().pipe(x => x[1] != 'b').ok(['a', 'b', 'c']) // false
 
 ---
 
-### 型: **Any**
+### バリデータ: **Any**
 ``` javascript
 .any
 ```
 
-Any型を使うと、「*undefined*や*null*はダメだけど、型は何でもいい」といった値を検証したいときに便利です:
+Anyバリデータを使うと、「*undefined*や*null*はダメだけど、型は何でもいい」といった値を検証したいときに便利です:
 ``` javascript
 $.any.ok('strawberry pasta') // true
 ```
@@ -229,13 +229,13 @@ Any固有のメソッドはありません。
 
 ---
 
-### 型: **Array**
+### バリデータ: **Array**
 ``` javascript
 .arr(query)
 .array(query)
 ```
 
-配列をバリデーションしたいときはこの型を使用します。
+配列をバリデーションしたいときはこのバリデータを使用します。
 
 #### 配列の要素をバリデーションする
 配列の各々の要素に対してバリデーションを定義できます:
@@ -296,26 +296,26 @@ $.arr().each(x => x < 4).ok([1, 4, 3]) // false
 
 ---
 
-### 型: **Boolean**
+### バリデータ: **Boolean**
 ``` javascript
 .bool
 .boolean
 ```
 
-真理値(`true`か`false`)をバリデーションしたいときはこの型を使用します。
+真理値(`true`か`false`)をバリデーションしたいときはこのバリデータを使用します。
 
 #### メソッド
 固有のメソッドはありません。
 
 ---
 
-### 型: **Number**
+### バリデータ: **Number**
 ``` javascript
 .num
 .number
 ```
 
-数値をバリデーションしたいときはこの型を使用します。
+数値をバリデーションしたいときはこのバリデータを使用します。
 
 #### メソッド
 
@@ -346,13 +346,13 @@ $.num.int().ok(Infinity) // false
 
 ---
 
-### 型: **Object**
+### バリデータ: **Object**
 ``` javascript
 .obj(props)
 .object(props)
 ```
 
-オブジェクトをバリデーションしたいときはこの型を使用します。
+オブジェクトをバリデーションしたいときはこのバリデータを使用します。
 
 #### プロパティを定義する
 引数にプロパティの定義を与えて、複雑なオブジェクトも簡単にバリデーションできます。
@@ -435,13 +435,13 @@ $.obj({ foo: $.num }).strict().ok({ foo: 42, bar: 24 }) // false
 
 ---
 
-### 型: **String**
+### バリデータ: **String**
 ``` javascript
 .str
 .string
 ```
 
-文字列をバリデーションしたいときはこの型を使用します。
+文字列をバリデーションしたいときはこのバリデータを使用します。
 
 #### メソッド
 ##### `.match(pattern)`
@@ -490,7 +490,7 @@ $.str.notInclude(['strawberry', 'alice']).ok('strawberry pasta') // false
 .either(queryA, queryB)
 ```
 
-「文字列または数値」とか「真理値または真理値の配列」のようなバリデーションを行いたいときは、`either`を使うことができます。
+「文字列または数値」とか「真理値または真理値の配列」のようなバリデーションを行いたいときは、`either`バリデータを使うことができます。
 例:
 ``` javascript
 // 文字列または数値
@@ -509,7 +509,7 @@ $.either($.str, $.either($.num, $.bool)).ok(42) // true
 .literal(literal)
 ```
 
-特定の値であることを保証するバリデーションを行いたいときは、`literal`を使うことができます。
+特定の値であることを保証するバリデーションを行いたいときは、`literal`バリデータを使うことができます。
 例:
 ``` javascript
 // 文字列'foo'でなければならない
@@ -660,7 +660,7 @@ x;
 詳しくはTypeScriptの[Assertion Functions](https://devblogs.microsoft.com/typescript/announcing-typescript-3-7-rc/#assertion-functions)のドキュメントを参照してください。
 
 ### Literal Types
-cafyの`$.literal()`は、TypeScriptのconst assertionと一緒に使うことができます。例:
+cafyの`$.literal()`バリデータは、TypeScriptのconst assertionと一緒に使うことができます。例:
 ``` ts
 if ($.literal('foo' as const).ok(x)) {
 	x;
