@@ -599,7 +599,7 @@ cafyはTypeScriptで書かれているため、強力な型定義を持ち、バ
 
 ### Type Guard
 例えば、「`x`は*文字列*でなければならない」とバリデーションした後の`x`の型は明らかに*文字列*です(バリデータの実装にミスが無いと仮定した場合)。
-`ok`メソッドは型定義においてTypeScriptの[Type Guard](http://www.typescriptlang.org/docs/handbook/advanced-types.html#type-guards-and-differentiating-types)を実装しており、`ok`メソッドの返り値を使って条件分岐を行うと、そのスコープではバリデーションした変数の型が正しいものに絞り込まれます。
+`ok`メソッドは型定義においてTypeScriptの[Type Guard](http://www.typescriptlang.org/docs/handbook/advanced-types.html#type-guards-and-differentiating-types)を実装しており、`ok`メソッドの返り値を使って条件分岐を行うと、そのスコープではバリデーションした変数の型が正しいものに絞り込まれます。これは、`ok`メソッドにバリデーションに合格しない値を渡すと`false`が返り分岐が実行されないことが判るので、分岐先スコープの変数の型は必ず求めている型になることが保証されるからです。
 例:
 ``` ts
 const x = 42 as unknown;
