@@ -625,6 +625,8 @@ function something(x: unknown) {
 }
 ```
 
+詳しくはTypeScriptの[Type Guard](http://www.typescriptlang.org/docs/handbook/advanced-types.html#type-guards-and-differentiating-types)のドキュメントを参照してください。
+
 ### Assertion Functions
 また、TypeScript 3.7で導入された[Assertion Functions](https://devblogs.microsoft.com/typescript/announcing-typescript-3-7-rc/#assertion-functions)もサポートしていて、
 `assert`メソッドにある変数を渡して呼び出すと、その後の変数の型はバリデーションされた型になります。これは、`assert`メソッドにバリデーションに合格しない値を渡すと、即座に例外がthrowされるので、
@@ -640,6 +642,8 @@ x;
 // ↑この時点でxの型は string
 // この例ではxはnumberなので、実際にはここに到達することはない
 ```
+
+詳しくはTypeScriptの[Assertion Functions](https://devblogs.microsoft.com/typescript/announcing-typescript-3-7-rc/#assertion-functions)のドキュメントを参照してください。
 
 ### Array, Object, Unionな型
 配列、オブジェクト、ユニオン型といった複雑な型も、正しく推論することができます。
