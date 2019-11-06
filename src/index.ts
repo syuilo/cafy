@@ -11,6 +11,7 @@ import NumberContext from './types/number';
 import ObjectContext, { Props } from './types/object';
 import StringContext from './types/string';
 import EitherContext from './types/either';
+import LiteralContext from './types/literal';
 
 import Context from './ctx';
 import { TypeOf } from './types';
@@ -36,6 +37,7 @@ const optionalNullable = {
 	get string() { return new StringContext().makeOptionalNullable() },
 	type<T extends Context & TypeContext>(Ctx: { new(): T; }): ReturnType<T['makeOptionalNullable']> { return new Ctx().makeOptionalNullable() as any },
 	use<T extends Context = Context>(ctx: T): AnyContext<TypeOf<T>, undefined | null> { return new AnyContext<TypeOf<T>>().makeOptionalNullable().pipe(ctx.test); },
+	literal<T>(literal: T): LiteralContext<T, undefined | null> { return new LiteralContext(literal).makeOptionalNullable() },
 };
 
 const $ = {
@@ -53,6 +55,7 @@ const $ = {
 	get string() { return new StringContext() },
 	type<T>(Ctx: { new(): T; }): T { return new Ctx() },
 	use<T extends Context = Context>(ctx: T): AnyContext<TypeOf<T>> { return new AnyContext<TypeOf<T>>().pipe(ctx.test); },
+	literal<T>(literal: T): LiteralContext<T> { return new LiteralContext(literal) },
 
 	/**
 	 * undefined を許容します
@@ -72,6 +75,7 @@ const $ = {
 		get string() { return new StringContext().makeOptional() },
 		type<T extends Context & TypeContext>(Ctx: { new(): T; }): ReturnType<T['makeOptional']> { return new Ctx().makeOptional() as any },
 		use<T extends Context = Context>(ctx: T): AnyContext<TypeOf<T>, undefined> { return new AnyContext<TypeOf<T>>().makeOptional().pipe(ctx.test); },
+		literal<T>(literal: T): LiteralContext<T, undefined> { return new LiteralContext(literal).makeOptional() },
 
 		/**
 		 * undefined と null を許容します
@@ -97,6 +101,7 @@ const $ = {
 		get string() { return new StringContext().makeNullable() },
 		type<T extends Context & TypeContext>(Ctx: { new(): T; }): ReturnType<T['makeNullable']> { return new Ctx().makeNullable() as any },
 		use<T extends Context = Context>(ctx: T): AnyContext<TypeOf<T>, null> { return new AnyContext<TypeOf<T>>().makeNullable().pipe(ctx.test); },
+		literal<T>(literal: T): LiteralContext<T, null> { return new LiteralContext(literal).makeNullable() },
 
 		/**
 		 * undefined と null を許容します

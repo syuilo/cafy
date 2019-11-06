@@ -97,6 +97,7 @@ cafyは様々な型をサポートしています:
 * **オブジェクト** ... `$.obj`
 * **ユーザー定義型** ... `$.type()`
 * **ユニオン** ... `$.either()`
+* **リテラル** ... `$.literal()`
 * **なんでも** ... `$.any`
 
 > ℹ JavaScriptの仕様上では配列はobjectですが、cafyでは配列はobjectとは見なされません。
@@ -503,6 +504,19 @@ $.either($.str, $.num).ok(42) // true
 $.either($.str, $.either($.num, $.bool)).ok(42) // true
 ```
 
+### **Literal**
+``` javascript
+.literal(literal)
+```
+
+特定の値であることを保証するバリデーションを行いたいときは、`literal`を使うことができます。
+例:
+``` javascript
+// 文字列'foo'でなければならない
+$.literal('foo').ok('foo') // true
+```
+TypeScriptで使うときに便利です。
+
 ---
 
 ### **Use**
@@ -644,6 +658,20 @@ x;
 ```
 
 詳しくはTypeScriptの[Assertion Functions](https://devblogs.microsoft.com/typescript/announcing-typescript-3-7-rc/#assertion-functions)のドキュメントを参照してください。
+
+### Literal Types
+cafyの`$.literal()`は、TypeScriptのconst assertionと一緒に使うことができます。例:
+``` ts
+if ($.literal('foo' as const).ok(x)) {
+	x;
+	// ↑xの型は 'foo' (stringではなく)
+}
+
+if ($.either($.literal('foo' as const), $.literal('bar' as const)).ok(x)) {
+	x;
+	// ↑xの型は 'foo' | 'bar'
+}
+```
 
 ### Array, Object, Unionな型
 配列、オブジェクト、ユニオン型といった複雑な型も、正しく推論することができます。

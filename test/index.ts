@@ -622,6 +622,23 @@ describe('Queries', () => {
 			assert.equal(ok2, false);
 		});
 	});
+
+	describe('Literal', () => {
+		it('OK', () => {
+			const ok = $.literal('foo' as const).ok('foo');
+			assert.equal(ok, true);
+		});
+
+		it('NOT OK', () => {
+			const ok = $.literal('foo' as const).ok(42);
+			assert.equal(ok, false);
+		});
+
+		it('Type', () => {
+			const type = $.literal('foo' as const).getType();
+			assert.equal(type, '\'foo\'');
+		});
+	});
 });
 
 class MyClass {
