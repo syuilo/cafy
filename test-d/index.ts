@@ -3,7 +3,6 @@
  * with https://github.com/SamVerschueren/tsd
  */
 
-/* https://github.com/SamVerschueren/tsd/issues/52
 import { expectType } from 'tsd';
 import $ from '../src';
 
@@ -102,6 +101,7 @@ import $ from '../src';
 
 // .assert() method
 // with Assertion Functions (TS 3.7)
+/*
 {
 	const x = 42 as unknown;
 
