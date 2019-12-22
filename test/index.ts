@@ -625,17 +625,17 @@ describe('Queries', () => {
 
 	describe('Literal', () => {
 		it('OK', () => {
-			const ok = $.literal('foo' as const).ok('foo');
+			const ok = $.literal('foo').ok('foo');
 			assert.equal(ok, true);
 		});
 
 		it('NOT OK', () => {
-			const ok = $.literal('foo' as const).ok(42);
+			const ok = $.literal('foo').ok(42);
 			assert.equal(ok, false);
 		});
 
 		it('Type', () => {
-			const type = $.literal('foo' as const).getType();
+			const type = $.literal('foo').getType();
 			assert.equal(type, '\'foo\'');
 		});
 	});

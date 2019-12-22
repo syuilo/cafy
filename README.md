@@ -660,14 +660,14 @@ x;
 詳しくはTypeScriptの[Assertion Functions](https://devblogs.microsoft.com/typescript/announcing-typescript-3-7-rc/#assertion-functions)のドキュメントを参照してください。
 
 ### Literal Types
-cafyの`$.literal()`バリデータは、TypeScriptのconst assertionと一緒に使うことができます。例:
+cafyの`$.literal()`バリデータは、TypeScriptのconst assertionを使ったときのように型が値そのものになります。例:
 ``` ts
-if ($.literal('foo' as const).ok(x)) {
+if ($.literal('foo').ok(x)) {
 	x;
 	// ↑xの型は 'foo' (stringではなく)
 }
 
-if ($.either($.literal('foo' as const), $.literal('bar' as const)).ok(x)) {
+if ($.either($.literal('foo'), $.literal('bar')).ok(x)) {
 	x;
 	// ↑xの型は 'foo' | 'bar'
 }

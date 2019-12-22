@@ -99,6 +99,17 @@ import $ from '../src';
 	);
 }
 
+// Literal
+{
+	expectType<'foo'>(
+		$.literal('foo').get(42)[0]
+	);
+
+	expectType<42>(
+		$.literal(42).get(42)[0]
+	);
+}
+
 // .assert() method
 // with Assertion Functions (TS 3.7)
 /*
