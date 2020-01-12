@@ -33,10 +33,12 @@ export class ObjError extends Error {
 	}
 }
 
+type O<Ps> = { [P in keyof Ps]: TypeOf<Ps[P]> };
+
 /**
  * Object
  */
-export default class ObjectContext<Ps extends Props, Maybe extends null | undefined | { [P in keyof Ps]: TypeOf<Ps[P]> } = { [P in keyof Ps]: TypeOf<Ps[P]> }> extends Context<Maybe extends { [P in keyof Ps]: TypeOf<Ps[P]> } ? { [P in keyof Ps]: TypeOf<Ps[P]> } : ({ [P in keyof Ps]: TypeOf<Ps[P]> } | Maybe), ObjError> {
+export default class ObjectContext<Ps extends Props, Maybe extends null | undefined | O<Ps> = O<Ps>> extends Context<Maybe extends O<Ps> ? O<Ps> : (O<Ps> | Maybe), ObjError> {
 	public readonly name = 'Object';
 
 	private isStrict = false;
